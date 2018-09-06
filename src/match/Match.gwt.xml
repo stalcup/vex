@@ -1,0 +1,13 @@
+<module>
+  <source path=""/>
+  <source path="web"/>
+  
+  <inherits name="com.google.gwt.user.User" />
+  <inherits name="elemental2.core.Core" />
+  <inherits name="elemental2.dom.Dom" />
+  <inherits name="vex.Vex" />
+  
+  <entry-point class="match.web.MatchGameEntryPoint" />
+  <add-linker name="sso" />
+  <collapse-all-properties />
+</module>
