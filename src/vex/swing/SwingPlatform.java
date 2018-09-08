@@ -26,8 +26,7 @@ public class SwingPlatform implements Platform {
 
   private BufferedImage buffer;
   private JPanel canvas;
-  private LinkedList<Rectangle> clips = new LinkedList<>();
-  private SwingVexGraphics g;
+  private SwingGraphics g;
   private KeyEvent keyEvent;
   private LinkedList<KeyEvent> keyEvents = new LinkedList<>();
   private MouseEvent mouseEvent;
@@ -152,24 +151,6 @@ public class SwingPlatform implements Platform {
   }
 
   @Override
-  public void popClip() {
-    clips.pop();
-    if (clips.isEmpty()) {
-      g.clearClip();
-    } else {
-      Rectangle clip = clips.peek();
-      g.setClip(clip.x, clip.y, clip.width, clip.height);
-    }
-  }
-
-  @Override
-  public void pushClip(int x, int y, int width, int height) {
-    Rectangle clip = new Rectangle(x, y, width, height);
-    clips.push(clip);
-    g.setClip(x, y, width, height);
-  }
-
-  @Override
   public void setTextCursorPosition(int textCursorPosition) {
     this.textCursorPosition = textCursorPosition;
   }
@@ -194,7 +175,6 @@ public class SwingPlatform implements Platform {
     this.window.getRootPane().getGraphics().drawImage(buffer, 0, 0, null);
     this.mouseEvent = null;
     this.keyEvent = null;
-    clips.clear();
   }
 
   private void startFrame() {
@@ -214,7 +194,7 @@ public class SwingPlatform implements Platform {
     swingGraphics.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     if (this.g == null) {
-      this.g = new SwingVexGraphics(swingGraphics);
+      this.g = new SwingGraphics(swingGraphics);
     } else {
       this.g.g = swingGraphics;
     }

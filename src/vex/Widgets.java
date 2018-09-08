@@ -7,6 +7,161 @@ import vex.geom.Point;
 
 public class Widgets {
 
+  public static class TextBoxBuilder {
+
+    private Color backgroundColor;
+    private int border;
+    private Color borderColor;
+    private String focusId;
+    private int height;
+    private int margin;
+    private String placeholderText;
+    private Color placeholderTextColor;
+    private String text;
+    private Color textColor;
+    private Color underlineColor;
+    private int width;
+    private int x;
+    private int y;
+
+    public TextBoxBuilder(String focusId, int x, int y, int width, int height) {
+      this.focusId = focusId;
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+    }
+
+    public TextBoxBuilder backgroundColor(Color backgroundColor) {
+      this.backgroundColor = backgroundColor;
+      return this;
+    }
+
+    public TextBoxBuilder border(int border, Color borderColor) {
+      this.border = border;
+      this.borderColor = borderColor;
+      return this;
+    }
+
+    public TextBoxBuilder margin(int margin) {
+      this.margin = margin;
+      return this;
+    }
+
+    public TextBoxBuilder placeholderText(String placeholderText, Color placeholderTextColor) {
+      this.placeholderText = placeholderText;
+      this.placeholderTextColor = placeholderTextColor;
+      return this;
+    }
+
+    public WidgetStatus render() {
+      if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
+        setCurrentFocusId(focusId);
+        Vex.platform.setTextCursorPosition(text.length());
+      }
+
+      Graphics g = g();
+      if (backgroundColor != null) {
+        g.setColor(backgroundColor);
+        g.fillRect(x, y, width, height);
+      }
+
+      if (borderColor != null) {
+        g.setColor(borderColor);
+        g.setStroke(border);
+        g.drawRect(x - border, y - border, width + border * 2 - 1, height + border * 2 - 1);
+      }
+
+      if (underlineColor != null) {
+        g.setColor(underlineColor);
+        g.fillRect(x, y + height - 1, width, 1);
+      }
+
+      if ((text == null || text.isEmpty())
+          && placeholderText != null
+          && placeholderTextColor != null) {
+        g.setColor(placeholderTextColor);
+        renderStringLeft(x + margin, y, width - margin, height, placeholderText);
+      }
+
+      boolean updatedText = false;
+
+      g.setColor(textColor);
+      boolean focused = getCurrentFocusId() == focusId;
+      if (focused) {
+        KeyEvent keyEvent = Vex.platform.getKeyEvent();
+        if (keyEvent != null) {
+          if (keyEvent.keyText.equals("Left")) {
+            Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() - 1);
+          } else if (keyEvent.keyText.equals("Right")) {
+            Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() + 1);
+          }
+        }
+        Vex.platform.setTextCursorPosition(
+            Math.min(Vex.platform.getTextCursorPosition(), text.length()));
+        Vex.platform.setTextCursorPosition(Math.max(Vex.platform.getTextCursorPosition(), 0));
+
+        if (keyEvent != null) {
+          Vex.platform.getKeyEvent();
+          boolean delete = keyEvent.keyText.equals("Delete");
+          boolean backspace = keyEvent.keyText.equals("Backspace");
+          if (keyEvent.printable || delete || backspace) {
+            String left =
+                Vex.platform.getTextCursorPosition() > 0
+                    ? text.substring(0, Vex.platform.getTextCursorPosition())
+                    : "";
+            String right =
+                Vex.platform.getTextCursorPosition() < text.length()
+                    ? text.substring(Vex.platform.getTextCursorPosition())
+                    : "";
+
+            if (keyEvent.printable) {
+              text = left + keyEvent.key + right;
+              Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() + 1);
+              updatedText = true;
+            }
+            if (delete && Vex.platform.getTextCursorPosition() < text.length()) {
+              text = left + right.substring(1);
+              updatedText = true;
+            }
+            if (backspace && Vex.platform.getTextCursorPosition() > 0) {
+              text = left.substring(0, left.length() - 1) + right;
+              Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() - 1);
+              updatedText = true;
+            }
+          }
+        }
+
+        Point stringSize = getStringSize(text.substring(0, Vex.platform.getTextCursorPosition()));
+        int textCursorX = stringSize.x;
+
+        int textCursorPixelX = x + margin + textCursorX;
+        if (textCursorPixelX < x + width) {
+          g.fillRect(
+              textCursorPixelX,
+              y + (height - stringSize.y) / 2 + Math.round(stringSize.y / 7f),
+              2,
+              stringSize.y);
+        }
+      }
+
+      renderStringLeft(x + margin, y, width - margin, height, text);
+
+      return WidgetStatus.text(updatedText, text);
+    }
+
+    public TextBoxBuilder text(String text, Color textColor) {
+      this.text = text;
+      this.textColor = textColor;
+      return this;
+    }
+
+    public TextBoxBuilder underlineColor(Color underlineColor) {
+      this.underlineColor = underlineColor;
+      return this;
+    }
+  }
+
   public static class WidgetStatus {
     static WidgetStatus click(boolean clicked) {
       WidgetStatus status = new WidgetStatus();
@@ -115,6 +270,10 @@ public class Widgets {
     return scrollPercent;
   }
 
+  private static Graphics g() {
+    return Vex.platform.getGraphics();
+  }
+
   public static String getCurrentFocusId() {
     return currentFocusId;
   }
@@ -136,101 +295,26 @@ public class Widgets {
 
   public static void renderStringCentered(int x, int y, int width, int height, String text) {
     Point stringSize = Widgets.getStringSize(text);
-    g().drawString(text, x + width / 2 - stringSize.x / 2, y + height / 2 + stringSize.y / 2);
+    g().drawString(
+            text,
+            x + width / 2 - stringSize.x / 2,
+            y + height / 2 + stringSize.y / 2,
+            x,
+            y,
+            width,
+            height);
   }
 
   public static void renderStringLeft(int x, int y, int width, int height, String text) {
-    Point stringSize = Widgets.getStringSize(text);
-    g().drawString(text, x, y + height / 2 + stringSize.y / 2);
+    g().drawString(
+            text, x, y + height / 2 + Widgets.getStringSize(text).y / 2, x, y, width, height);
   }
 
   public static void renderStringRight(int x, int y, int width, int height, String text) {
     g().setColor(Color.BLACK);
     Point stringSize = Widgets.getStringSize(text);
-    g().drawString(text, x + width - stringSize.x, y + height / 2 + stringSize.y / 2);
-  }
-
-  public static WidgetStatus renderTextBox(
-      String focusId,
-      int x,
-      int y,
-      int width,
-      int height,
-      String text,
-      Color underlineColor,
-      Color textColor) {
-    Vex.platform.pushClip(x, y, width, height);
-
-    if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
-      setCurrentFocusId(focusId);
-      Vex.platform.setTextCursorPosition(text.length());
-    }
-
-    int margin = 3;
-
-    boolean focused = getCurrentFocusId() == focusId;
-
-    if (underlineColor != null) {
-      g().setColor(underlineColor);
-      g().fillRect(x, y + height - 1, width, 1);
-    }
-
-    boolean updatedText = false;
-
-    if (focused) {
-      KeyEvent keyEvent = Vex.platform.getKeyEvent();
-      if (keyEvent != null) {
-        if (keyEvent.keyText.equals("Left")) {
-          Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() - 1);
-        } else if (keyEvent.keyText.equals("Right")) {
-          Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() + 1);
-        }
-      }
-      Vex.platform.setTextCursorPosition(
-          Math.min(Vex.platform.getTextCursorPosition(), text.length()));
-      Vex.platform.setTextCursorPosition(Math.max(Vex.platform.getTextCursorPosition(), 0));
-
-      if (keyEvent != null) {
-        Vex.platform.getKeyEvent();
-        boolean delete = keyEvent.keyText.equals("Delete");
-        boolean backspace = keyEvent.keyText.equals("Backspace");
-        if (keyEvent.printable || delete || backspace) {
-          String left =
-              Vex.platform.getTextCursorPosition() > 0
-                  ? text.substring(0, Vex.platform.getTextCursorPosition())
-                  : "";
-          String right =
-              Vex.platform.getTextCursorPosition() < text.length()
-                  ? text.substring(Vex.platform.getTextCursorPosition())
-                  : "";
-
-          if (keyEvent.printable) {
-            text = left + keyEvent.key + right;
-            Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() + 1);
-            updatedText = true;
-          }
-          if (delete && Vex.platform.getTextCursorPosition() < text.length()) {
-            text = left + right.substring(1);
-            updatedText = true;
-          }
-          if (backspace && Vex.platform.getTextCursorPosition() > 0) {
-            text = left.substring(0, left.length() - 1) + right;
-            Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() - 1);
-            updatedText = true;
-          }
-        }
-      }
-
-      int textCursorX = getStringSize(text.substring(0, Vex.platform.getTextCursorPosition())).x;
-
-      g().fillRect(x + margin + textCursorX, y + margin, 1, height - margin * 2);
-    }
-
-    g().setColor(textColor);
-    renderStringLeft(x + margin, y, width - margin * 2, height, text);
-
-    Vex.platform.popClip();
-    return WidgetStatus.text(updatedText, text);
+    g().drawString(
+            text, x + width - stringSize.x, y + height / 2 + stringSize.y / 2, x, y, width, height);
   }
 
   public static void renderTitleBar(
@@ -254,7 +338,7 @@ public class Widgets {
     g().setFont(fontName, fontStyle, fontSize);
   }
 
-  private static Graphics g() {
-    return Vex.platform.getGraphics();
+  public static TextBoxBuilder textBox(String focusId, int x, int y, int width, int height) {
+    return new TextBoxBuilder(focusId, x, y, width, height);
   }
 }

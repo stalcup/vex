@@ -22,7 +22,6 @@ public class WebPlatform implements Platform {
   private Graphics g;
   private int textCursorPosition;
   private Runnable ui;
-  private LinkedList<Rectangle> clips = new LinkedList<>();
   private KeyEvent keyEvent;
   private LinkedList<KeyEvent> keyEvents = new LinkedList<>();
   private MouseEvent mouseEvent;
@@ -32,7 +31,7 @@ public class WebPlatform implements Platform {
   public WebPlatform(HTMLCanvasElement canvasElement) {
     this.canvasElement = canvasElement;
     context2d = (CanvasRenderingContext2D) (Object) canvasElement.getContext("2d");
-    g = new VexCanvasGraphics(context2d);
+    g = new WebGraphics(context2d);
 
     fitCanvasToWindow();
 
@@ -113,24 +112,6 @@ public class WebPlatform implements Platform {
   }
 
   @Override
-  public void popClip() {
-    clips.pop();
-    if (clips.isEmpty()) {
-      getGraphics().clearClip();
-    } else {
-      Rectangle clip = clips.peek();
-      getGraphics().setClip(clip.x, clip.y, clip.width, clip.height);
-    }
-  }
-
-  @Override
-  public void pushClip(int x, int y, int width, int height) {
-    Rectangle clip = new Rectangle(x, y, width, height);
-    clips.push(clip);
-    getGraphics().setClip(x, y, width, height);
-  }
-
-  @Override
   public void setTextCursorPosition(int textCursorPosition) {
     this.textCursorPosition = textCursorPosition;
   }
@@ -150,7 +131,6 @@ public class WebPlatform implements Platform {
   private void endFrame() {
     this.mouseEvent = null;
     this.keyEvent = null;
-    clips.clear();
   }
 
   private void startFrame() {

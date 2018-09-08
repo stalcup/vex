@@ -21,10 +21,6 @@ public interface Platform {
 
   int getTextCursorPosition();
 
-  void popClip();
-
-  void pushClip(int x, int y, int width, int height);
-
   void setTextCursorPosition(int textCursorPosition);
 
   void setUi(Runnable ui);

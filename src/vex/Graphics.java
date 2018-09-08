@@ -18,17 +18,13 @@ public interface Graphics {
     }
   }
 
-  void clearClip();
-
   void drawRect(int x, int y, int width, int height);
 
-  void drawString(String string, int x, int y);
+  void drawString(String string, int x, int y, int clipX, int clipY, int clipWidth, int clipHeight);
 
   void fillRect(int x, int y, int width, int height);
 
   Point getSize(String string);
-
-  void setClip(int x, int y, int width, int height);
 
   void setColor(Color color);
 
