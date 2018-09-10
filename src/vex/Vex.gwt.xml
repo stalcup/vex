@@ -2,7 +2,7 @@
   <source path=""/>
   <source path="web"/>
   
-  <inherits name="com.google.gwt.user.User" />
+  <inherits name="com.google.gwt.core.Core" />
   <inherits name="jsinterop.base.Base" />
   <inherits name="elemental2.core.Core" />
   <inherits name="elemental2.dom.Dom" />
