@@ -1,17 +1,13 @@
 package vex.swing;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import vex.Graphics;
 import vex.Platform;
 import vex.events.KeyEvent;
@@ -43,10 +39,11 @@ public class SwingPlatform implements Platform {
 
     // fullscreen for aligned comparison with web version
     // this.window.setUndecorated(true);
+    // Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    // this.window.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
 
     this.window.setLocation(0, 0);
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    this.window.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
+    this.window.setSize(1400, 900);
     this.window.setVisible(true);
 
     this.canvas =
