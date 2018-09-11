@@ -50,16 +50,17 @@ public class MatchGame {
         Color buttonColor = isResetButton || isMatched ? resetButtonColor : Color.GRAY_60;
         Color mouseOverColor = isResetButton || isMatched ? resetButtonColor : Color.GRAY_80;
 
-        if (Widgets.doButton(
+        if (Widgets.button(
+                null,
                 gapSize + i * (gapSize + squareSize),
                 gapSize + k * (gapSize + squareSize),
                 squareSize,
-                squareSize,
-                buttonLabel,
-                Color.GRAY_10,
-                buttonColor,
-                mouseOverColor,
-                null)
+                squareSize)
+            .text(buttonLabel)
+            .textColor(Color.GRAY_10)
+            .backgroundColor(buttonColor)
+            .hoverColor(mouseOverColor)
+            .render()
             .clicked) {
 
           if (confirmingReset) {
@@ -83,45 +84,51 @@ public class MatchGame {
     }
 
     Widgets.setFont("Impact", FontStyle.PLAIN, squareSize / 2);
-    Widgets.doButton(
-        height < width ? smallerDimension : gapSize * 2 + squareSize,
-        height < width ? gapSize * 2 + squareSize : smallerDimension,
-        squareSize * 5 / 2,
-        squareSize,
-        "Clicks: " + clickCounter,
-        Color.BLACK,
-        new Color(196, 196, 255),
-        null,
-        null);
+    Widgets.button(
+            null,
+            height < width ? smallerDimension : gapSize * 2 + squareSize,
+            height < width ? gapSize * 2 + squareSize : smallerDimension,
+            squareSize * 5 / 2,
+            squareSize)
+        .text("Clicks: " + clickCounter)
+        .textColor(Color.BLACK)
+        .backgroundColor(new Color(196, 196, 255))
+        .hoverColor(null)
+        .setSelectedColor(null)
+        .render();
 
     if (confirmingReset) {
       Widgets.setFont("Arial", FontStyle.BOLD, 20);
-      if (Widgets.doButton(
+      if (Widgets.button(
+              null,
               height < width ? smallerDimension : gapSize,
               height < width ? gapSize : smallerDimension,
               squareSize,
-              squareSize,
-              "Yes",
-              Color.BLACK,
-              resetButtonColor,
-              null,
-              null)
+              squareSize)
+          .text("Yes")
+          .textColor(Color.BLACK)
+          .backgroundColor(resetButtonColor)
+          .hoverColor(null)
+          .setSelectedColor(null)
+          .render()
           .clicked) {
         confirmingReset = false;
         selectedButtonIndexes.clear();
         matchedButtonIndexes.clear();
         clickCounter = 0;
       }
-      if (Widgets.doButton(
+      if (Widgets.button(
+              null,
               height < width ? smallerDimension + gapSize + squareSize : gapSize,
               height < width ? gapSize : smallerDimension + gapSize + squareSize,
               squareSize,
-              squareSize,
-              "No",
-              Color.BLACK,
-              resetButtonColor,
-              null,
-              null)
+              squareSize)
+          .text("No")
+          .textColor(Color.BLACK)
+          .backgroundColor(resetButtonColor)
+          .hoverColor(null)
+          .setSelectedColor(null)
+          .render()
           .clicked) {
         confirmingReset = false;
       }

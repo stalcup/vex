@@ -1,7 +1,6 @@
 package vex.swing;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;

@@ -21,8 +21,14 @@ public class WebGraphics implements Graphics {
   }
 
   @Override
-  public void drawString(String string, int x, int y, int clipX, int clipY, int clipWidth, int clipHeight) {
+  public void drawString(String string, int x, int y) {
     context2d.fillText(string, x, y);
+  }
+
+  @Override
+  public void drawString(
+      String string, int x, int y, int clipX, int clipY, int clipWidth, int clipHeight) {
+    context2d.fillText(string, x, y, clipX + clipWidth - x);
   }
 
   @Override
@@ -53,7 +59,7 @@ public class WebGraphics implements Graphics {
   }
 
   @Override
-  public void setFont(String fontName, FontStyle style, int pixelSize) {
+  public void setFont(String fontName, FontStyle style, int pixelSize, boolean strikeThrough) {
     this.fontPixelSize = pixelSize;
     context2d.font = style.name + " " + pixelSize + "px " + fontName;
   }

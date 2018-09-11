@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
+
 import vex.Color;
 import vex.Graphics;
 import vex.geom.Point;
@@ -12,6 +13,8 @@ import vex.geom.Point;
 public class SwingGraphics implements Graphics {
 
   public Graphics2D g;
+  private boolean strikeThrough;
+  private int pointSize;
 
   public SwingGraphics(Graphics2D g) {
     this.g = g;
@@ -23,10 +26,19 @@ public class SwingGraphics implements Graphics {
   }
 
   @Override
+  public void drawString(String string, int x, int y) {
+    g.drawString(string, x, y);
+    if (strikeThrough) {
+      Point size = getSize(string);
+      g.fillRect(x, y - (int) Math.round(size.y * .25), size.x, (int) Math.ceil(pointSize / 9));
+    }
+  }
+
+  @Override
   public void drawString(
       String string, int x, int y, int clipX, int clipY, int clipWidth, int clipHeight) {
     g.clipRect(clipX, clipY, clipWidth, clipHeight);
-    g.drawString(string, x, y);
+    drawString(string, x, y);
     g.setClip(null);
   }
 
@@ -48,12 +60,35 @@ public class SwingGraphics implements Graphics {
   }
 
   @Override
-  public void setFont(String fontName, FontStyle style, int pointSize) {
+  public void setFont(String fontName, FontStyle style, int pointSize, boolean strikeThrough) {
+    this.strikeThrough = strikeThrough;
+    this.pointSize = pointSize;
     g.setFont(new Font(fontName, style.code, pointSize));
   }
 
   @Override
   public void setStroke(int width) {
     g.setStroke(new BasicStroke(width));
+  }
+
+  @Override
+  public void drawDropShadow(
+      int x, int y, int width, int height, int offsetX, int offsetY, int blur) {
+    java.awt.Color startingColor = g.getColor();
+
+    int blurOffset = startingColor.getAlpha() / (blur + 1) - 1;
+
+    for (int i = 0; i < blur; i++) {
+      g.setColor(
+          new java.awt.Color(
+              startingColor.getRed(),
+              startingColor.getGreen(),
+              startingColor.getBlue(),
+              startingColor.getAlpha() / (i + 1) - blurOffset));
+
+      g.fillRoundRect(
+          x - i + offsetX, y - i + offsetY, width + i * 2, height + i * 2, i * 2, i * 2);
+    }
+    g.setColor(startingColor);
   }
 }

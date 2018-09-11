@@ -15,7 +15,9 @@ public class Color {
   public static final Color GRAY_95 = new Color(0.95f, 0.95f, 0.95f);
   public static final Color WHITE = new Color(255, 255, 255);
   public static final Color YELLOW = new Color(255, 255, 0);
-  public static final Color HAZE = new Color(0, 0, 0, 32);
+  public static final Color HIGH_HAZE = new Color(0, 0, 0, 64);
+  public static final Color MEDIUM_HAZE = new Color(0, 0, 0, 32);
+  public static final Color LOW_HAZE = new Color(0, 0, 0, 16);
 
   public final int r, g, b, a;
 

@@ -40,7 +40,7 @@ public interface Platform {
     return point != null
         && point.x >= x
         && point.y >= y
-        && point.x <= x + width
-        && point.y <= y + height;
+        && point.x < x + width
+        && point.y < y + height;
   }
 }
