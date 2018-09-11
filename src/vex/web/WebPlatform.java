@@ -13,7 +13,6 @@ import vex.events.KeyEvent;
 import vex.events.MouseEvent;
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
-import vex.geom.Rectangle;
 
 public class WebPlatform implements Platform {
 
@@ -47,6 +46,7 @@ public class WebPlatform implements Platform {
                   KeyEvent.Type.TYPE,
                   keyboardEvent.key.length() == 1));
           doFrame();
+          doFrame();
         });
     DomGlobal.window.addEventListener(
         "resize",
@@ -68,6 +68,7 @@ public class WebPlatform implements Platform {
     elemental2.dom.MouseEvent mouseEvent = (elemental2.dom.MouseEvent) e;
     Point point = new Point((int) mouseEvent.clientX, (int) mouseEvent.clientY);
     mouseEvents.addLast(new MouseEvent(point, type, Point.createDelta(getMouseLocation(), point)));
+    doFrame();
     doFrame();
   }
 

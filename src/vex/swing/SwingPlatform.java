@@ -1,7 +1,9 @@
 package vex.swing;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
@@ -37,6 +39,16 @@ public class SwingPlatform implements Platform {
 
   {
     this.window = new JFrame();
+    this.window.setState(JFrame.MAXIMIZED_BOTH);
+
+    // fullscreen for aligned comparison with web version
+    // this.window.setUndecorated(true);
+
+    this.window.setLocation(0, 0);
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    this.window.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
+    this.window.setVisible(true);
+
     this.canvas =
         new JPanel() {
           @Override
@@ -47,12 +59,13 @@ public class SwingPlatform implements Platform {
 
     this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.window.add(this.canvas);
-    this.window.setSize(1400, 900);
+    //    this.window.setSize(1400, 900);
 
     this.window.addComponentListener(
         new SimpleComponentListener() {
           @Override
           public void componentResized(ComponentEvent e) {
+            resizeBuffer();
             doFrame();
           }
         });
@@ -107,11 +120,6 @@ public class SwingPlatform implements Platform {
             doFrame();
           }
         });
-
-    this.window.setLocationRelativeTo(null);
-    this.window.setVisible(true);
-
-    resizeBuffer();
   }
 
   @Override
@@ -165,6 +173,13 @@ public class SwingPlatform implements Platform {
   }
 
   private synchronized void doFrame() {
+    if (this.ui == null) {
+      return;
+    }
+    if (getWidth() == 0 || getHeight() == 0) {
+      return;
+    }
+
     this.startFrame();
     this.ui.run();
     this.endFrame();
@@ -192,6 +207,14 @@ public class SwingPlatform implements Platform {
     Graphics2D swingGraphics = (Graphics2D) buffer.getGraphics();
     swingGraphics.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    swingGraphics.setRenderingHint(
+        RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    swingGraphics.setRenderingHint(
+        RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+    swingGraphics.setRenderingHint(
+        RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+    swingGraphics.setRenderingHint(
+        RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
     if (this.g == null) {
       this.g = new SwingGraphics(swingGraphics);
     } else {

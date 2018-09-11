@@ -26,6 +26,14 @@ public class TodoMvc {
     }
   }
 
+  // Arial Unicode MS, missing on web
+  // Helvetica, renders different
+  // Arial, Swing is missing Unicode
+  // Times New Roman, shape mismatch
+  // Lucida Sans Regular, missing some unicode in Java, not available in web
+  // Verdana, missing unicode in Java
+  private static String fontName = "Helvetica";
+
   private static Color smallDropShadowColor = new Color(96, 96, 96, 255 * 3 / 10);
   private static int smallDropShadowRadius = 6;
   private static int smallDropShadowOffsetY = 1;
@@ -46,7 +54,7 @@ public class TodoMvc {
     Widgets.renderRect(x, y, width, height, new Color(245, 245, 245));
 
     Widgets.setColor(new Color(175, 47, 47, 38));
-    Widgets.setFont("SanSerif", FontStyle.PLAIN, 100);
+    Widgets.setFont(fontName, FontStyle.PLAIN, 100);
     Widgets.renderStringCenteredHorizontal(x, y + 103, width, "todos");
 
     int left = (width - 550) / 2;
@@ -116,15 +124,14 @@ public class TodoMvc {
     WidgetStatus entryStatus =
         Widgets.textBox("entry", left, 130, 550, entryHeight)
             .backgroundColor(Color.WHITE)
-            //            .border(1, Color.LOW_HAZE)
-            .font("SanSerif", FontStyle.PLAIN, 24, false)
+            .font(fontName, FontStyle.PLAIN, 24, false)
             .margin(60)
             .placeholderText("What needs to be done?", new Color(230, 230, 230))
             .text(entryValue, new Color(77, 77, 77))
             .render();
 
     if (!todos.isEmpty()) {
-      Widgets.setFont("SanSerif", FontStyle.PLAIN, 30);
+      Widgets.setFont(fontName, FontStyle.PLAIN, 30);
       if (Widgets.button(null, left + 6, 130 + 8, 45, 45)
           .text("✔")
           .textColor(Color.GRAY_80)
@@ -162,7 +169,7 @@ public class TodoMvc {
       WidgetStatus todoStatus =
           Widgets.textBox(todo.id, left, top, 550, todoHeight)
               .backgroundColor(Color.WHITE)
-              .font("SanSerif", FontStyle.PLAIN, 24, todo.done)
+              .font(fontName, FontStyle.PLAIN, 24, todo.done)
               .margin(60)
               .text(todo.value, todo.done ? Color.GRAY_70 : new Color(77, 77, 77))
               .render();
@@ -171,7 +178,7 @@ public class TodoMvc {
       }
       Widgets.renderRect(left, top, 550, 1, Color.LOW_HAZE);
 
-      Widgets.setFont("SanSerif", FontStyle.PLAIN, 30);
+      Widgets.setFont(fontName, FontStyle.PLAIN, 30);
       if (Widgets.button(null, left + 6, top + 8, 45, 45)
           .text(todo.done ? "✔" : "◯")
           .textColor(todo.done ? Color.GRAY_70 : Color.GRAY_90)
@@ -210,7 +217,7 @@ public class TodoMvc {
       Widgets.renderRect(left, top, 550, 1, Color.LOW_HAZE);
 
       Widgets.setColor(filterTextColor);
-      Widgets.setFont("SanSerif", FontStyle.PLAIN, 14);
+      Widgets.setFont(fontName, FontStyle.PLAIN, 14);
       Widgets.renderStringLeft(
           left + 13,
           top,
