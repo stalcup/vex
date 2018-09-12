@@ -116,7 +116,6 @@ public class TextBoxWidget {
         boolean delete = keyEvent.keyText.equals("Delete");
         boolean backspace = keyEvent.keyText.equals("Backspace");
         keyText = keyEvent.keyText;
-        Vex.platform.println(keyText);
         if (keyEvent.printable && !"Enter".equals(keyEvent.keyText) || delete || backspace) {
           String left =
               Widgets.textCursorPosition > 0 ? text.substring(0, Widgets.textCursorPosition) : "";
