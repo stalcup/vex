@@ -18,7 +18,7 @@ public class TodoMvc {
     String id;
     String value;
     boolean done;
-    public boolean deleted;
+    boolean deleted;
 
     Todo(String value) {
       this.id = Math.random() + "";
