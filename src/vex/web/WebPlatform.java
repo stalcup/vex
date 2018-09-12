@@ -18,19 +18,18 @@ public class WebPlatform implements Platform {
 
   private HTMLCanvasElement canvasElement;
   private CanvasRenderingContext2D context2d;
-  private Graphics g;
-  private int textCursorPosition;
-  private Runnable ui;
+  private Graphics graphics;
   private KeyEvent keyEvent;
   private LinkedList<KeyEvent> keyEvents = new LinkedList<>();
   private MouseEvent mouseEvent;
   private LinkedList<MouseEvent> mouseEvents = new LinkedList<>();
   private Point mouseLocation = new Point(0, 0);
+  private Runnable ui;
 
   public WebPlatform(HTMLCanvasElement canvasElement) {
     this.canvasElement = canvasElement;
     context2d = (CanvasRenderingContext2D) (Object) canvasElement.getContext("2d");
-    g = new WebGraphics(context2d);
+    graphics = new WebGraphics(context2d);
 
     fitCanvasToWindow();
 
@@ -64,32 +63,14 @@ public class WebPlatform implements Platform {
         });
   }
 
-  private void addMouseEvent(Event e, Type type) {
-    elemental2.dom.MouseEvent mouseEvent = (elemental2.dom.MouseEvent) e;
-    Point point = new Point((int) mouseEvent.clientX, (int) mouseEvent.clientY);
-    mouseEvents.addLast(new MouseEvent(point, type, Point.createDelta(getMouseLocation(), point)));
-    doFrame();
-    doFrame();
-  }
-
-  private void fitCanvasToWindow() {
-    this.canvasElement.height = DomGlobal.window.innerHeight;
-    this.canvasElement.width = DomGlobal.window.innerWidth;
+  @Override
+  public Graphics getGraphics() {
+    return graphics;
   }
 
   @Override
   public int getHeight() {
     return canvasElement.clientHeight;
-  }
-
-  @Override
-  public int getWidth() {
-    return canvasElement.clientWidth;
-  }
-
-  @Override
-  public Graphics getGraphics() {
-    return g;
   }
 
   @Override
@@ -108,13 +89,13 @@ public class WebPlatform implements Platform {
   }
 
   @Override
-  public int getTextCursorPosition() {
-    return textCursorPosition;
+  public int getWidth() {
+    return canvasElement.clientWidth;
   }
 
   @Override
-  public void setTextCursorPosition(int textCursorPosition) {
-    this.textCursorPosition = textCursorPosition;
+  public void println(String line) {
+    DomGlobal.console.log(line);
   }
 
   @Override
@@ -123,24 +104,37 @@ public class WebPlatform implements Platform {
     doFrame();
   }
 
+  private void addMouseEvent(Event e, Type type) {
+    elemental2.dom.MouseEvent mouseEvent = (elemental2.dom.MouseEvent) e;
+    Point point = new Point((int) mouseEvent.clientX, (int) mouseEvent.clientY);
+    mouseEvents.addLast(new MouseEvent(point, type, Point.createDelta(getMouseLocation(), point)));
+    doFrame();
+    doFrame();
+  }
+
   private synchronized void doFrame() {
-    this.startFrame();
-    this.ui.run();
-    this.endFrame();
+    startFrame();
+    ui.run();
+    endFrame();
   }
 
   private void endFrame() {
-    this.mouseEvent = null;
-    this.keyEvent = null;
+    mouseEvent = null;
+    keyEvent = null;
+  }
+
+  private void fitCanvasToWindow() {
+    canvasElement.height = DomGlobal.window.innerHeight;
+    canvasElement.width = DomGlobal.window.innerWidth;
   }
 
   private void startFrame() {
     if (!mouseEvents.isEmpty()) {
-      this.mouseEvent = mouseEvents.removeFirst();
-      this.mouseLocation = getMouseEvent().point;
+      mouseEvent = mouseEvents.removeFirst();
+      mouseLocation = getMouseEvent().point;
     }
     if (!keyEvents.isEmpty()) {
-      this.keyEvent = keyEvents.removeFirst();
+      keyEvent = keyEvents.removeFirst();
     }
   }
 }

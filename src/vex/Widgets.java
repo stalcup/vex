@@ -9,6 +9,7 @@ import vex.widgets.TextBoxWidget;
 public class Widgets {
 
   public static String currentFocusId;
+  public static int textCursorPosition;
 
   public static float doVerticalScrollBar(
       String focusId,
@@ -36,16 +37,16 @@ public class Widgets {
     g().setColor(barColor);
     g().fillRect(x, y + offsetPixels, width, visiblePixels);
 
-    if (Platform.mouseLocationIsIn(x, y, width, height) || getCurrentFocusId() == focusId) {
+    if (Platform.mouseLocationIsIn(x, y, width, height) || currentFocusId == focusId) {
       g().fillRect(x, y + offsetPixels, width, visiblePixels);
     }
 
     if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
-      setCurrentFocusId(focusId);
+      currentFocusId = focusId;
       // Aka, start dragging.
     }
 
-    if (getCurrentFocusId() == focusId
+    if (currentFocusId == focusId
         && Vex.platform.getMouseEvent() != null
         && Vex.platform.getMouseEvent().type == Type.DRAG) {
       scrollPercent += Vex.platform.getMouseEvent().delta.y * 100f / hiddenPixels;
@@ -54,19 +55,15 @@ public class Widgets {
       scrollPercent = Math.min(100, scrollPercent);
     }
 
-    if (getCurrentFocusId() == focusId && Platform.mouseEventIs(Type.UP)) {
-      setCurrentFocusId(null);
+    if (currentFocusId == focusId && Platform.mouseEventIs(Type.UP)) {
+      currentFocusId = null;
     }
 
     return scrollPercent;
   }
 
-  static Graphics g() {
+  public static Graphics g() {
     return Vex.platform.getGraphics();
-  }
-
-  public static String getCurrentFocusId() {
-    return currentFocusId;
   }
 
   public static Point getStringSize(String text) {
@@ -84,7 +81,7 @@ public class Widgets {
   }
 
   public static void renderStringCenteredBoth(int x, int y, int width, int height, String text) {
-    Point stringSize = Widgets.getStringSize(text);
+    Point stringSize = getStringSize(text);
     g().drawString(
             text,
             x + width / 2 - stringSize.x / 2,
@@ -96,12 +93,12 @@ public class Widgets {
   }
 
   public static void renderStringCenteredHorizontal(int x, int y, int width, String text) {
-    Point stringSize = Widgets.getStringSize(text);
+    Point stringSize = getStringSize(text);
     g().drawString(text, x + width / 2 - stringSize.x / 2, y);
   }
 
   public static void renderStringLeft(int x, int y, int width, int height, String text) {
-    Point stringSize = Widgets.getStringSize(text);
+    Point stringSize = getStringSize(text);
     g().drawString(
             text,
             x,
@@ -113,7 +110,7 @@ public class Widgets {
   }
 
   public static void renderStringRight(int x, int y, int width, int height, String text) {
-    Point stringSize = Widgets.getStringSize(text);
+    Point stringSize = getStringSize(text);
     g().drawString(
             text,
             x + width - stringSize.x,
@@ -130,15 +127,11 @@ public class Widgets {
     g().fillRect(x, y, width, height);
 
     g().setColor(textColor);
-    Widgets.renderStringCenteredBoth(x, y, width, height, title);
+    renderStringCenteredBoth(x, y, width, height, title);
   }
 
   public static void setColor(Color color) {
     g().setColor(color);
-  }
-
-  public static void setCurrentFocusId(String currentFocusId) {
-    Widgets.currentFocusId = currentFocusId;
   }
 
   public static void setFont(String fontName, FontStyle fontStyle, int fontSize) {

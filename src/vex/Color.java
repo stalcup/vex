@@ -25,7 +25,7 @@ public class Color {
     this.r = (int) (r * 256);
     this.g = (int) (g * 256);
     this.b = (int) (b * 256);
-    this.a = 255;
+    a = 255;
   }
 
   public Color(float r, float g, float b, float a) {
@@ -39,7 +39,7 @@ public class Color {
     this.r = r;
     this.g = g;
     this.b = b;
-    this.a = 255;
+    a = 255;
   }
 
   public Color(int r, int g, int b, int a) {

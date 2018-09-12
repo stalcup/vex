@@ -21,7 +21,7 @@ public class TodoMvc {
     boolean deleted;
 
     Todo(String value) {
-      this.id = Math.random() + "";
+      id = Math.random() + "";
       this.value = value;
     }
   }
@@ -163,7 +163,7 @@ public class TodoMvc {
       }
 
       if (todo.done && Widgets.currentFocusId == todo.id) {
-        Widgets.setCurrentFocusId(null);
+        Widgets.currentFocusId = null;
       }
 
       WidgetStatus todoStatus =

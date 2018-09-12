@@ -63,8 +63,8 @@ public class TextBoxWidget {
 
   public WidgetStatus render() {
     if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
-      Widgets.setCurrentFocusId(focusId);
-      Vex.platform.setTextCursorPosition(text.length());
+      Widgets.currentFocusId = focusId;
+      Widgets.textCursorPosition = text.length();
     }
 
     Graphics g = Vex.platform.getGraphics();
@@ -99,53 +99,50 @@ public class TextBoxWidget {
     String keyText = null;
 
     g.setColor(textColor);
-    boolean focused = Widgets.getCurrentFocusId() == focusId;
+    boolean focused = Widgets.currentFocusId == focusId;
     if (focused) {
       KeyEvent keyEvent = Vex.platform.getKeyEvent();
       if (keyEvent != null) {
         if (keyEvent.keyText.equals("Left")) {
-          Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() - 1);
+          Widgets.textCursorPosition = Widgets.textCursorPosition - 1;
         } else if (keyEvent.keyText.equals("Right")) {
-          Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() + 1);
+          Widgets.textCursorPosition = Widgets.textCursorPosition + 1;
         }
       }
-      Vex.platform.setTextCursorPosition(
-          Math.min(Vex.platform.getTextCursorPosition(), text.length()));
-      Vex.platform.setTextCursorPosition(Math.max(Vex.platform.getTextCursorPosition(), 0));
+      Widgets.textCursorPosition = Math.min(Widgets.textCursorPosition, text.length());
+      Widgets.textCursorPosition = Math.max(Widgets.textCursorPosition, 0);
 
       if (keyEvent != null) {
         boolean delete = keyEvent.keyText.equals("Delete");
         boolean backspace = keyEvent.keyText.equals("Backspace");
         keyText = keyEvent.keyText;
-        if ((keyEvent.printable && !"Enter".equals(keyEvent.keyText)) || delete || backspace) {
+        Vex.platform.println(keyText);
+        if (keyEvent.printable && !"Enter".equals(keyEvent.keyText) || delete || backspace) {
           String left =
-              Vex.platform.getTextCursorPosition() > 0
-                  ? text.substring(0, Vex.platform.getTextCursorPosition())
-                  : "";
+              Widgets.textCursorPosition > 0 ? text.substring(0, Widgets.textCursorPosition) : "";
           String right =
-              Vex.platform.getTextCursorPosition() < text.length()
-                  ? text.substring(Vex.platform.getTextCursorPosition())
+              Widgets.textCursorPosition < text.length()
+                  ? text.substring(Widgets.textCursorPosition)
                   : "";
 
           // Process these as mutually exclusive states, even though on some OS's the KeyEvent does
           // not make that clear.
-          if (delete && Vex.platform.getTextCursorPosition() < text.length()) {
+          if (delete && Widgets.textCursorPosition < text.length()) {
             text = left + right.substring(1);
             updatedText = true;
-          } else if (backspace && Vex.platform.getTextCursorPosition() > 0) {
+          } else if (backspace && Widgets.textCursorPosition > 0) {
             text = left.substring(0, left.length() - 1) + right;
-            Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() - 1);
+            Widgets.textCursorPosition = Widgets.textCursorPosition - 1;
             updatedText = true;
           } else if (keyEvent.printable) {
             text = left + keyEvent.key + right;
-            Vex.platform.setTextCursorPosition(Vex.platform.getTextCursorPosition() + 1);
+            Widgets.textCursorPosition = Widgets.textCursorPosition + 1;
             updatedText = true;
           }
         }
       }
 
-      Point stringSize =
-          Widgets.getStringSize(text.substring(0, Vex.platform.getTextCursorPosition()));
+      Point stringSize = Widgets.getStringSize(text.substring(0, Widgets.textCursorPosition));
       int textCursorX = stringSize.x;
 
       int textCursorPixelX = x + margin + textCursorX;
@@ -171,13 +168,10 @@ public class TextBoxWidget {
   }
 
   public TextBoxWidget font(String name, FontStyle style, int pointSize, boolean strikeThrough) {
-    this.fontName = name;
-    this.fontStyle = style;
-    this.fontPointSize = pointSize;
-    this.fontStrikeThrough = strikeThrough;
-    if (fontStrikeThrough) {
-      System.out.println("");
-    }
+    fontName = name;
+    fontStyle = style;
+    fontPointSize = pointSize;
+    fontStrikeThrough = strikeThrough;
     return this;
   }
 }

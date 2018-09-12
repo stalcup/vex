@@ -60,10 +60,10 @@ public class WebGraphics implements Graphics {
   }
 
   private void applyColor() {
-    int red = this.color.r;
-    int green = this.color.g;
-    int blue = this.color.b;
-    int alpha = this.color.a;
+    int red = color.r;
+    int green = color.g;
+    int blue = color.b;
+    int alpha = color.a;
     if (alpha == 255) {
       context2d.fillStyle =
           Js.<CanvasRenderingContext2D.FillStyleUnionType>uncheckedCast(
@@ -71,14 +71,14 @@ public class WebGraphics implements Graphics {
     } else {
       context2d.fillStyle =
           Js.<CanvasRenderingContext2D.FillStyleUnionType>uncheckedCast(
-              "rgb(" + red + ", " + green + ", " + blue + ", " + (alpha / 255f) + ")");
+              "rgb(" + red + ", " + green + ", " + blue + ", " + alpha / 255f + ")");
     }
   }
 
   @Override
   public void setFont(String fontName, FontStyle style, int pixelSize, boolean strikeThrough) {
-    this.fontPixelSize = pixelSize;
-    this.fontStrikeThrough = strikeThrough;
+    fontPixelSize = pixelSize;
+    fontStrikeThrough = strikeThrough;
     context2d.font = style.name + " " + pixelSize + "px " + fontName;
   }
 
@@ -93,7 +93,7 @@ public class WebGraphics implements Graphics {
   public void drawDropShadow(
       int x, int y, int width, int height, int offsetX, int offsetY, int blur) {
     context2d.shadowColor =
-        "rgb(" + color.r + ", " + color.g + ", " + color.b + ", " + (color.a / 255f) + ")";
+        "rgb(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a / 255f + ")";
     context2d.shadowBlur = blur;
     context2d.shadowOffsetX = offsetX;
     context2d.shadowOffsetY = offsetY;

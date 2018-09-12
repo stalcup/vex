@@ -1,10 +1,12 @@
 package vex;
 
+import jsinterop.annotations.JsType;
 import vex.events.KeyEvent;
 import vex.events.MouseEvent;
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
 
+@JsType
 public interface Platform {
 
   int getHeight();
@@ -19,9 +21,7 @@ public interface Platform {
 
   Point getMouseLocation();
 
-  int getTextCursorPosition();
-
-  void setTextCursorPosition(int textCursorPosition);
+  void println(String line);
 
   void setUi(Runnable ui);
 
@@ -35,7 +35,7 @@ public interface Platform {
         && mouseLocationIsIn(x, y, width, height);
   }
 
-  public static boolean mouseLocationIsIn(int x, int y, int width, int height) {
+  static boolean mouseLocationIsIn(int x, int y, int width, int height) {
     Point point = Vex.platform.getMouseLocation();
     return point != null
         && point.x >= x

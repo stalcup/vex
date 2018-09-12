@@ -9,6 +9,9 @@ public class KeyEvent {
   static {
     normalizedByKeyText.put("ArrowLeft", "Left");
     normalizedByKeyText.put("ArrowRight", "Right");
+    normalizedByKeyText.put("ControlLeft", "Ctrl");
+    normalizedByKeyText.put("ControlRight", "Ctrl");
+    normalizedByKeyText.put("NumpadEnter", "Enter");
   }
 
   public static enum Type {

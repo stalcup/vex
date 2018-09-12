@@ -1,13 +1,18 @@
 package vex.swing;
 
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import vex.Graphics;
 import vex.Platform;
 import vex.events.KeyEvent;
@@ -29,24 +34,25 @@ public class SwingPlatform implements Platform {
   private MouseEvent mouseEvent;
   private LinkedList<MouseEvent> mouseEvents = new LinkedList<>();
   private Point mouseLocation = new Point(0, 0);
-  private int textCursorPosition;
   private Runnable ui;
   private JFrame window;
 
-  {
-    this.window = new JFrame();
-    this.window.setState(JFrame.MAXIMIZED_BOTH);
+  public SwingPlatform(boolean fullScreen) {
+    window = new JFrame();
+    window.setState(Frame.MAXIMIZED_BOTH);
 
-    // fullscreen for aligned comparison with web version
-    // this.window.setUndecorated(true);
-    // Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    // this.window.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
+    if (fullScreen) {
+      window.setUndecorated(true);
+      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      window.setLocation(0, 0);
+      window.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
+    } else {
+      window.setSize(1400, 900);
+      window.setLocationRelativeTo(null);
+    }
+    window.setVisible(true);
 
-    this.window.setLocation(0, 0);
-    this.window.setSize(1400, 900);
-    this.window.setVisible(true);
-
-    this.canvas =
+    canvas =
         new JPanel() {
           @Override
           public void paint(java.awt.Graphics g) {
@@ -54,11 +60,10 @@ public class SwingPlatform implements Platform {
           }
         };
 
-    this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.window.add(this.canvas);
-    //    this.window.setSize(1400, 900);
+    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    window.add(canvas);
 
-    this.window.addComponentListener(
+    window.addComponentListener(
         new SimpleComponentListener() {
           @Override
           public void componentResized(ComponentEvent e) {
@@ -103,7 +108,7 @@ public class SwingPlatform implements Platform {
           }
         });
 
-    this.window.addKeyListener(
+    window.addKeyListener(
         new SimpleKeyListener() {
           @Override
           public void keyPressed(java.awt.event.KeyEvent e) {
@@ -112,7 +117,7 @@ public class SwingPlatform implements Platform {
                     e.getKeyChar() + "",
                     java.awt.event.KeyEvent.getKeyText(e.getKeyCode()),
                     KeyEvent.Type.TYPE,
-                    g.g.getFont().canDisplay(e.getKeyChar())));
+                    g.graphics.getFont().canDisplay(e.getKeyChar())));
             doFrame();
             doFrame();
           }
@@ -120,18 +125,13 @@ public class SwingPlatform implements Platform {
   }
 
   @Override
-  public int getHeight() {
-    return this.window.getRootPane().getHeight();
-  }
-
-  @Override
-  public int getWidth() {
-    return this.window.getRootPane().getWidth();
-  }
-
-  @Override
   public Graphics getGraphics() {
     return g;
+  }
+
+  @Override
+  public int getHeight() {
+    return window.getRootPane().getHeight();
   }
 
   @Override
@@ -150,13 +150,13 @@ public class SwingPlatform implements Platform {
   }
 
   @Override
-  public int getTextCursorPosition() {
-    return textCursorPosition;
+  public int getWidth() {
+    return window.getRootPane().getWidth();
   }
 
   @Override
-  public void setTextCursorPosition(int textCursorPosition) {
-    this.textCursorPosition = textCursorPosition;
+  public void println(String line) {
+    System.out.println(line);
   }
 
   @Override
@@ -165,27 +165,34 @@ public class SwingPlatform implements Platform {
     doFrame();
   }
 
-  private void resizeBuffer() {
-    this.buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+  private void addMouseEvent(java.awt.event.MouseEvent e, Type type) {
+    Point point = new Point(e.getPoint().x, e.getPoint().y);
+    mouseEvents.addLast(new MouseEvent(point, type, Point.createDelta(getMouseLocation(), point)));
+    doFrame();
+    doFrame();
   }
 
   private synchronized void doFrame() {
-    if (this.ui == null) {
+    if (ui == null) {
       return;
     }
     if (getWidth() == 0 || getHeight() == 0) {
       return;
     }
 
-    this.startFrame();
-    this.ui.run();
-    this.endFrame();
+    startFrame();
+    ui.run();
+    endFrame();
   }
 
   private void endFrame() {
-    this.window.getRootPane().getGraphics().drawImage(buffer, 0, 0, null);
-    this.mouseEvent = null;
-    this.keyEvent = null;
+    window.getRootPane().getGraphics().drawImage(buffer, 0, 0, null);
+    mouseEvent = null;
+    keyEvent = null;
+  }
+
+  private void resizeBuffer() {
+    buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_3BYTE_BGR);
   }
 
   private void startFrame() {
@@ -194,11 +201,11 @@ public class SwingPlatform implements Platform {
     }
 
     if (!mouseEvents.isEmpty()) {
-      this.mouseEvent = mouseEvents.removeFirst();
-      this.mouseLocation = getMouseEvent().point;
+      mouseEvent = mouseEvents.removeFirst();
+      mouseLocation = getMouseEvent().point;
     }
     if (!keyEvents.isEmpty()) {
-      this.keyEvent = keyEvents.removeFirst();
+      keyEvent = keyEvents.removeFirst();
     }
 
     Graphics2D swingGraphics = (Graphics2D) buffer.getGraphics();
@@ -212,17 +219,10 @@ public class SwingPlatform implements Platform {
         RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
     swingGraphics.setRenderingHint(
         RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-    if (this.g == null) {
-      this.g = new SwingGraphics(swingGraphics);
+    if (g == null) {
+      g = new SwingGraphics(swingGraphics);
     } else {
-      this.g.g = swingGraphics;
+      g.graphics = swingGraphics;
     }
-  }
-
-  private void addMouseEvent(java.awt.event.MouseEvent e, Type type) {
-    Point point = new Point(e.getPoint().x, e.getPoint().y);
-    mouseEvents.addLast(new MouseEvent(point, type, Point.createDelta(getMouseLocation(), point)));
-    doFrame();
-    doFrame();
   }
 }
