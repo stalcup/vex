@@ -30,7 +30,7 @@ public class MatchGame {
     int smallerDimension = Math.min(width, height);
 
     int gapSize = 10;
-    int squareSize = (smallerDimension - (gapSize * (gridSize + 1))) / gridSize;
+    int squareSize = (smallerDimension - gapSize * (gridSize + 1)) / gridSize;
 
     for (int i = 0; i < gridSize; i++) {
       for (int k = 0; k < gridSize; k++) {

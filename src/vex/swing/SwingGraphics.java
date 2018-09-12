@@ -12,83 +12,100 @@ import vex.geom.Point;
 
 public class SwingGraphics implements Graphics {
 
-  public Graphics2D g;
+  public Graphics2D graphics;
   private boolean strikeThrough;
   private int pointSize;
 
-  public SwingGraphics(Graphics2D g) {
-    this.g = g;
+  public SwingGraphics(Graphics2D graphics) {
+    this.graphics = graphics;
   }
 
   @Override
   public void drawRect(int x, int y, int width, int height) {
-    g.drawRect(x, y, width, height);
+    graphics.drawRect(x, y, width, height);
   }
 
   @Override
   public void drawString(String string, int x, int y) {
-    g.drawString(string, x, y);
+    Font originalFont = null;
+    // Maybe use a fallback for unicode symbols.
+    if (string.length() == 1) {
+      if (!graphics.getFont().canDisplay(string.charAt(0))) {
+        originalFont = graphics.getFont();
+        graphics.setFont(new Font("SanSerif", originalFont.getStyle(), originalFont.getSize()));
+      }
+    }
+    graphics.drawString(string, x, y);
+    if (originalFont != null) {
+      graphics.setFont(originalFont);
+    }
     if (strikeThrough) {
       Point size = getSize(string);
-      g.fillRect(x, y - (int) Math.round(size.y * .25), size.x, (int) Math.ceil(pointSize / 9));
+      graphics.fillRect(
+          x, y - (int) Math.round(size.y * .25), size.x, (int) Math.ceil(pointSize / 9));
     }
   }
 
   @Override
   public void drawString(
       String string, int x, int y, int clipX, int clipY, int clipWidth, int clipHeight) {
-    g.clipRect(clipX, clipY, clipWidth, clipHeight);
+    graphics.clipRect(clipX, clipY, clipWidth, clipHeight);
     drawString(string, x, y);
-    g.setClip(null);
+    graphics.setClip(null);
   }
 
   @Override
   public void fillRect(int x, int y, int width, int height) {
-    g.fillRect(x, y, width, height);
+    graphics.fillRect(x, y, width, height);
   }
 
   @Override
   public Point getSize(String string) {
-    GlyphVector glyphVector = g.getFont().createGlyphVector(g.getFontRenderContext(), string);
+    Font font = graphics.getFont();
+    font =
+        string.length() == 1 && !font.canDisplay(string.charAt(0))
+            ? new Font("SanSerif", font.getStyle(), font.getSize())
+            : font;
+    GlyphVector glyphVector = font.createGlyphVector(graphics.getFontRenderContext(), string);
     Rectangle2D bounds = glyphVector.getLogicalBounds();
     return new Point((int) Math.round(bounds.getWidth()), (int) Math.round(bounds.getHeight()));
   }
 
   @Override
   public void setColor(Color color) {
-    g.setColor(new java.awt.Color(color.r, color.g, color.b, color.a));
+    graphics.setColor(new java.awt.Color(color.r, color.g, color.b, color.a));
   }
 
   @Override
   public void setFont(String fontName, FontStyle style, int pointSize, boolean strikeThrough) {
     this.strikeThrough = strikeThrough;
     this.pointSize = pointSize;
-    g.setFont(new Font(fontName, style.code, pointSize));
+    graphics.setFont(new Font(fontName, style.code, pointSize));
   }
 
   @Override
   public void setStroke(int width) {
-    g.setStroke(new BasicStroke(width));
+    graphics.setStroke(new BasicStroke(width));
   }
 
   @Override
   public void drawDropShadow(
       int x, int y, int width, int height, int offsetX, int offsetY, int blur) {
-    java.awt.Color startingColor = g.getColor();
+    java.awt.Color startingColor = graphics.getColor();
 
     int blurOffset = startingColor.getAlpha() / (blur + 1) - 1;
 
     for (int i = 0; i < blur; i++) {
-      g.setColor(
+      graphics.setColor(
           new java.awt.Color(
               startingColor.getRed(),
               startingColor.getGreen(),
               startingColor.getBlue(),
               startingColor.getAlpha() / (i + 1) - blurOffset));
 
-      g.fillRoundRect(
+      graphics.fillRoundRect(
           x - i + offsetX, y - i + offsetY, width + i * 2, height + i * 2, i * 2, i * 2);
     }
-    g.setColor(startingColor);
+    graphics.setColor(startingColor);
   }
 }

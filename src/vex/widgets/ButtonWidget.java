@@ -12,7 +12,7 @@ public class ButtonWidget {
   private int y;
   private int width;
   private int height;
-  private String title;
+  private String text;
   private Color textColor;
   private Color backgroundColor;
   private Color mouseOverColor;
@@ -27,12 +27,8 @@ public class ButtonWidget {
     this.height = height;
   }
 
-  public ButtonWidget text(String title) {
-    this.title = title;
-    return this;
-  }
-
-  public ButtonWidget textColor(Color textColor) {
+  public ButtonWidget text(String text, Color textColor) {
+    this.text = text;
     this.textColor = textColor;
     return this;
   }
@@ -69,9 +65,9 @@ public class ButtonWidget {
       g.fillRect(x, y, width, height);
     }
 
-    if (title != null) {
+    if (text != null) {
       g.setColor(textColor);
-      Widgets.renderStringCenteredBoth(x, y, width, height, title);
+      Widgets.renderStringCenteredBoth(x, y, width, height, text);
     }
 
     return WidgetStatus.click(Platform.mouseEventIsIn(x, y, width, height, Type.DOWN));
