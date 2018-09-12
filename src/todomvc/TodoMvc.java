@@ -14,9 +14,12 @@ import vex.widgets.WidgetStatus;
 public class TodoMvc {
 
   private static class Style {
+    static Color pageBackgroundColor = new Color(245, 245, 245);
+
     static String appFontName = "Arial";
     static Color appTitleColor = new Color(175, 47, 47, 38);
-    static Color appBackgroundColor = new Color(245, 245, 245);
+    static int appTitleFontSize = 100;
+    static Color appBackgroundColor = Color.WHITE;
 
     static Color smallDropShadowColor = new Color(96, 96, 96, 255 * 3 / 10);
     static int smallDropShadowRadius = 6;
@@ -28,6 +31,8 @@ public class TodoMvc {
 
     static int todoHeight = 59;
     static int todoWidth = 550;
+    static int todoFontSize = 24;
+    static int newTodoHeight = 66;
     static Color newTodoPlaceholderColor = new Color(230, 230, 230);
     static Color doneTodoTextColor = Color.GRAY_70;
     static Color todoTextColor = new Color(77, 77, 77);
@@ -38,6 +43,8 @@ public class TodoMvc {
     static int filterAreaHeight = 40;
     static Color filterButtonTextColor = Color.GRAY_30;
     static Color filterButtonHoverColor = Color.GRAY_95;
+
+    static int doneButtonFontSize = 30;
   }
 
   private static class DataState {
@@ -67,93 +74,33 @@ public class TodoMvc {
       Widgets.currentFocusId = "new-todo-textbox";
     }
 
-    Widgets.renderRect(x, y, width, height, Style.appBackgroundColor);
+    Widgets.renderRect(x, y, width, height, Style.pageBackgroundColor);
 
     Widgets.setColor(Style.appTitleColor);
-    Widgets.setFont(Style.appFontName, FontStyle.PLAIN, 100);
+    Widgets.setFont(Style.appFontName, FontStyle.PLAIN, Style.appTitleFontSize);
     Widgets.renderStringCenteredHorizontal(x, y + 103, width, "todos");
 
     int left = (width - Style.todoWidth) / 2;
 
-    int dropShadowHeight = 66;
+    doDecorations(left);
 
-    for (Todo todo : DataState.todos) {
-      if (UiState.todosFilter.equals("done") && todo.done) {
-        continue;
-      } else if (UiState.todosFilter.equals("not done") && !todo.done) {
-        continue;
-      }
-      dropShadowHeight += Style.todoHeight;
-    }
-
-    Graphics g = Vex.platform.getGraphics();
-
-    Widgets.setColor(Style.bigDropShadowColor);
-    g.drawDropShadow(
-        left,
-        130,
-        Style.todoWidth,
-        dropShadowHeight + (DataState.todos.isEmpty() ? 0 : Style.filterAreaHeight),
-        0,
-        Style.bigDropShadowOffsetY + (DataState.todos.isEmpty() ? 0 : 10),
-        Style.bigDropShadowRadius);
-
-    if (!DataState.todos.isEmpty()) {
-      Widgets.setColor(Style.smallDropShadowColor);
-      g.drawDropShadow(
-          left + 6,
-          130 + dropShadowHeight + 10,
-          Style.todoWidth - 12,
-          Style.filterAreaHeight,
-          0,
-          Style.smallDropShadowOffsetY,
-          Style.smallDropShadowRadius);
-      Widgets.renderRect(
-          left + 6,
-          130 + dropShadowHeight + 10,
-          Style.todoWidth - 12,
-          Style.filterAreaHeight,
-          Color.WHITE);
-
-      Widgets.setColor(Style.smallDropShadowColor);
-      g.drawDropShadow(
-          left + 3,
-          130 + dropShadowHeight + 5,
-          Style.todoWidth - 6,
-          Style.filterAreaHeight,
-          0,
-          Style.smallDropShadowOffsetY,
-          Style.smallDropShadowRadius);
-      Widgets.renderRect(
-          left + 3,
-          130 + dropShadowHeight + 5,
-          Style.todoWidth - 6,
-          Style.filterAreaHeight,
-          Color.WHITE);
-    }
-
-    Widgets.setColor(Style.smallDropShadowColor);
-    g.drawDropShadow(
-        left,
-        130,
-        Style.todoWidth,
-        dropShadowHeight + (DataState.todos.isEmpty() ? 0 : Style.filterAreaHeight),
-        0,
-        Style.smallDropShadowOffsetY,
-        Style.smallDropShadowRadius);
-
-    int entryHeight = 66;
-    WidgetStatus entryStatus =
-        Widgets.textBox("new-todo-textbox", left, 130, Style.todoWidth, entryHeight)
-            .backgroundColor(Color.WHITE)
-            .font(Style.appFontName, FontStyle.PLAIN, 24, false)
+    WidgetStatus newTodoStatus =
+        Widgets.textBox("new-todo-textbox", left, 130, Style.todoWidth, Style.newTodoHeight)
+            .backgroundColor(Style.appBackgroundColor)
+            .font(Style.appFontName, FontStyle.PLAIN, Style.todoFontSize, false)
             .margin(60)
             .placeholderText("What needs to be done?", Style.newTodoPlaceholderColor)
             .text(UiState.newTodoDescription, Style.todoTextColor)
             .render();
+    if (newTodoStatus.updated) {
+      UiState.newTodoDescription = newTodoStatus.text;
+    } else if (!UiState.newTodoDescription.isEmpty() && "Enter".equals(newTodoStatus.keyText)) {
+      DataState.todos.add(new Todo(UiState.newTodoDescription));
+      UiState.newTodoDescription = "";
+    }
 
     if (!DataState.todos.isEmpty()) {
-      Widgets.setFont(Style.appFontName, FontStyle.PLAIN, 30);
+      Widgets.setFont(Style.appFontName, FontStyle.PLAIN, Style.doneButtonFontSize);
       if (Widgets.button(null, left + 6, 130 + 8, 45, 45)
           .text("✔", Color.GRAY_80)
           .render()
@@ -163,13 +110,6 @@ public class TodoMvc {
           todo.done = newState;
         }
       }
-    }
-
-    if (entryStatus.updated) {
-      UiState.newTodoDescription = entryStatus.text;
-    } else if (!UiState.newTodoDescription.isEmpty() && "Enter".equals(entryStatus.keyText)) {
-      DataState.todos.add(new Todo(UiState.newTodoDescription));
-      UiState.newTodoDescription = "";
     }
 
     int top = 196;
@@ -189,7 +129,7 @@ public class TodoMvc {
 
       WidgetStatus todoStatus =
           Widgets.textBox(todo.id, left, top, Style.todoWidth, Style.todoHeight)
-              .backgroundColor(Color.WHITE)
+              .backgroundColor(Style.appBackgroundColor)
               .font(Style.appFontName, FontStyle.PLAIN, 24, todo.done)
               .margin(60)
               .text(todo.description, todo.done ? Style.doneTodoTextColor : Style.todoTextColor)
@@ -226,7 +166,8 @@ public class TodoMvc {
 
     if (!DataState.todos.isEmpty()) {
 
-      Widgets.renderRect(left, top, Style.todoWidth, Style.filterAreaHeight, Color.WHITE);
+      Widgets.renderRect(
+          left, top, Style.todoWidth, Style.filterAreaHeight, Style.appBackgroundColor);
       Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
       Widgets.setColor(Style.filterButtonTextColor);
@@ -275,5 +216,72 @@ public class TodoMvc {
 
     DataState.todos.removeAll(UiState.deletedTodos);
     UiState.deletedTodos.clear();
+  }
+
+  private static void doDecorations(int left) {
+    int dropShadowHeight = 66;
+    for (Todo todo : DataState.todos) {
+      if (UiState.todosFilter.equals("done") && todo.done) {
+        continue;
+      } else if (UiState.todosFilter.equals("not done") && !todo.done) {
+        continue;
+      }
+      dropShadowHeight += Style.todoHeight;
+    }
+
+    Widgets.setColor(Style.bigDropShadowColor);
+    Graphics g = Vex.platform.getGraphics();
+    g.drawDropShadow(
+        left,
+        130,
+        Style.todoWidth,
+        dropShadowHeight + (DataState.todos.isEmpty() ? 0 : Style.filterAreaHeight),
+        0,
+        Style.bigDropShadowOffsetY + (DataState.todos.isEmpty() ? 0 : 10),
+        Style.bigDropShadowRadius);
+
+    if (!DataState.todos.isEmpty()) {
+      Widgets.setColor(Style.smallDropShadowColor);
+      g.drawDropShadow(
+          left + 6,
+          130 + dropShadowHeight + 10,
+          Style.todoWidth - 12,
+          Style.filterAreaHeight,
+          0,
+          Style.smallDropShadowOffsetY,
+          Style.smallDropShadowRadius);
+      Widgets.renderRect(
+          left + 6,
+          130 + dropShadowHeight + 10,
+          Style.todoWidth - 12,
+          Style.filterAreaHeight,
+          Style.appBackgroundColor);
+
+      Widgets.setColor(Style.smallDropShadowColor);
+      g.drawDropShadow(
+          left + 3,
+          130 + dropShadowHeight + 5,
+          Style.todoWidth - 6,
+          Style.filterAreaHeight,
+          0,
+          Style.smallDropShadowOffsetY,
+          Style.smallDropShadowRadius);
+      Widgets.renderRect(
+          left + 3,
+          130 + dropShadowHeight + 5,
+          Style.todoWidth - 6,
+          Style.filterAreaHeight,
+          Style.appBackgroundColor);
+    }
+
+    Widgets.setColor(Style.smallDropShadowColor);
+    g.drawDropShadow(
+        left,
+        130,
+        Style.todoWidth,
+        dropShadowHeight + (DataState.todos.isEmpty() ? 0 : Style.filterAreaHeight),
+        0,
+        Style.smallDropShadowOffsetY,
+        Style.smallDropShadowRadius);
   }
 }
