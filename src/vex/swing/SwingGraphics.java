@@ -27,7 +27,18 @@ public class SwingGraphics implements Graphics {
 
   @Override
   public void drawString(String string, int x, int y) {
+    Font originalFont = null;
+    // Maybe use a fallback for unicode symbols.
+    if (string.length() == 1) {
+      if (!graphics.getFont().canDisplay(string.charAt(0))) {
+        originalFont = graphics.getFont();
+        graphics.setFont(new Font("SanSerif", originalFont.getStyle(), originalFont.getSize()));
+      }
+    }
     graphics.drawString(string, x, y);
+    if (originalFont != null) {
+      graphics.setFont(originalFont);
+    }
     if (strikeThrough) {
       Point size = getSize(string);
       graphics.fillRect(
@@ -50,8 +61,12 @@ public class SwingGraphics implements Graphics {
 
   @Override
   public Point getSize(String string) {
-    GlyphVector glyphVector =
-        graphics.getFont().createGlyphVector(graphics.getFontRenderContext(), string);
+    Font font = graphics.getFont();
+    font =
+        string.length() == 1 && !font.canDisplay(string.charAt(0))
+            ? new Font("SanSerif", font.getStyle(), font.getSize())
+            : font;
+    GlyphVector glyphVector = font.createGlyphVector(graphics.getFontRenderContext(), string);
     Rectangle2D bounds = glyphVector.getLogicalBounds();
     return new Point((int) Math.round(bounds.getWidth()), (int) Math.round(bounds.getHeight()));
   }
