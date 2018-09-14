@@ -1,8 +1,8 @@
 package vex;
 
-import vex.Graphics.FontStyle;
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
+import vex.widgets.AreaWidget;
 import vex.widgets.ButtonWidget;
 import vex.widgets.TextBoxWidget;
 
@@ -97,28 +97,42 @@ public class Widgets {
     g().drawString(text, x + width / 2 - stringSize.x / 2, y);
   }
 
-  public static void renderStringLeft(int x, int y, int width, int height, String text) {
+  public static void renderAlignedString(
+      int x, int y, int width, int height, String text, HorizontalAlignment horizontalAlignment) {
     Point stringSize = getStringSize(text);
-    g().drawString(
-            text,
-            x,
-            y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-            x,
-            y,
-            width,
-            height);
+
+    if (horizontalAlignment == HorizontalAlignment.LEFT) {
+      g().drawString(
+              text,
+              x,
+              y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
+              x,
+              y,
+              width,
+              height);
+    } else if (horizontalAlignment == HorizontalAlignment.CENTER) {
+      g().drawString(
+              text,
+              x + width / 2 - stringSize.x / 2,
+              y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f));
+    } else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
+      g().drawString(
+              text,
+              x + width - stringSize.x,
+              y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
+              x,
+              y,
+              width,
+              height);
+    }
+  }
+
+  public static void renderStringLeft(int x, int y, int width, int height, String text) {
+    renderAlignedString(x, y, width, height, text, HorizontalAlignment.LEFT);
   }
 
   public static void renderStringRight(int x, int y, int width, int height, String text) {
-    Point stringSize = getStringSize(text);
-    g().drawString(
-            text,
-            x + width - stringSize.x,
-            y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-            x,
-            y,
-            width,
-            height);
+    renderAlignedString(x, y, width, height, text, HorizontalAlignment.RIGHT);
   }
 
   public static void renderTitleBar(
@@ -144,5 +158,9 @@ public class Widgets {
 
   public static TextBoxWidget textBox(String focusId, int x, int y, int width, int height) {
     return new TextBoxWidget(focusId, x, y, width, height);
+  }
+
+  public static AreaWidget area(int x, int y, int width, int height) {
+    return new AreaWidget(x, y, width, height);
   }
 }

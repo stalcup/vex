@@ -2,7 +2,6 @@ package vex.widgets;
 
 import vex.Color;
 import vex.Graphics;
-import vex.Graphics.FontStyle;
 import vex.Platform;
 import vex.Vex;
 import vex.Widgets;
@@ -10,44 +9,21 @@ import vex.events.KeyEvent;
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
 
-public class TextBoxWidget {
+public class TextBoxWidget extends AreaWidget {
 
-  private Color backgroundColor;
-  private int border;
-  private Color borderColor;
+  private static int NOT_SET = -1;
+
   private String focusId;
-  private int height;
-  private int margin;
+  private int margin = NOT_SET;
   private String placeholderText;
   private Color placeholderTextColor;
   private String text;
   private Color textColor;
   private Color underlineColor;
-  private int width;
-  private int x;
-  private int y;
-  private String fontName;
-  private FontStyle fontStyle;
-  private int fontPointSize;
-  private boolean fontStrikeThrough;
 
   public TextBoxWidget(String focusId, int x, int y, int width, int height) {
+    super(x, y, width, height);
     this.focusId = focusId;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-  }
-
-  public TextBoxWidget backgroundColor(Color backgroundColor) {
-    this.backgroundColor = backgroundColor;
-    return this;
-  }
-
-  public TextBoxWidget border(int border, Color borderColor) {
-    this.border = border;
-    this.borderColor = borderColor;
-    return this;
   }
 
   public TextBoxWidget margin(int margin) {
@@ -62,37 +38,27 @@ public class TextBoxWidget {
   }
 
   public WidgetStatus render() {
+    super.render();
+
     if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
       Widgets.currentFocusId = focusId;
       Widgets.textCursorPosition = text.length();
     }
 
     Graphics g = Vex.platform.getGraphics();
-    if (backgroundColor != null) {
-      g.setColor(backgroundColor);
-      g.fillRect(x, y, width, height);
-    }
-
-    if (borderColor != null) {
-      g.setColor(borderColor);
-      g.setStroke(border);
-      g.drawRect(x - border, y - border, width + border * 2 - 1, height + border * 2 - 1);
-    }
-
     if (underlineColor != null) {
       g.setColor(underlineColor);
       g.fillRect(x, y + height - 1, width, 1);
     }
 
-    if (fontName != null) {
-      g.setFont(fontName, fontStyle, fontPointSize, fontStrikeThrough);
-    }
+    int effectiveMargin = margin == NOT_SET ? fontPointSize / 2 : margin;
 
     if ((text == null || text.isEmpty())
         && placeholderText != null
         && placeholderTextColor != null) {
       g.setColor(placeholderTextColor);
-      Widgets.renderStringLeft(x + margin, y, width - margin, height, placeholderText);
+      Widgets.renderStringLeft(
+          x + effectiveMargin, y, width - effectiveMargin, height, placeholderText);
     }
 
     boolean updatedText = false;
@@ -144,17 +110,18 @@ public class TextBoxWidget {
       Point stringSize = Widgets.getStringSize(text.substring(0, Widgets.textCursorPosition));
       int textCursorX = stringSize.x;
 
-      int textCursorPixelX = x + margin + textCursorX;
+      int textCursorPixelX = x + effectiveMargin + textCursorX;
       if (textCursorPixelX < x + width) {
         g.fillRect(textCursorPixelX, y + (height - stringSize.y) / 2, 2, stringSize.y);
       }
     }
 
-    Widgets.renderStringLeft(x + margin, y, width - margin, height, text);
+    Widgets.renderStringLeft(x + effectiveMargin, y, width - effectiveMargin, height, text);
 
     return WidgetStatus.text(updatedText, text, keyText);
   }
 
+  @Override
   public TextBoxWidget text(String text, Color textColor) {
     this.text = text;
     this.textColor = textColor;
@@ -163,14 +130,6 @@ public class TextBoxWidget {
 
   public TextBoxWidget underlineColor(Color underlineColor) {
     this.underlineColor = underlineColor;
-    return this;
-  }
-
-  public TextBoxWidget font(String name, FontStyle style, int pointSize, boolean strikeThrough) {
-    fontName = name;
-    fontStyle = style;
-    fontPointSize = pointSize;
-    fontStrikeThrough = strikeThrough;
     return this;
   }
 }

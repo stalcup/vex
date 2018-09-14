@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import vex.Color;
-import vex.Graphics.FontStyle;
+import vex.FontStyle;
 import vex.Widgets;
 import vex.geom.Point;
 
@@ -56,9 +56,10 @@ public class MatchGame {
                 gapSize + k * (gapSize + squareSize),
                 squareSize,
                 squareSize)
-            .text(buttonLabel)
-            .textColor(Color.GRAY_10)
+            .text(buttonLabel, Color.GRAY_10)
             .backgroundColor(buttonColor)
+            .border(2, Color.BLACK)
+            .cornerRadius(10)
             .hoverColor(mouseOverColor)
             .render()
             .clicked) {
@@ -90,11 +91,10 @@ public class MatchGame {
             height < width ? gapSize * 2 + squareSize : smallerDimension,
             squareSize * 5 / 2,
             squareSize)
-        .text("Clicks: " + clickCounter)
-        .textColor(Color.BLACK)
+        .text("Clicks: " + clickCounter, Color.BLACK)
         .backgroundColor(new Color(196, 196, 255))
-        .hoverColor(null)
-        .setSelectedColor(null)
+        .border(2, Color.BLACK)
+        .cornerRadius(10)
         .render();
 
     if (confirmingReset) {
@@ -105,11 +105,10 @@ public class MatchGame {
               height < width ? gapSize : smallerDimension,
               squareSize,
               squareSize)
-          .text("Yes")
-          .textColor(Color.BLACK)
+          .text("Yes", Color.BLACK)
           .backgroundColor(resetButtonColor)
-          .hoverColor(null)
-          .setSelectedColor(null)
+          .border(2, Color.BLACK)
+          .cornerRadius(10)
           .render()
           .clicked) {
         confirmingReset = false;
@@ -123,11 +122,10 @@ public class MatchGame {
               height < width ? gapSize : smallerDimension + gapSize + squareSize,
               squareSize,
               squareSize)
-          .text("No")
-          .textColor(Color.BLACK)
+          .text("No", Color.BLACK)
           .backgroundColor(resetButtonColor)
-          .hoverColor(null)
-          .setSelectedColor(null)
+          .border(2, Color.BLACK)
+          .cornerRadius(10)
           .render()
           .clicked) {
         confirmingReset = false;

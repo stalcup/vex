@@ -7,6 +7,7 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
 
 import vex.Color;
+import vex.FontStyle;
 import vex.Graphics;
 import vex.geom.Point;
 
@@ -107,5 +108,15 @@ public class SwingGraphics implements Graphics {
           x - i + offsetX, y - i + offsetY, width + i * 2, height + i * 2, i * 2, i * 2);
     }
     graphics.setColor(startingColor);
+  }
+
+  @Override
+  public void drawRoundRect(int x, int y, int width, int height, int cornerRadius) {
+    graphics.drawRoundRect(x, y, width, height, cornerRadius, cornerRadius);
+  }
+
+  @Override
+  public void fillRoundRect(int x, int y, int width, int height, int cornerRadius) {
+    graphics.fillRoundRect(x, y, width, height, cornerRadius, cornerRadius);
   }
 }

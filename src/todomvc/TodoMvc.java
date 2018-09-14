@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vex.Color;
+import vex.FontStyle;
 import vex.Graphics;
-import vex.Graphics.FontStyle;
 import vex.Platform;
 import vex.Vex;
 import vex.Widgets;
@@ -86,10 +86,10 @@ public class TodoMvc {
 
     WidgetStatus newTodoStatus =
         Widgets.textBox("new-todo-textbox", left, 130, Style.todoWidth, Style.newTodoHeight)
-            .backgroundColor(Style.appBackgroundColor)
-            .font(Style.appFontName, FontStyle.PLAIN, Style.todoFontSize, false)
             .margin(60)
             .placeholderText("What needs to be done?", Style.newTodoPlaceholderColor)
+            .backgroundColor(Style.appBackgroundColor)
+            .font(Style.appFontName, FontStyle.PLAIN, Style.todoFontSize, false)
             .text(UiState.newTodoDescription, Style.todoTextColor)
             .render();
     if (newTodoStatus.updated) {
@@ -129,9 +129,9 @@ public class TodoMvc {
 
       WidgetStatus todoStatus =
           Widgets.textBox(todo.id, left, top, Style.todoWidth, Style.todoHeight)
+              .margin(60)
               .backgroundColor(Style.appBackgroundColor)
               .font(Style.appFontName, FontStyle.PLAIN, 24, todo.done)
-              .margin(60)
               .text(todo.description, todo.done ? Style.doneTodoTextColor : Style.todoTextColor)
               .render();
       if (todoStatus.updated) {

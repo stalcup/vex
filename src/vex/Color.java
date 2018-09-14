@@ -14,7 +14,19 @@ public class Color {
   public static final Color GRAY_90 = new Color(0.90f, 0.90f, 0.90f);
   public static final Color GRAY_95 = new Color(0.95f, 0.95f, 0.95f);
   public static final Color WHITE = new Color(255, 255, 255);
+
+  // We got all the colors.
+  public static final Color RED = new Color(255, 0, 0);
+  public static final Color ORANGE = new Color(255, 128, 0);
   public static final Color YELLOW = new Color(255, 255, 0);
+  public static final Color YEGEEN = new Color(128, 255, 0);
+  public static final Color GREEN = new Color(0, 255, 0);
+  public static final Color CYAN = new Color(0, 255, 255);
+  public static final Color BLUE = new Color(0, 0, 255);
+  public static final Color PURPLE = new Color(128, 0, 255);
+  public static final Color PINKLE = new Color(255, 0, 255);
+  public static final Color PINK = new Color(255, 0, 128);
+
   public static final Color HIGH_HAZE = new Color(0, 0, 0, 64);
   public static final Color MEDIUM_HAZE = new Color(0, 0, 0, 32);
   public static final Color LOW_HAZE = new Color(0, 0, 0, 16);

@@ -3,6 +3,7 @@ package vex.web;
 import elemental2.dom.CanvasRenderingContext2D;
 import jsinterop.base.Js;
 import vex.Color;
+import vex.FontStyle;
 import vex.Graphics;
 import vex.geom.Point;
 
@@ -108,5 +109,19 @@ public class WebGraphics implements Graphics {
     context2d.shadowBlur = 0;
     context2d.shadowOffsetX = 0;
     context2d.shadowOffsetY = 0;
+  }
+
+  @Override
+  public void drawRoundRect(int x, int y, int width, int height, int cornerRadius) {
+    context2d.lineJoin = "round";
+    context2d.lineWidth = cornerRadius;
+    context2d.strokeRect(x, y, width, height);
+  }
+
+  @Override
+  public void fillRoundRect(int x, int y, int width, int height, int cornerRadius) {
+    context2d.lineJoin = "round";
+    context2d.lineWidth = cornerRadius;
+    context2d.fillRect(x, y, width, height);
   }
 }
