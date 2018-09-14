@@ -48,7 +48,7 @@ public class MatchGame {
         }
 
         Color buttonColor = isResetButton || isMatched ? resetButtonColor : Color.GRAY_60;
-        Color mouseOverColor = isResetButton || isMatched ? resetButtonColor : Color.GRAY_80;
+        Color hoverColor = isResetButton || isMatched ? resetButtonColor : Color.GRAY_80;
 
         if (Widgets.button(
                 null,
@@ -60,7 +60,7 @@ public class MatchGame {
             .backgroundColor(buttonColor)
             .border(2, Color.BLACK)
             .cornerRadius(10)
-            .hoverColor(mouseOverColor)
+            .hoverColor(hoverColor)
             .render()
             .clicked) {
 

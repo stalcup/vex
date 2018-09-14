@@ -9,7 +9,7 @@ import vex.Vex;
 import vex.Widgets;
 
 public class AreaWidget {
-  private Color mouseOverColor;
+  private Color hoverColor;
   private Color backgroundColor;
   private Color borderColor;
   private int borderWidth;
@@ -26,8 +26,8 @@ public class AreaWidget {
   protected int fontPointSize;
   protected boolean fontStrikeThrough;
 
-  public AreaWidget hoverColor(Color mouseOverColor) {
-    this.mouseOverColor = mouseOverColor;
+  public AreaWidget hoverColor(Color hoverColor) {
+    this.hoverColor = hoverColor;
     return this;
   }
 
@@ -75,8 +75,8 @@ public class AreaWidget {
   }
 
   protected void renderHoverColor(Graphics g) {
-    if (mouseOverColor != null && Platform.mouseLocationIsIn(x, y, width, height)) {
-      g.setColor(mouseOverColor);
+    if (hoverColor != null && Platform.mouseLocationIsIn(x, y, width, height)) {
+      g.setColor(hoverColor);
       fillRectOrRoundRect(g);
     }
   }
