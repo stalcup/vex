@@ -1,38 +1,27 @@
 package vex.widgets;
 
-import vex.Color;
 import vex.Graphics;
 import vex.Platform;
 import vex.Vex;
 import vex.events.MouseEvent.Type;
 
-public class ButtonWidget extends AreaWidget {
-  private Color selectedColor;
-  private String focusId;
-
-  public ButtonWidget(String focusId, int x, int y, int width, int height) {
+public class ButtonWidget extends Widget {
+  public ButtonWidget(int x, int y, int width, int height) {
     super(x, y, width, height);
-    this.focusId = focusId;
   }
 
-  public ButtonWidget setSelectedColor(Color selectedColor) {
-    this.selectedColor = selectedColor;
-    return this;
-  }
-
-  @Override
-  public WidgetStatus render() {
+  public WidgetStatus render(ButtonStyle<?> style) {
     Graphics g = Vex.platform.getGraphics();
 
-    renderBackground(g);
-    renderHoverColor(g);
-    if (selectedColor != null) {
-      g.setColor(selectedColor);
-      fillRectOrRoundRect(g);
+    renderBackground(g, style);
+    renderHoverColor(g, style);
+    if (style.selectedColor != null) {
+      g.setColor(style.selectedColor);
+      fillRectOrRoundRect(g, style);
     }
-    renderFont(g);
-    renderText(g);
-    renderBorder(g);
+    renderFont(g, style);
+    renderText(g, style);
+    renderBorder(g, style);
 
     return WidgetStatus.click(Platform.mouseEventIsIn(x, y, width, height, Type.DOWN));
   }

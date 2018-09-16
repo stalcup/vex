@@ -86,12 +86,14 @@ public class TodoMvc {
 
     WidgetStatus newTodoStatus =
         Widgets.textBox("new-todo-textbox", left, 130, Style.todoWidth, Style.newTodoHeight)
-            .margin(60)
-            .placeholderText("What needs to be done?", Style.newTodoPlaceholderColor)
-            .backgroundColor(Style.appBackgroundColor)
-            .font(Style.appFontName, FontStyle.PLAIN, Style.todoFontSize, false)
-            .text(UiState.newTodoDescription, Style.todoTextColor)
-            .render();
+            .text(UiState.newTodoDescription)
+            .render(
+                Widgets.textBoxStyle()
+                    .margin(60)
+                    .placeholderText("What needs to be done?", Style.newTodoPlaceholderColor)
+                    .backgroundColor(Style.appBackgroundColor)
+                    .font(Style.appFontName, FontStyle.PLAIN, Style.todoFontSize, false)
+                    .textColor(Style.todoTextColor));
     if (newTodoStatus.updated) {
       UiState.newTodoDescription = newTodoStatus.text;
     } else if (!UiState.newTodoDescription.isEmpty() && "Enter".equals(newTodoStatus.keyText)) {
@@ -101,9 +103,8 @@ public class TodoMvc {
 
     if (!DataState.todos.isEmpty()) {
       Widgets.setFont(Style.appFontName, FontStyle.PLAIN, Style.doneButtonFontSize);
-      if (Widgets.button(null, left + 6, 130 + 8, 45, 45)
-          .text("✔", Color.GRAY_80)
-          .render()
+      if (Widgets.button(left + 6, 130 + 8, 45, 45)
+          .render(Widgets.buttonStyle().text("✔", Color.GRAY_80))
           .clicked) {
         boolean newState = !DataState.todos.get(0).done;
         for (Todo todo : DataState.todos) {
@@ -129,33 +130,32 @@ public class TodoMvc {
 
       WidgetStatus todoStatus =
           Widgets.textBox(todo.id, left, top, Style.todoWidth, Style.todoHeight)
-              .margin(60)
-              .backgroundColor(Style.appBackgroundColor)
-              .font(Style.appFontName, FontStyle.PLAIN, 24, todo.done)
-              .text(todo.description, todo.done ? Style.doneTodoTextColor : Style.todoTextColor)
-              .render();
+              .text(todo.description)
+              .render(
+                  Widgets.textBoxStyle()
+                      .margin(60)
+                      .backgroundColor(Style.appBackgroundColor)
+                      .font(Style.appFontName, FontStyle.PLAIN, 24, todo.done)
+                      .textColor(todo.done ? Style.doneTodoTextColor : Style.todoTextColor));
       if (todoStatus.updated) {
         todo.description = todoStatus.text;
       }
       Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
       Widgets.setFont(Style.appFontName, FontStyle.PLAIN, 30);
-      if (Widgets.button(null, left + 6, top + 8, 45, 45)
-          .text(todo.done ? "✔" : "◯", Style.doneTodoTextColor)
-          .render()
+      if (Widgets.button(left + 6, top + 8, 45, 45)
+          .render(Widgets.buttonStyle().text(todo.done ? "✔" : "◯", Style.doneTodoTextColor))
           .clicked) {
         todo.done = !todo.done;
       }
 
       if (Platform.mouseLocationIsIn(left, top, Style.todoWidth, Style.todoHeight)) {
         if (Widgets.button(
-                null,
                 left + Style.todoWidth - Style.todoHeight + Style.todoHeight / 4,
                 top + Style.todoHeight / 4 + 1,
                 Style.todoHeight / 2,
                 Style.todoHeight / 2)
-            .text("✘", Style.deleteTodoButtonColor)
-            .render()
+            .render(Widgets.buttonStyle().text("✘", Style.deleteTodoButtonColor))
             .clicked) {
           UiState.deletedTodos.add(todo);
         }
@@ -179,36 +179,39 @@ public class TodoMvc {
           Style.filterAreaHeight,
           notDoneCount + " item" + (notDoneCount > 1 ? "s" : "") + " left");
 
-      if (Widgets.button(null, left + 200, top + 3, 30, Style.filterAreaHeight - 6)
-          .text(
-              "All",
-              UiState.todosFilter.equals("all")
-                  ? Style.selectedFilterButtonTextColor
-                  : Style.filterButtonTextColor)
-          .hoverColor(Style.filterButtonHoverColor)
-          .render()
+      if (Widgets.button(left + 200, top + 3, 30, Style.filterAreaHeight - 6)
+          .render(
+              Widgets.buttonStyle()
+                  .text(
+                      "All",
+                      UiState.todosFilter.equals("all")
+                          ? Style.selectedFilterButtonTextColor
+                          : Style.filterButtonTextColor)
+                  .hoverColor(Style.filterButtonHoverColor))
           .clicked) {
         UiState.todosFilter = "all";
       }
-      if (Widgets.button(null, left + 240, top + 3, 50, Style.filterAreaHeight - 6)
-          .text(
-              "Active",
-              UiState.todosFilter.equals("done")
-                  ? Style.selectedFilterButtonTextColor
-                  : Style.filterButtonTextColor)
-          .hoverColor(Style.filterButtonHoverColor)
-          .render()
+      if (Widgets.button(left + 240, top + 3, 50, Style.filterAreaHeight - 6)
+          .render(
+              Widgets.buttonStyle()
+                  .text(
+                      "Active",
+                      UiState.todosFilter.equals("done")
+                          ? Style.selectedFilterButtonTextColor
+                          : Style.filterButtonTextColor)
+                  .hoverColor(Style.filterButtonHoverColor))
           .clicked) {
         UiState.todosFilter = "done";
       }
-      if (Widgets.button(null, left + 300, top + 3, 80, Style.filterAreaHeight - 6)
-          .text(
-              "Completed",
-              UiState.todosFilter.equals("not done")
-                  ? Style.selectedFilterButtonTextColor
-                  : Style.filterButtonTextColor)
-          .hoverColor(Style.filterButtonHoverColor)
-          .render()
+      if (Widgets.button(left + 300, top + 3, 80, Style.filterAreaHeight - 6)
+          .render(
+              Widgets.buttonStyle()
+                  .text(
+                      "Completed",
+                      UiState.todosFilter.equals("not done")
+                          ? Style.selectedFilterButtonTextColor
+                          : Style.filterButtonTextColor)
+                  .hoverColor(Style.filterButtonHoverColor))
           .clicked) {
         UiState.todosFilter = "not done";
       }

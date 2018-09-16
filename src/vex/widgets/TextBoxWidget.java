@@ -1,6 +1,5 @@
 package vex.widgets;
 
-import vex.Color;
 import vex.Graphics;
 import vex.Platform;
 import vex.Vex;
@@ -9,36 +8,18 @@ import vex.events.KeyEvent;
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
 
-public class TextBoxWidget extends AreaWidget {
-
-  private static int NOT_SET = -1;
+public class TextBoxWidget extends Widget {
 
   private String focusId;
-  private int margin = NOT_SET;
-  private String placeholderText;
-  private Color placeholderTextColor;
   private String text;
-  private Color textColor;
-  private Color underlineColor;
 
   public TextBoxWidget(String focusId, int x, int y, int width, int height) {
     super(x, y, width, height);
     this.focusId = focusId;
   }
 
-  public TextBoxWidget margin(int margin) {
-    this.margin = margin;
-    return this;
-  }
-
-  public TextBoxWidget placeholderText(String placeholderText, Color placeholderTextColor) {
-    this.placeholderText = placeholderText;
-    this.placeholderTextColor = placeholderTextColor;
-    return this;
-  }
-
-  public WidgetStatus render() {
-    super.render();
+  public WidgetStatus render(TextBoxStyle<?> style) {
+    super.render(style);
 
     if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
       Widgets.currentFocusId = focusId;
@@ -46,25 +27,26 @@ public class TextBoxWidget extends AreaWidget {
     }
 
     Graphics g = Vex.platform.getGraphics();
-    if (underlineColor != null) {
-      g.setColor(underlineColor);
+    if (style.underlineColor != null) {
+      g.setColor(style.underlineColor);
       g.fillRect(x, y + height - 1, width, 1);
     }
 
-    int effectiveMargin = margin == NOT_SET ? fontPointSize / 2 : margin;
+    int effectiveMargin =
+        style.margin == TextBoxStyle.NOT_SET ? style.fontPointSize / 2 : style.margin;
 
     if ((text == null || text.isEmpty())
-        && placeholderText != null
-        && placeholderTextColor != null) {
-      g.setColor(placeholderTextColor);
+        && style.placeholderText != null
+        && style.placeholderTextColor != null) {
+      g.setColor(style.placeholderTextColor);
       Widgets.renderStringLeft(
-          x + effectiveMargin, y, width - effectiveMargin, height, placeholderText);
+          x + effectiveMargin, y, width - effectiveMargin, height, style.placeholderText);
     }
 
     boolean updatedText = false;
     String keyText = null;
 
-    g.setColor(textColor);
+    g.setColor(style.textColor);
     boolean focused = Widgets.currentFocusId == focusId;
     if (focused) {
       KeyEvent keyEvent = Vex.platform.getKeyEvent();
@@ -121,15 +103,8 @@ public class TextBoxWidget extends AreaWidget {
     return WidgetStatus.text(updatedText, text, keyText);
   }
 
-  @Override
-  public TextBoxWidget text(String text, Color textColor) {
+  public TextBoxWidget text(String text) {
     this.text = text;
-    this.textColor = textColor;
-    return this;
-  }
-
-  public TextBoxWidget underlineColor(Color underlineColor) {
-    this.underlineColor = underlineColor;
     return this;
   }
 }

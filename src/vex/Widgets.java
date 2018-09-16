@@ -2,9 +2,12 @@ package vex;
 
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
-import vex.widgets.AreaWidget;
+import vex.widgets.ButtonStyle;
 import vex.widgets.ButtonWidget;
+import vex.widgets.Style;
+import vex.widgets.TextBoxStyle;
 import vex.widgets.TextBoxWidget;
+import vex.widgets.Widget;
 
 public class Widgets {
 
@@ -152,15 +155,27 @@ public class Widgets {
     g().setFont(fontName, fontStyle, fontSize, false);
   }
 
-  public static ButtonWidget button(String focusId, int x, int y, int width, int height) {
-    return new ButtonWidget(focusId, x, y, width, height);
+  public static ButtonWidget button(int x, int y, int width, int height) {
+    return new ButtonWidget(x, y, width, height);
   }
 
   public static TextBoxWidget textBox(String focusId, int x, int y, int width, int height) {
     return new TextBoxWidget(focusId, x, y, width, height);
   }
 
-  public static AreaWidget area(int x, int y, int width, int height) {
-    return new AreaWidget(x, y, width, height);
+  public static Widget area(int x, int y, int width, int height) {
+    return new Widget(x, y, width, height);
+  }
+
+  public static Style<Style<?>> style() {
+    return new Style<Style<?>>();
+  }
+
+  public static TextBoxStyle<TextBoxStyle<?>> textBoxStyle() {
+    return new TextBoxStyle<TextBoxStyle<?>>();
+  }
+
+  public static ButtonStyle<ButtonStyle<?>> buttonStyle() {
+    return new ButtonStyle<ButtonStyle<?>>();
   }
 }

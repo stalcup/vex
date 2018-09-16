@@ -30,6 +30,9 @@ public class Color {
   public static final Color HIGH_HAZE = new Color(0, 0, 0, 64);
   public static final Color MEDIUM_HAZE = new Color(0, 0, 0, 32);
   public static final Color LOW_HAZE = new Color(0, 0, 0, 16);
+  public static final Color LOW_MIST = new Color(255, 255, 255, 64);
+  public static final Color MEDIUM_MIST = new Color(255, 255, 255, 128);
+  public static final Color HIGH_MIST = new Color(255, 255, 255, 192);
 
   public final int r, g, b, a;
 
