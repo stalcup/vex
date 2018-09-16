@@ -35,7 +35,7 @@ public class Scratch {
             .cornerRadius(10)
             .textColor(Color.BLACK)
             .font("Arial", FontStyle.BOLD, 14, false)
-            .hoverColor(Color.YELLOW);
+            .hoverBackgroundColor(Color.YELLOW);
   }
 
   public static void doUi(int x, int y, int width, int height) {

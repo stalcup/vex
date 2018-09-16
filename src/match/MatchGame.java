@@ -31,7 +31,7 @@ public class MatchGame {
         Widgets.buttonStyle()
             .textColor(Color.BLACK)
             .border(2, Color.BLACK)
-            .hoverColor(Color.MEDIUM_MIST)
+            .hoverBackgroundColor(Color.MEDIUM_MIST)
             .cornerRadius(10);
 
     static Color resetButtonColor = Color.GRAY_60;
@@ -91,7 +91,7 @@ public class MatchGame {
                         isResetButton
                             ? Styles.resetButtonColor
                             : (isSelected ? Color.WHITE : Color.GRAY_60))
-                    .hoverColor(UiState.confirmingReset ? null : Color.MEDIUM_MIST)
+                    .hoverBackgroundColor(UiState.confirmingReset ? null : Color.MEDIUM_MIST)
                     .borderWidth(isSelected ? 4 : 2)
                     .text(buttonLabel))
             .clicked) {

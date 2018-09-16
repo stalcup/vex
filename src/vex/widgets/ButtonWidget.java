@@ -14,15 +14,18 @@ public class ButtonWidget extends Widget {
     Graphics g = Vex.platform.getGraphics();
 
     renderBackground(g, style);
-    renderHoverColor(g, style);
-    if (style.selectedColor != null) {
-      g.setColor(style.selectedColor);
-      fillRectOrRoundRect(g, style);
-    }
+    renderSelectedColor(g, style);
     renderFont(g, style);
     renderText(g, style);
     renderBorder(g, style);
 
     return WidgetStatus.click(Platform.mouseEventIsIn(x, y, width, height, Type.DOWN));
+  }
+
+  protected void renderSelectedColor(Graphics g, ButtonStyle<?> style) {
+    if (style.selectedColor != null) {
+      g.setColor(style.selectedColor);
+      fillRectOrRoundRect(g, style);
+    }
   }
 }

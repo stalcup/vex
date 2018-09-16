@@ -43,4 +43,13 @@ public interface Platform {
         && point.x < x + width
         && point.y < y + height;
   }
+
+  @FunctionalInterface
+  interface ResponseMessageHandler {
+    void handleResponseMessage(String responseMessage);
+  }
+
+  void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler);
+
+  void httpGet(String path, ResponseMessageHandler responseMessageHandler);
 }

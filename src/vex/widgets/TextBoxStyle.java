@@ -3,7 +3,6 @@ package vex.widgets;
 import vex.Color;
 
 public class TextBoxStyle<T extends TextBoxStyle<?>> extends Style<T> {
-  public static int NOT_SET = -1;
   public int margin = NOT_SET;
   public String placeholderText;
   public Color placeholderTextColor;

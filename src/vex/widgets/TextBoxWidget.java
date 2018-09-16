@@ -10,6 +10,8 @@ import vex.geom.Point;
 
 public class TextBoxWidget extends Widget {
 
+  public static String updatedText;
+
   private String focusId;
   private String text;
 
@@ -21,9 +23,11 @@ public class TextBoxWidget extends Widget {
   public WidgetStatus render(TextBoxStyle<?> style) {
     super.render(style);
 
-    if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
+    if (focusId != null && Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
       Widgets.currentFocusId = focusId;
-      Widgets.textCursorPosition = text.length();
+      if (text != null) {
+        Widgets.textCursorPosition = text.length();
+      }
     }
 
     Graphics g = Vex.platform.getGraphics();
@@ -41,6 +45,10 @@ public class TextBoxWidget extends Widget {
       g.setColor(style.placeholderTextColor);
       Widgets.renderStringLeft(
           x + effectiveMargin, y, width - effectiveMargin, height, style.placeholderText);
+    }
+
+    if (text == null) {
+      return WidgetStatus.text(false, null, null);
     }
 
     boolean updatedText = false;
@@ -99,6 +107,10 @@ public class TextBoxWidget extends Widget {
     }
 
     Widgets.renderStringLeft(x + effectiveMargin, y, width - effectiveMargin, height, text);
+
+    if (updatedText) {
+      TextBoxWidget.updatedText = text;
+    }
 
     return WidgetStatus.text(updatedText, text, keyText);
   }

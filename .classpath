@@ -8,5 +8,11 @@
 	<classpathentry kind="lib" path="lib/base-1.0.0-RC1.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-dev.jar"/>
 	<classpathentry kind="lib" path="lib/elemental2-promise-1.0.0-RC1.jar"/>
+	<classpathentry kind="lib" path="lib/jodd-http-5.0.4.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Vex/lib/jodd-http-5.0.4-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jodd-core-5.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

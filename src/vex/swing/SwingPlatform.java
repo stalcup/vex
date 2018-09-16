@@ -9,10 +9,15 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
 import vex.Graphics;
 import vex.Platform;
 import vex.events.KeyEvent;
@@ -122,6 +127,19 @@ public class SwingPlatform implements Platform {
             doFrame();
           }
         });
+
+    Thread httpProcessingQueue =
+        new Thread() {
+          public void run() {
+            while (true) {
+              try {
+                queuedHttpRequests.takeFirst().run();
+              } catch (InterruptedException e) {
+              }
+            }
+          };
+        };
+    httpProcessingQueue.start();
   }
 
   @Override
@@ -224,5 +242,40 @@ public class SwingPlatform implements Platform {
     } else {
       g.graphics = swingGraphics;
     }
+  }
+
+  private BlockingDeque<Runnable> queuedHttpRequests = new LinkedBlockingDeque<>();
+
+  @Override
+  public void httpGet(String path, ResponseMessageHandler responseMessageHandler) {
+    queuedHttpRequests.add(
+        () -> {
+          HttpRequest.get(path)
+              .sendAndReceive(
+                  new Consumer<HttpResponse>() {
+                    @Override
+                    public void accept(HttpResponse httpResponse) {
+                      responseMessageHandler.handleResponseMessage(httpResponse.bodyText());
+                      doFrame();
+                    }
+                  });
+        });
+  }
+
+  @Override
+  public void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler) {
+    queuedHttpRequests.add(
+        () -> {
+          HttpRequest.post(path)
+              .body(body)
+              .sendAndReceive(
+                  new Consumer<HttpResponse>() {
+                    @Override
+                    public void accept(HttpResponse httpResponse) {
+                      responseMessageHandler.handleResponseMessage(httpResponse.bodyText());
+                      doFrame();
+                    }
+                  });
+        });
   }
 }

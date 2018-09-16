@@ -1,5 +1,6 @@
 package vex.widgets;
 
+import vex.Color;
 import vex.Graphics;
 import vex.Platform;
 import vex.Vex;
@@ -18,11 +19,10 @@ public class Widget {
     this.height = height;
   }
 
-  public WidgetStatus render(Style style) {
+  public WidgetStatus render(Style<?> style) {
     Graphics g = Vex.platform.getGraphics();
 
     renderBackground(g, style);
-    renderHoverColor(g, style);
     renderFont(g, style);
     renderText(g, style);
     renderBorder(g, style);
@@ -30,18 +30,23 @@ public class Widget {
     return null;
   }
 
-  protected void renderHoverColor(Graphics g, Style style) {
-    if (style.hoverColor != null && Platform.mouseLocationIsIn(x, y, width, height)) {
-      g.setColor(style.hoverColor);
-      fillRectOrRoundRect(g, style);
-    }
-  }
+  protected void renderBorder(Graphics g, Style<?> style) {
+    int borderWidth = style.borderWidth;
+    Color borderColor = style.borderColor;
 
-  protected void renderBorder(Graphics g, Style style) {
-    if (style.borderWidth > 0) {
-      g.setColor(style.borderColor);
-      g.setStroke(style.borderWidth);
-      int pad = (int) Math.floor(style.borderWidth / 2);
+    if (Platform.mouseLocationIsIn(x, y, width, height)) {
+      if (style.hoverBorderWidth != Style.NOT_SET) {
+        borderWidth = style.hoverBorderWidth;
+      }
+      if (style.hoverBorderColor != null) {
+        borderColor = style.hoverBorderColor;
+      }
+    }
+
+    if (borderWidth > 0) {
+      g.setColor(borderColor);
+      g.setStroke(borderWidth);
+      int pad = (int) Math.floor(borderWidth / 2);
       if (style.cornerRadius > 0) {
         g.drawRoundRect(x - 1, y - 1, width + 1, height + 1, style.cornerRadius);
       } else {
@@ -50,28 +55,33 @@ public class Widget {
     }
   }
 
-  protected void renderText(Graphics g, Style style) {
+  protected void renderText(Graphics g, Style<?> style) {
     if (style.text != null) {
       g.setColor(style.textColor);
       Widgets.renderAlignedString(x, y, width, height, style.text, style.textHorizontalAlignment);
     }
   }
 
-  protected void renderFont(Graphics g, Style style) {
+  protected void renderFont(Graphics g, Style<?> style) {
     if (style.fontName != null) {
       g.setFont(style.fontName, style.fontStyle, style.fontPointSize, style.fontStrikeThrough);
     }
   }
 
-  protected void renderBackground(Graphics g, Style style) {
-    if (style.backgroundColor != null) {
-      g.setColor(style.backgroundColor);
+  protected void renderBackground(Graphics g, Style<?> style) {
+    Color color = style.backgroundColor;
 
+    if (style.hoverBackgroundColor != null && Platform.mouseLocationIsIn(x, y, width, height)) {
+      color = style.hoverBackgroundColor;
+    }
+
+    if (color != null) {
+      g.setColor(color);
       fillRectOrRoundRect(g, style);
     }
   }
 
-  protected void fillRectOrRoundRect(Graphics g, Style style) {
+  protected void fillRectOrRoundRect(Graphics g, Style<?> style) {
     if (style.cornerRadius > 0) {
       g.fillRoundRect(x, y, width, height, style.cornerRadius);
     } else {

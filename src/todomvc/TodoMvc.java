@@ -42,7 +42,7 @@ public class TodoMvc {
 
     static int filterAreaHeight = 40;
     static Color filterButtonTextColor = Color.GRAY_30;
-    static Color filterButtonHoverColor = Color.GRAY_95;
+    static Color filterButtonHoverBackgroundColor = Color.GRAY_95;
 
     static int doneButtonFontSize = 30;
   }
@@ -187,7 +187,7 @@ public class TodoMvc {
                       UiState.todosFilter.equals("all")
                           ? Style.selectedFilterButtonTextColor
                           : Style.filterButtonTextColor)
-                  .hoverColor(Style.filterButtonHoverColor))
+                  .hoverBackgroundColor(Style.filterButtonHoverBackgroundColor))
           .clicked) {
         UiState.todosFilter = "all";
       }
@@ -199,7 +199,7 @@ public class TodoMvc {
                       UiState.todosFilter.equals("done")
                           ? Style.selectedFilterButtonTextColor
                           : Style.filterButtonTextColor)
-                  .hoverColor(Style.filterButtonHoverColor))
+                  .hoverBackgroundColor(Style.filterButtonHoverBackgroundColor))
           .clicked) {
         UiState.todosFilter = "done";
       }
@@ -211,7 +211,7 @@ public class TodoMvc {
                       UiState.todosFilter.equals("not done")
                           ? Style.selectedFilterButtonTextColor
                           : Style.filterButtonTextColor)
-                  .hoverColor(Style.filterButtonHoverColor))
+                  .hoverBackgroundColor(Style.filterButtonHoverBackgroundColor))
           .clicked) {
         UiState.todosFilter = "not done";
       }

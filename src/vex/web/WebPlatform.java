@@ -137,4 +137,11 @@ public class WebPlatform implements Platform {
       keyEvent = keyEvents.removeFirst();
     }
   }
+
+  @Override
+  public void httpPost(
+      String path, String requestMessage, ResponseMessageHandler responseMessageHandler) {}
+
+  @Override
+  public void httpGet(String path, ResponseMessageHandler responseMessageHandler) {}
 }

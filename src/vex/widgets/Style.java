@@ -5,10 +5,16 @@ import vex.FontStyle;
 import vex.HorizontalAlignment;
 
 public class Style<T extends Style<?>> {
-  public Color hoverColor;
+  public static int NOT_SET = -1;
+
+  public Color hoverBackgroundColor;
   public Color backgroundColor;
+  public Color hoverBorderColor;
+  public int hoverBorderWidth = NOT_SET;
+
   public Color borderColor;
   public int borderWidth;
+
   public int cornerRadius;
   public String text;
   public Color textColor;
@@ -23,8 +29,24 @@ public class Style<T extends Style<?>> {
     return (T) this;
   }
 
-  public T hoverColor(Color hoverColor) {
-    this.hoverColor = hoverColor;
+  public T hoverBackgroundColor(Color hoverBackgroundColor) {
+    this.hoverBackgroundColor = hoverBackgroundColor;
+    return self();
+  }
+
+  public T hoverBorderWidth(int hoverBorderWidth) {
+    this.hoverBorderWidth = hoverBorderWidth;
+    return self();
+  }
+
+  public T hoverBorder(int hoverBorderWidth, Color hoverBorderColor) {
+    this.hoverBorderWidth = hoverBorderWidth;
+    this.hoverBorderColor = hoverBorderColor;
+    return self();
+  }
+
+  public T hoverBorderColor(Color hoverBorderColor) {
+    this.hoverBorderColor = hoverBorderColor;
     return self();
   }
 
