@@ -14,5 +14,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jodd-core-5.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/nanohttpd-2.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
