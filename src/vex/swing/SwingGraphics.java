@@ -5,6 +5,13 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.GlyphVector;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import vex.Color;
 import vex.FontStyle;
@@ -118,5 +125,38 @@ public class SwingGraphics implements Graphics {
   @Override
   public void fillRoundRect(int x, int y, int width, int height, int cornerRadius) {
     graphics.fillRoundRect(x, y, width, height, cornerRadius, cornerRadius);
+  }
+
+  @Override
+  public void drawImage(int x, int y, String imagePath) {
+    BufferedImage image = getOrLoadImage(imagePath);
+    graphics.drawImage(image, x, y, null);
+  }
+
+  @Override
+  public void drawImage(int x, int y, float scale, String imagePath) {
+    BufferedImage image = getOrLoadImage(imagePath);
+    graphics.drawImage(
+        image,
+        x,
+        y,
+        (int) (x + image.getWidth() * scale),
+        (int) (y + image.getHeight() * scale),
+        null);
+  }
+
+  private Map<String, BufferedImage> imagesByPath = new HashMap<>();
+
+  private BufferedImage getOrLoadImage(String imagePath) {
+    if (imagesByPath.containsKey(imagePath)) {
+      return imagesByPath.get(imagePath);
+    }
+    try {
+      BufferedImage image = ImageIO.read(new File(imagePath));
+      imagesByPath.put(imagePath, image);
+      return image;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

@@ -19,6 +19,7 @@ public class Style<T extends Style<?>> {
   public String text;
   public Color textColor;
   public HorizontalAlignment textHorizontalAlignment = HorizontalAlignment.CENTER;
+  public int paddingLeft;
   public String fontName;
   public FontStyle fontStyle;
   public int fontPointSize;
@@ -27,6 +28,16 @@ public class Style<T extends Style<?>> {
   @SuppressWarnings("unchecked")
   protected T self() {
     return (T) this;
+  }
+
+  public T paddingLeft(int paddingLeft) {
+    this.paddingLeft = paddingLeft;
+    return self();
+  }
+
+  public T textHorizontalAlignment(HorizontalAlignment textHorizontalAlignment) {
+    this.textHorizontalAlignment = textHorizontalAlignment;
+    return self();
   }
 
   public T hoverBackgroundColor(Color hoverBackgroundColor) {

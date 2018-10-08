@@ -58,7 +58,13 @@ public class Widget {
   protected void renderText(Graphics g, Style<?> style) {
     if (style.text != null) {
       g.setColor(style.textColor);
-      Widgets.renderAlignedString(x, y, width, height, style.text, style.textHorizontalAlignment);
+      Widgets.renderAlignedString(
+          x + style.paddingLeft,
+          y,
+          width - style.paddingLeft,
+          height,
+          style.text,
+          style.textHorizontalAlignment);
     }
   }
 
