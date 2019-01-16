@@ -1,18 +1,28 @@
 package vex;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
-import vex.widgets.ButtonStyle;
+import vex.styles.ButtonStyle;
 import vex.widgets.ButtonWidget;
-import vex.widgets.Style;
-import vex.widgets.TextBoxStyle;
+import vex.widgets.DatePickerWidget;
+import vex.widgets.DateTextBoxWidget;
+import vex.widgets.RadioButtonWidget;
+import vex.widgets.RadioButtonsWidget;
+import vex.widgets.SelectWidget;
 import vex.widgets.TextBoxWidget;
 import vex.widgets.Widget;
+import vex.widgets.WidgetStatus;
 
 public class Widgets {
 
-  public static String currentFocusId;
-  public static int textCursorPosition;
+  public static boolean focusNext = true;
+  private static String lastFocusId;
+  private static String currentFocusId;
+  private static int focusSetOnFrameId;
 
   public static float doVerticalScrollBar(
       String focusId,
@@ -40,16 +50,17 @@ public class Widgets {
     g().setColor(barColor);
     g().fillRect(x, y + offsetPixels, width, visiblePixels);
 
-    if (Platform.mouseLocationIsIn(x, y, width, height) || currentFocusId == focusId) {
+    if (Platform.mouseLocationIsIn(x, y, width, height)
+        || Strings.equals(getCurrentFocusId(), focusId)) {
       g().fillRect(x, y + offsetPixels, width, visiblePixels);
     }
 
     if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
-      currentFocusId = focusId;
+      setCurrentFocusId(focusId);
       // Aka, start dragging.
     }
 
-    if (currentFocusId == focusId
+    if (Strings.equals(getCurrentFocusId(), focusId)
         && Vex.platform.getMouseEvent() != null
         && Vex.platform.getMouseEvent().type == Type.DRAG) {
       scrollPercent += Vex.platform.getMouseEvent().delta.y * 100f / hiddenPixels;
@@ -58,8 +69,8 @@ public class Widgets {
       scrollPercent = Math.min(100, scrollPercent);
     }
 
-    if (currentFocusId == focusId && Platform.mouseEventIs(Type.UP)) {
-      currentFocusId = null;
+    if (Strings.equals(getCurrentFocusId(), focusId) && Platform.mouseEventIs(Type.UP)) {
+      setCurrentFocusId(null);
     }
 
     return scrollPercent;
@@ -83,6 +94,10 @@ public class Widgets {
     g().fillRect(x, y, width, height);
   }
 
+  public static void renderRect(Rect rect, Color color) {
+    renderRect(rect.x, rect.y, rect.width, rect.height, color);
+  }
+
   public static void renderStringCenteredBoth(int x, int y, int width, int height, String text) {
     Point stringSize = getStringSize(text);
     g().drawString(
@@ -100,11 +115,15 @@ public class Widgets {
     g().drawString(text, x + width / 2 - stringSize.x / 2, y);
   }
 
+  public static void renderAlignedString(Rect rect, String text, Align horizontalAlignment) {
+    renderAlignedString(rect.x, rect.y, rect.width, rect.height, text, horizontalAlignment);
+  }
+
   public static void renderAlignedString(
-      int x, int y, int width, int height, String text, HorizontalAlignment horizontalAlignment) {
+      int x, int y, int width, int height, String text, Align horizontalAlignment) {
     Point stringSize = getStringSize(text);
 
-    if (horizontalAlignment == HorizontalAlignment.LEFT) {
+    if (horizontalAlignment == Align.MIN) {
       g().drawString(
               text,
               x,
@@ -113,12 +132,12 @@ public class Widgets {
               y,
               width,
               height);
-    } else if (horizontalAlignment == HorizontalAlignment.CENTER) {
+    } else if (horizontalAlignment == Align.MID) {
       g().drawString(
               text,
               x + width / 2 - stringSize.x / 2,
               y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f));
-    } else if (horizontalAlignment == HorizontalAlignment.RIGHT) {
+    } else if (horizontalAlignment == Align.MAX) {
       g().drawString(
               text,
               x + width - stringSize.x,
@@ -130,12 +149,36 @@ public class Widgets {
     }
   }
 
+  public static void drawAlignedImage(
+      int x,
+      int y,
+      int width,
+      int height,
+      Base64Image image,
+      Align horizontalAlignment,
+      int imageShiftX,
+      int imageShiftY) {
+    if (horizontalAlignment == Align.MIN) {
+      g().drawImage(x + imageShiftX, y + imageShiftY + (height - image.height) / 2, image);
+    } else if (horizontalAlignment == Align.MID) {
+      g().drawImage(
+              x + imageShiftX + (width - image.width) / 2,
+              y + imageShiftY + (height - image.height) / 2,
+              image);
+    } else if (horizontalAlignment == Align.MAX) {
+      g().drawImage(
+              x + imageShiftX + width - image.width,
+              y + imageShiftY + (height - image.height) / 2,
+              image);
+    }
+  }
+
   public static void renderStringLeft(int x, int y, int width, int height, String text) {
-    renderAlignedString(x, y, width, height, text, HorizontalAlignment.LEFT);
+    renderAlignedString(x, y, width, height, text, Align.MIN);
   }
 
   public static void renderStringRight(int x, int y, int width, int height, String text) {
-    renderAlignedString(x, y, width, height, text, HorizontalAlignment.RIGHT);
+    renderAlignedString(x, y, width, height, text, Align.MAX);
   }
 
   public static void renderTitleBar(
@@ -155,27 +198,112 @@ public class Widgets {
     g().setFont(fontName, fontStyle, fontSize, false);
   }
 
-  public static ButtonWidget button(int x, int y, int width, int height) {
-    return new ButtonWidget(x, y, width, height);
+  public static ButtonWidget label(Rect rect) {
+    return button(rect);
   }
 
-  public static TextBoxWidget textBox(String focusId, int x, int y, int width, int height) {
-    return new TextBoxWidget(focusId, x, y, width, height);
+  public static ButtonWidget button(Rect rect) {
+    return new ButtonWidget(rect);
   }
 
-  public static Widget area(int x, int y, int width, int height) {
-    return new Widget(x, y, width, height);
+  public static TextBoxWidget textBox(String focusId, Rect rect) {
+    return new TextBoxWidget(focusId, rect);
   }
 
-  public static Style<Style<?>> style() {
-    return new Style<Style<?>>();
+  public static RadioButtonWidget radioButton(String focusId, Rect radioButtonBounds) {
+    return new RadioButtonWidget(focusId, radioButtonBounds);
   }
 
-  public static TextBoxStyle<TextBoxStyle<?>> textBoxStyle() {
-    return new TextBoxStyle<TextBoxStyle<?>>();
+  public static RadioButtonsWidget radioButtons(
+      Rect radioButtonsBounds,
+      Map<String, String> selectableKeysByDisplayValue,
+      String selectedKey) {
+    return new RadioButtonsWidget(radioButtonsBounds, selectableKeysByDisplayValue, selectedKey);
   }
 
-  public static ButtonStyle<ButtonStyle<?>> buttonStyle() {
-    return new ButtonStyle<ButtonStyle<?>>();
+  public static Widget area(Rect rect) {
+    return new Widget(rect);
+  }
+
+  public static WidgetStatus startRawDropDown(
+      boolean open,
+      String selectionsPreview,
+      Rect closedRect,
+      ButtonStyle<?> buttonStyle,
+      int optionsCount) {
+    if (selectionsPreview != null) {
+      buttonStyle.text(selectionsPreview);
+    }
+    if (button(closedRect).render(buttonStyle).clicked) {
+      open = true;
+      Vex.platform.consumeMouseEvent();
+    }
+
+    int displayRowCount = Math.min(optionsCount, 5);
+    Rect openRect = closedRect.dupe().scaleHeight(displayRowCount).panDown(closedRect.height + 10);
+
+    List<Rect> rowRects = null;
+
+    if (open) {
+      Vex.platform.beginLayer();
+      rowRects = openRect.dupe().asRows(displayRowCount);
+    }
+
+    if (open && Platform.mouseEventIs(Type.DOWN) && !Platform.mouseEventIsIn(openRect, Type.DOWN)) {
+      open = false;
+    }
+
+    return WidgetStatus.open(open, rowRects);
+  }
+
+  public static SelectWidget textDropDown(
+      Rect closedBounds, List<String> options, Set<String> selections) {
+    return new SelectWidget(closedBounds, options, selections);
+  }
+
+  public static DatePickerWidget datePicker(Rect bounds) {
+    return new DatePickerWidget(bounds);
+  }
+
+  public static DateTextBoxWidget dateTextBox(String focusId, Rect bounds) {
+    return new DateTextBoxWidget(focusId, bounds);
+  }
+
+  public static void maybeFocusMeNext(String focusId) {
+    if (focusNext) {
+      focusNext = false;
+      setCurrentFocusId(focusId);
+      Vex.platform.consumeKeyEvent();
+    }
+  }
+
+  public static String getCurrentFocusId() {
+    return currentFocusId;
+  }
+
+  public static void setCurrentFocusId(String currentFocusId) {
+    lastFocusId = Widgets.currentFocusId;
+    Widgets.currentFocusId = currentFocusId;
+    focusSetOnFrameId = Vex.platform.getFrameid();
+  }
+
+  public static String getLastFocusId() {
+    return lastFocusId;
+  }
+
+  public static void clearFocusIfNotSetThisFrame() {
+    if (focusSetOnFrameId != Vex.platform.getFrameid()) {
+      setCurrentFocusId(null);
+    }
+  }
+
+  public static void setLastFocusId(String lastFocusId) {
+    Widgets.lastFocusId = lastFocusId;
+  }
+
+  public static boolean lostFocus(String focusId) {
+    return focusId != null
+        && focusId.equals(lastFocusId)
+        && focusSetOnFrameId == Vex.platform.getFrameid() - 1;
   }
 }

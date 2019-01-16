@@ -2,6 +2,7 @@ package vex.web;
 
 import elemental2.dom.CanvasRenderingContext2D;
 import jsinterop.base.Js;
+import vex.Base64Image;
 import vex.Color;
 import vex.FontStyle;
 import vex.Graphics;
@@ -123,5 +124,33 @@ public class WebGraphics implements Graphics {
     context2d.lineJoin = "round";
     context2d.lineWidth = cornerRadius;
     context2d.fillRect(x, y, width, height);
+  }
+
+  @Override
+  public void drawImage(int x, int y, String path) {
+    throw new RuntimeException("drawImage not supported");
+  }
+
+  @Override
+  public void drawImage(int x, int y, float scale, String path) {
+    throw new RuntimeException("drawImage not supported");
+  }
+
+  @Override
+  public void drawImage(int x, int y, Base64Image image) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void drawOval(int x, int y, int width, int height) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void fillOval(int x, int y, int width, int height) {
+    // TODO Auto-generated method stub
+
   }
 }

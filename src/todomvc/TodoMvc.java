@@ -3,10 +3,13 @@ package todomvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
 import vex.Graphics;
 import vex.Platform;
+import vex.Rect;
+import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
 import vex.widgets.WidgetStatus;
@@ -70,8 +73,8 @@ public class TodoMvc {
   }
 
   public static void doUi(int x, int y, int width, int height) {
-    if (Widgets.currentFocusId == null) {
-      Widgets.currentFocusId = "new-todo-textbox";
+    if (Widgets.getCurrentFocusId() == null) {
+      Widgets.setCurrentFocusId("new-todo-textbox");
     }
 
     Widgets.renderRect(x, y, width, height, Style.pageBackgroundColor);
@@ -85,10 +88,11 @@ public class TodoMvc {
     doDecorations(left);
 
     WidgetStatus newTodoStatus =
-        Widgets.textBox("new-todo-textbox", left, 130, Style.todoWidth, Style.newTodoHeight)
+        Widgets.textBox(
+                "new-todo-textbox", new Rect(left, 130, Style.todoWidth, Style.newTodoHeight))
             .text(UiState.newTodoDescription)
             .render(
-                Widgets.textBoxStyle()
+                BaseStyles.textBox()
                     .margin(60)
                     .placeholderText("What needs to be done?", Style.newTodoPlaceholderColor)
                     .backgroundColor(Style.appBackgroundColor)
@@ -103,8 +107,8 @@ public class TodoMvc {
 
     if (!DataState.todos.isEmpty()) {
       Widgets.setFont(Style.appFontName, FontStyle.PLAIN, Style.doneButtonFontSize);
-      if (Widgets.button(left + 6, 130 + 8, 45, 45)
-          .render(Widgets.buttonStyle().text("✔", Color.GRAY_80))
+      if (Widgets.button(new Rect(left + 6, 130 + 8, 45, 45))
+          .render(BaseStyles.button().text("✔", Color.GRAY_80))
           .clicked) {
         boolean newState = !DataState.todos.get(0).done;
         for (Todo todo : DataState.todos) {
@@ -124,15 +128,15 @@ public class TodoMvc {
         continue;
       }
 
-      if (todo.done && Widgets.currentFocusId == todo.id) {
-        Widgets.currentFocusId = null;
+      if (todo.done && Strings.equals(Widgets.getCurrentFocusId(), todo.id)) {
+        Widgets.setCurrentFocusId(null);
       }
 
       WidgetStatus todoStatus =
-          Widgets.textBox(todo.id, left, top, Style.todoWidth, Style.todoHeight)
+          Widgets.textBox(todo.id, new Rect(left, top, Style.todoWidth, Style.todoHeight))
               .text(todo.description)
               .render(
-                  Widgets.textBoxStyle()
+                  BaseStyles.textBox()
                       .margin(60)
                       .backgroundColor(Style.appBackgroundColor)
                       .font(Style.appFontName, FontStyle.PLAIN, 24, todo.done)
@@ -143,19 +147,20 @@ public class TodoMvc {
       Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
       Widgets.setFont(Style.appFontName, FontStyle.PLAIN, 30);
-      if (Widgets.button(left + 6, top + 8, 45, 45)
-          .render(Widgets.buttonStyle().text(todo.done ? "✔" : "◯", Style.doneTodoTextColor))
+      if (Widgets.button(new Rect(left + 6, top + 8, 45, 45))
+          .render(BaseStyles.button().text(todo.done ? "✔" : "◯", Style.doneTodoTextColor))
           .clicked) {
         todo.done = !todo.done;
       }
 
       if (Platform.mouseLocationIsIn(left, top, Style.todoWidth, Style.todoHeight)) {
         if (Widgets.button(
-                left + Style.todoWidth - Style.todoHeight + Style.todoHeight / 4,
-                top + Style.todoHeight / 4 + 1,
-                Style.todoHeight / 2,
-                Style.todoHeight / 2)
-            .render(Widgets.buttonStyle().text("✘", Style.deleteTodoButtonColor))
+                new Rect(
+                    left + Style.todoWidth - Style.todoHeight + Style.todoHeight / 4,
+                    top + Style.todoHeight / 4 + 1,
+                    Style.todoHeight / 2,
+                    Style.todoHeight / 2))
+            .render(BaseStyles.button().text("✘", Style.deleteTodoButtonColor))
             .clicked) {
           UiState.deletedTodos.add(todo);
         }
@@ -179,9 +184,9 @@ public class TodoMvc {
           Style.filterAreaHeight,
           notDoneCount + " item" + (notDoneCount > 1 ? "s" : "") + " left");
 
-      if (Widgets.button(left + 200, top + 3, 30, Style.filterAreaHeight - 6)
+      if (Widgets.button(new Rect(left + 200, top + 3, 30, Style.filterAreaHeight - 6))
           .render(
-              Widgets.buttonStyle()
+              BaseStyles.button()
                   .text(
                       "All",
                       UiState.todosFilter.equals("all")
@@ -191,9 +196,9 @@ public class TodoMvc {
           .clicked) {
         UiState.todosFilter = "all";
       }
-      if (Widgets.button(left + 240, top + 3, 50, Style.filterAreaHeight - 6)
+      if (Widgets.button(new Rect(left + 240, top + 3, 50, Style.filterAreaHeight - 6))
           .render(
-              Widgets.buttonStyle()
+              BaseStyles.button()
                   .text(
                       "Active",
                       UiState.todosFilter.equals("done")
@@ -203,9 +208,9 @@ public class TodoMvc {
           .clicked) {
         UiState.todosFilter = "done";
       }
-      if (Widgets.button(left + 300, top + 3, 80, Style.filterAreaHeight - 6)
+      if (Widgets.button(new Rect(left + 300, top + 3, 80, Style.filterAreaHeight - 6))
           .render(
-              Widgets.buttonStyle()
+              BaseStyles.button()
                   .text(
                       "Completed",
                       UiState.todosFilter.equals("not done")

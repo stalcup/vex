@@ -7,28 +7,30 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
+import vex.Rect;
 import vex.Widgets;
 import vex.geom.Point;
-import vex.widgets.ButtonStyle;
-import vex.widgets.Style;
+import vex.styles.ButtonStyle;
+import vex.styles.Style;
 
 public class MatchGame {
 
   private static class Styles {
     static ButtonStyle<?> gridButtonStyle =
-        Widgets.buttonStyle().border(2, Color.BLACK).cornerRadius(10).textColor(Color.GRAY_10);
+        BaseStyles.button().border(2, Color.BLACK).cornerRadius(10).textColor(Color.GRAY_10);
 
     static Style<?> infoLabelStyle =
-        Widgets.style()
+        BaseStyles.style()
             .textColor(Color.BLACK)
             .backgroundColor(new Color(196, 196, 255))
             .border(2, Color.BLACK)
             .cornerRadius(10);
 
     static ButtonStyle<?> confirmationButtonsStyle =
-        Widgets.buttonStyle()
+        BaseStyles.button()
             .textColor(Color.BLACK)
             .border(2, Color.BLACK)
             .hoverBackgroundColor(Color.MEDIUM_MIST)
@@ -81,10 +83,11 @@ public class MatchGame {
         }
 
         if (Widgets.button(
-                Styles.gridCellGap + cellX * (Styles.gridCellGap + UiState.squareSize),
-                Styles.gridCellGap + cellY * (Styles.gridCellGap + UiState.squareSize),
-                UiState.squareSize,
-                UiState.squareSize)
+                new Rect(
+                    Styles.gridCellGap + cellX * (Styles.gridCellGap + UiState.squareSize),
+                    Styles.gridCellGap + cellY * (Styles.gridCellGap + UiState.squareSize),
+                    UiState.squareSize,
+                    UiState.squareSize))
             .render(
                 Styles.gridButtonStyle
                     .backgroundColor(
@@ -110,21 +113,27 @@ public class MatchGame {
     Widgets.setFont("Impact", FontStyle.PLAIN, UiState.squareSize / 2);
 
     Widgets.area(
-            height < width ? UiState.smallerDimension : Styles.gridCellGap * 2 + UiState.squareSize,
-            height < width ? Styles.gridCellGap * 2 + UiState.squareSize : UiState.smallerDimension,
-            UiState.squareSize * 5 / 2,
-            UiState.squareSize)
+            new Rect(
+                height < width
+                    ? UiState.smallerDimension
+                    : Styles.gridCellGap * 2 + UiState.squareSize,
+                height < width
+                    ? Styles.gridCellGap * 2 + UiState.squareSize
+                    : UiState.smallerDimension,
+                UiState.squareSize * 5 / 2,
+                UiState.squareSize))
         .render(Styles.infoLabelStyle.text("Clicks: " + DataState.clickCounter));
 
     Widgets.area(
-            height < width
-                ? UiState.smallerDimension
-                : Styles.gridCellGap * 3 + UiState.squareSize * 2,
-            height < width
-                ? Styles.gridCellGap * 3 + UiState.squareSize * 2
-                : UiState.smallerDimension,
-            UiState.squareSize * 5 / 2,
-            UiState.squareSize)
+            new Rect(
+                height < width
+                    ? UiState.smallerDimension
+                    : Styles.gridCellGap * 3 + UiState.squareSize * 2,
+                height < width
+                    ? Styles.gridCellGap * 3 + UiState.squareSize * 2
+                    : UiState.smallerDimension,
+                UiState.squareSize * 5 / 2,
+                UiState.squareSize))
         .render(
             Styles.infoLabelStyle.text(
                 +DataState.matchedButtonIndexes.size() / 2
@@ -134,10 +143,11 @@ public class MatchGame {
     if (UiState.confirmingReset) {
       Widgets.setFont("Arial", FontStyle.BOLD, 20);
       if (Widgets.button(
-              UiState.smallerDimension / 2,
-              UiState.smallerDimension / 2,
-              UiState.squareSize,
-              UiState.squareSize)
+              new Rect(
+                  UiState.smallerDimension / 2,
+                  UiState.smallerDimension / 2,
+                  UiState.squareSize,
+                  UiState.squareSize))
           .render(
               Styles.confirmationButtonsStyle.text("Yes").backgroundColor(Styles.resetButtonColor))
           .clicked) {
@@ -147,10 +157,11 @@ public class MatchGame {
         DataState.clickCounter = 0;
       }
       if (Widgets.button(
-              UiState.smallerDimension / 2 + Styles.gridCellGap + UiState.squareSize,
-              UiState.smallerDimension / 2,
-              UiState.squareSize,
-              UiState.squareSize)
+              new Rect(
+                  UiState.smallerDimension / 2 + Styles.gridCellGap + UiState.squareSize,
+                  UiState.smallerDimension / 2,
+                  UiState.squareSize,
+                  UiState.squareSize))
           .render(
               Styles.confirmationButtonsStyle.text("No").backgroundColor(Styles.resetButtonColor))
           .clicked) {

@@ -9,6 +9,11 @@ import vex.geom.Point;
 @JsType
 public interface Platform {
 
+  @FunctionalInterface
+  interface ResponseMessageHandler {
+    void handleResponseMessage(String responseMessage);
+  }
+
   int getHeight();
 
   int getWidth();
@@ -21,21 +26,41 @@ public interface Platform {
 
   Point getMouseLocation();
 
+  void consumeMouseEvent();
+
+  void consumeKeyEvent();
+
   void println(String line);
 
   void setUi(Runnable ui);
 
-  static boolean mouseEventIs(Type type) {
+  void doAtEnd();
+
+  void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler);
+
+  void httpGet(String path, ResponseMessageHandler responseMessageHandler);
+
+  String getLocation();
+
+  void setLocation(String location);
+
+  void setTitle(String title);
+
+  //  void setLocalStorage(String key, String value);
+  //
+  //  String getLocalStorage(String key);
+
+  public static boolean mouseEventIs(Type type) {
     return Vex.platform.getMouseEvent() != null && Vex.platform.getMouseEvent().type == type;
   }
 
-  static boolean mouseEventIsIn(int x, int y, int width, int height, Type type) {
+  public static boolean mouseEventIsIn(int x, int y, int width, int height, Type type) {
     return Vex.platform.getMouseEvent() != null
         && Vex.platform.getMouseEvent().type == type
         && mouseLocationIsIn(x, y, width, height);
   }
 
-  static boolean mouseLocationIsIn(int x, int y, int width, int height) {
+  public static boolean mouseLocationIsIn(int x, int y, int width, int height) {
     Point point = Vex.platform.getMouseLocation();
     return point != null
         && point.x >= x
@@ -44,12 +69,19 @@ public interface Platform {
         && point.y < y + height;
   }
 
-  @FunctionalInterface
-  interface ResponseMessageHandler {
-    void handleResponseMessage(String responseMessage);
+  public static boolean mouseLocationIsIn(Rect rect) {
+    return mouseLocationIsIn(rect.x, rect.y, rect.width, rect.height);
   }
 
-  void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler);
+  public static boolean mouseEventIsIn(Rect rect, Type type) {
+    return mouseEventIsIn(rect.x, rect.y, rect.width, rect.height, type);
+  }
 
-  void httpGet(String path, ResponseMessageHandler responseMessageHandler);
+  void beginLayer();
+
+  void endLayer();
+
+  void setCursor(Cursor cursor);
+  
+  int getFrameid();
 }

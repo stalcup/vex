@@ -119,8 +119,13 @@ public class WebPlatform implements Platform {
   }
 
   private void endFrame() {
-    mouseEvent = null;
+    consumeMouseEvent();
     keyEvent = null;
+  }
+
+  @Override
+  public void consumeMouseEvent() {
+    mouseEvent = null;
   }
 
   private void fitCanvasToWindow() {
@@ -144,4 +149,40 @@ public class WebPlatform implements Platform {
 
   @Override
   public void httpGet(String path, ResponseMessageHandler responseMessageHandler) {}
+
+  @Override
+  public void consumeKeyEvent() {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public String getLocation() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void setLocation(String location) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void setTitle(String title) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void beginLayer() {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void endLayer() {
+    // TODO Auto-generated method stub
+
+  }
 }

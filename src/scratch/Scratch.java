@@ -1,55 +1,57 @@
 package scratch;
 
 import vex.Color;
-import vex.FontStyle;
+import vex.Rect;
 import vex.Widgets;
-import vex.widgets.ButtonStyle;
-import vex.widgets.Style;
-import vex.widgets.TextBoxStyle;
+import vex.themes.flatui.FlatUiTheme;
 
 public class Scratch {
 
-  private static class DataState {
-    static String queryValue = "";
-  }
-
-  private static class Styles {
-    static Style<?> windowAreaStyle =
-        Widgets.style()
-            .backgroundColor(Color.GRAY_95)
-            .border(1, Color.MEDIUM_HAZE)
-            .cornerRadius(20);
-
-    static TextBoxStyle<?> queryTextBoxStyle =
-        Widgets.textBoxStyle()
-            .textColor(Color.BLACK)
-            .backgroundColor(Color.WHITE)
-            .border(1, Color.MEDIUM_HAZE)
-            .cornerRadius(10)
-            .font("Times New Roman", FontStyle.ITALIC, 14, false);
-
-    static ButtonStyle<?> buttonStyle =
-        Widgets.buttonStyle()
-            .backgroundColor(Color.WHITE)
-            .border(1, Color.MEDIUM_HAZE)
-            .cornerRadius(10)
-            .textColor(Color.BLACK)
-            .font("Arial", FontStyle.BOLD, 14, false)
-            .hoverBackgroundColor(Color.YELLOW);
+  private static class UiState {
+    static String newCountryText = "";
+    static boolean isSelectingCountries;
+    static String bigText = "";
   }
 
   public static void doUi(int x, int y, int width, int height) {
-    Widgets.renderRect(x, y, width, height, Color.WHITE);
+    Rect appRect = new Rect(x, y, width, height);
 
-    Widgets.area(20, 20, 340, 70).render(Styles.windowAreaStyle);
+    Widgets.renderRect(appRect, Color.WHITE);
 
-    DataState.queryValue =
-        Widgets.textBox("query-textbox", 40, 40, 200, 30)
-            .text(DataState.queryValue)
-            .render(Styles.queryTextBoxStyle)
+    Rect queryBounds = appRect.dupe().offLeft(20).offTop(20).onLeft(300).onTop(30);
+    UiState.newCountryText =
+        Widgets.textBox(
+                "query-textbox", FlatUiTheme.textBoxRect.dupe().at(queryBounds.x, queryBounds.y))
+            .text(UiState.newCountryText)
+            .render(FlatUiTheme.defaultTextBoxStyle)
             .text;
 
-    Widgets.button(260, 40, 80, 30).render(Styles.buttonStyle.text("Search"));
-    Widgets.button(40, 110, 80, 30).render(Styles.buttonStyle.text("Refresh"));
+    Rect selectorBounds = queryBounds.dupe().panDown(50);
+    UiState.isSelectingCountries =
+        Widgets.textDropDown(selectorBounds, Constants.countries, DataState.selectedCountries)
+            .render(
+                ScratchTheme.dropButtonTriggerStyle,
+                ScratchTheme.dropButtonTriggerStyle,
+                UiState.isSelectingCountries)
+            .open;
+
+    Rect buttonBounds = selectorBounds.dupe().panDown(50);
+    if (!UiState.newCountryText.isEmpty()
+        && Widgets.button(buttonBounds)
+            .render(FlatUiTheme.defaultButtonStyle.text("+ Add Country"))
+            .clicked) {
+      Constants.countries.add(0, UiState.newCountryText);
+      DataState.selectedCountries.add(UiState.newCountryText);
+      UiState.newCountryText = "";
+    }
+
+    Rect textAreaBounds = selectorBounds.dupe().panDown(100);
+    UiState.bigText =
+        Widgets.textBox(
+                "textarea", FlatUiTheme.textAreaRect.dupe().at(textAreaBounds.x, textAreaBounds.y))
+            .multiline(true)
+            .text(UiState.bigText)
+            .render(FlatUiTheme.defaultTextBoxStyle)
+            .text;
   }
 }

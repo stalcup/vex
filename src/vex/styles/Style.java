@@ -1,65 +1,68 @@
-package vex.widgets;
+package vex.styles;
 
 import vex.Color;
+import vex.Cursor;
 import vex.FontStyle;
-import vex.HorizontalAlignment;
+import vex.Align;
 
 public class Style<T extends Style<?>> {
   public static int NOT_SET = -1;
-
-  public Color hoverBackgroundColor;
-  public Color backgroundColor;
-  public Color hoverBorderColor;
-  public int hoverBorderWidth = NOT_SET;
-
-  public Color borderColor;
-  public int borderWidth;
-
-  public int cornerRadius;
-  public String text;
-  public Color textColor;
-  public HorizontalAlignment textHorizontalAlignment = HorizontalAlignment.CENTER;
-  public int paddingLeft;
-  public String fontName;
-  public FontStyle fontStyle;
-  public int fontPointSize;
-  public boolean fontStrikeThrough;
 
   @SuppressWarnings("unchecked")
   protected T self() {
     return (T) this;
   }
 
+  public int paddingLeft;
+
   public T paddingLeft(int paddingLeft) {
     this.paddingLeft = paddingLeft;
     return self();
   }
 
-  public T textHorizontalAlignment(HorizontalAlignment textHorizontalAlignment) {
+  public Align textHorizontalAlignment = Align.MID;
+
+  public T textHorizontalAlignment(Align textHorizontalAlignment) {
     this.textHorizontalAlignment = textHorizontalAlignment;
     return self();
   }
+
+  public Color hoverBackgroundColor;
 
   public T hoverBackgroundColor(Color hoverBackgroundColor) {
     this.hoverBackgroundColor = hoverBackgroundColor;
     return self();
   }
 
+  public int hoverBorderWidth = NOT_SET;
+
   public T hoverBorderWidth(int hoverBorderWidth) {
     this.hoverBorderWidth = hoverBorderWidth;
     return self();
   }
 
-  public T hoverBorder(int hoverBorderWidth, Color hoverBorderColor) {
-    this.hoverBorderWidth = hoverBorderWidth;
-    this.hoverBorderColor = hoverBorderColor;
-    return self();
-  }
+  public Color hoverBorderColor;
 
   public T hoverBorderColor(Color hoverBorderColor) {
     this.hoverBorderColor = hoverBorderColor;
     return self();
   }
+
+  public Color focusBorderColor;
+
+  public T focusBorderColor(Color focusBorderColor) {
+    this.focusBorderColor = focusBorderColor;
+    return self();
+  }
+
+  public Color focusHaloColor;
+
+  public T focusHaloColor(Color focusHaloColor) {
+    this.focusHaloColor = focusHaloColor;
+    return self();
+  }
+
+  public Color backgroundColor;
 
   public T backgroundColor(Color backgroundColor) {
     this.backgroundColor = backgroundColor;
@@ -72,20 +75,37 @@ public class Style<T extends Style<?>> {
     return self();
   }
 
+  public Color borderColor;
+
   public T borderColor(Color borderColor) {
     this.borderColor = borderColor;
     return self();
   }
+
+  public int borderWidth;
 
   public T borderWidth(int borderWidth) {
     this.borderWidth = borderWidth;
     return self();
   }
 
+  public int focusHaloWidth;
+
+  public T focusHaloWidth(int focusHaloWidth) {
+    this.focusHaloWidth = focusHaloWidth;
+    return self();
+  }
+
+  public int cornerRadius;
+
   public T cornerRadius(int cornerRadius) {
     this.cornerRadius = cornerRadius;
     return self();
   }
+
+  public String fontName;
+
+  public boolean fontStrikeThrough;
 
   public T font(String name, FontStyle style, int pointSize, boolean strikeThrough) {
     fontName = name;
@@ -94,6 +114,8 @@ public class Style<T extends Style<?>> {
     fontStrikeThrough = strikeThrough;
     return self();
   }
+
+  public String text;
 
   public T text(String text) {
     this.text = text;
@@ -106,8 +128,31 @@ public class Style<T extends Style<?>> {
     return self();
   }
 
+  public Color textColor;
+
   public T textColor(Color textColor) {
     this.textColor = textColor;
+    return self();
+  }
+
+  public int fontPointSize;
+
+  public T fontPointSize(int fontPointSize) {
+    this.fontPointSize = fontPointSize;
+    return self();
+  }
+
+  public FontStyle fontStyle;
+
+  public T fontStyle(FontStyle fontStyle) {
+    this.fontStyle = fontStyle;
+    return self();
+  }
+
+  public Cursor cursor;
+
+  public T cursor(Cursor cursor) {
+    this.cursor = cursor;
     return self();
   }
 }
