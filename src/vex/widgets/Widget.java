@@ -16,7 +16,6 @@ import vex.styles.Style;
 
 public class Widget {
   protected Rect bounds;
-  protected String focusId;
 
   public Widget(Rect bounds) {
     this.bounds = bounds;
@@ -173,7 +172,7 @@ public class Widget {
           bounds.width - style.paddingLeft,
           bounds.height,
           style.text,
-          style.textHorizontalAlignment);
+          style.textAlignX);
     }
   }
 
@@ -199,6 +198,9 @@ public class Widget {
   public Color computeBackgroundColor(Style<?> style) {
     Color color = style.backgroundColor;
 
+    if (disabled && style.disabledBackgroundColor != null) {
+      return style.disabledBackgroundColor;
+    }
     if (style.hoverBackgroundColor != null && isHovered()) {
       color = style.hoverBackgroundColor;
     }
@@ -218,6 +220,27 @@ public class Widget {
 
   protected Widget tooltip(String tooltip) {
     this.tooltip = tooltip;
+    return this;
+  }
+
+  protected boolean disabled;
+
+  public Widget disabled(boolean disabled) {
+    this.disabled = disabled;
+    return this;
+  }
+
+  protected String focusId;
+
+  public Widget focusId(String focusId) {
+    this.focusId = focusId;
+    return this;
+  }
+
+  protected boolean receivesTabFocus = true;
+
+  public Widget receivesTabFocus(boolean receivesTabFocus) {
+    this.receivesTabFocus = receivesTabFocus;
     return this;
   }
 }

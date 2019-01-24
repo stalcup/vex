@@ -1,6 +1,7 @@
 package vex;
 
 public class Color {
+
   public static final Color BLACK = new Color(0, 0, 0);
   public static final Color GRAY = new Color(127, 127, 127);
   public static final Color GRAY_10 = new Color(0.10f, 0.10f, 0.10f);
@@ -42,7 +43,9 @@ public class Color {
   public static final Color BLUE_80 = new Color(0.80f, 0.80f, 1.00f);
   public static final Color BLUE_95 = new Color(0.95f, 0.95f, 1.00f);
 
-  public final int r, g, b, a;
+  public int r, g, b, a;
+
+  public Color() {}
 
   public Color(float r, float g, float b) {
     this.r = (int) (r * 255);
@@ -70,5 +73,38 @@ public class Color {
     this.g = g;
     this.b = b;
     this.a = a;
+  }
+
+  public Color lighter(float lighter) {
+    Color lighterColor = new Color();
+    lighterColor.r = (int) (r * (1 - lighter) + 255 * lighter);
+    lighterColor.g = (int) (g * (1 - lighter) + 255 * lighter);
+    lighterColor.b = (int) (b * (1 - lighter) + 255 * lighter);
+    lighterColor.a = a;
+    return lighterColor;
+  }
+
+  public Color darker(float darker) {
+    Color darkerColor = new Color();
+    darkerColor.r = (int) (r * (1 - darker) + 0 * darker);
+    darkerColor.g = (int) (g * (1 - darker) + 0 * darker);
+    darkerColor.b = (int) (b * (1 - darker) + 0 * darker);
+    darkerColor.a = a;
+    return darkerColor;
+  }
+
+  public Color desaturate(float desaturation) {
+    int grey = (r + g + b) / 3;
+    Color desaturatedColor = new Color();
+    desaturatedColor.r = (int) (r * (1 - desaturation) + grey * desaturation);
+    desaturatedColor.g = (int) (g * (1 - desaturation) + grey * desaturation);
+    desaturatedColor.b = (int) (b * (1 - desaturation) + grey * desaturation);
+    desaturatedColor.a = a;
+    return desaturatedColor;
+  }
+
+  @Override
+  public String toString() {
+    return "Color [r=" + r + ", g=" + g + ", b=" + b + ", a=" + a + "]";
   }
 }

@@ -1,10 +1,8 @@
 package vex.styles;
 
+import vex.Align;
 import vex.Base64Image;
 import vex.Color;
-import vex.Graphics;
-import vex.Align;
-import vex.Widgets;
 
 public class TextBoxStyle<T extends TextBoxStyle<?>> extends Style<T> {
   public int margin = NOT_SET;
@@ -12,13 +10,6 @@ public class TextBoxStyle<T extends TextBoxStyle<?>> extends Style<T> {
   public Color placeholderTextColor;
   public Color underlineColor;
   public boolean password;
-
-  public Color disabledBackgroundColor;
-
-  public T disabledBackgroundColor(Color disabledBackgroundColor) {
-    this.disabledBackgroundColor = disabledBackgroundColor;
-    return self();
-  }
 
   public Color disabledTextColor;
 
@@ -31,13 +22,6 @@ public class TextBoxStyle<T extends TextBoxStyle<?>> extends Style<T> {
 
   public T disabledPlaceholderTextColor(Color disabledPlaceholderTextColor) {
     this.disabledPlaceholderTextColor = disabledPlaceholderTextColor;
-    return self();
-  }
-
-  public Color disabledBorderColor;
-
-  public T disabledBorderColor(Color disabledBorderColor) {
-    this.disabledBorderColor = disabledBorderColor;
     return self();
   }
 
@@ -88,7 +72,7 @@ public class TextBoxStyle<T extends TextBoxStyle<?>> extends Style<T> {
         .paddingLeft(margin)
         .placeholderText(placeholderText, placeholderTextColor)
         .text(text, textColor)
-        .textHorizontalAlignment(textHorizontalAlignment)
+        .textAlignX(textAlignX)
         .underlineColor(underlineColor)
         .password(password)
         .disabledBackgroundColor(disabledBackgroundColor)

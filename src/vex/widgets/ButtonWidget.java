@@ -6,6 +6,7 @@ import vex.Platform;
 import vex.Rect;
 import vex.Vex;
 import vex.Widgets;
+import vex.events.KeyEvent;
 import vex.events.MouseEvent.Type;
 import vex.styles.ButtonStyle;
 import vex.styles.Style;
@@ -24,6 +25,18 @@ public class ButtonWidget extends Widget {
   }
 
   public WidgetStatus render(ButtonStyle<?> style) {
+    if (!disabled && focusId != null && receivesTabFocus) {
+      Widgets.maybeFocusMeNext(focusId);
+    }
+    boolean clicked =
+        !disabled
+            && Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
+    if (clicked) {
+      if (focusId != null) {
+        Widgets.setCurrentFocusId(focusId);
+      }
+    }
+
     Graphics g = Vex.platform.getGraphics();
 
     renderBackground(g, style);
@@ -34,15 +47,24 @@ public class ButtonWidget extends Widget {
     renderTooltip(g, style);
     setCursor(style);
 
-    return WidgetStatus.click(
-        Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN), false);
+    if (!disabled && isFocused()) {
+      KeyEvent keyEvent = Vex.platform.getKeyEvent();
+      if (keyEvent != null) {
+        boolean tab = "Tab".equals(keyEvent.keyText);
+        if (tab) {
+          Widgets.focusNext = tab;
+        }
+      }
+    }
+
+    return WidgetStatus.click(clicked, false);
   }
 
   @Override
   public Color computeBackgroundColor(Style<?> style) {
     ButtonStyle<?> buttonStyle = (ButtonStyle<?>) style;
     if (selected && buttonStyle.selectedBackgroundColor != null) {
-      return ((ButtonStyle<?>) style).selectedBackgroundColor;
+      return buttonStyle.selectedBackgroundColor;
     }
 
     return super.computeBackgroundColor(style);
@@ -52,7 +74,7 @@ public class ButtonWidget extends Widget {
   public Color computeTextColor(Style<?> style) {
     ButtonStyle<?> buttonStyle = (ButtonStyle<?>) style;
     if (selected && buttonStyle.selectedTextColor != null) {
-      return ((ButtonStyle<?>) style).selectedTextColor;
+      return buttonStyle.selectedTextColor;
     }
 
     return super.computeTextColor(style);
@@ -75,5 +97,15 @@ public class ButtonWidget extends Widget {
   @Override
   public ButtonWidget tooltip(String tooltip) {
     return (ButtonWidget) super.tooltip(tooltip);
+  }
+
+  @Override
+  public ButtonWidget disabled(boolean disabled) {
+    return (ButtonWidget) super.disabled(disabled);
+  }
+
+  @Override
+  public ButtonWidget focusId(String focusId) {
+    return (ButtonWidget) super.focusId(focusId);
   }
 }

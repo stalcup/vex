@@ -13,6 +13,7 @@ public class RadioButtonsWidget extends Widget {
 
   protected boolean disabled;
 
+  @Override
   public RadioButtonsWidget disabled(boolean disabled) {
     this.disabled = disabled;
     return this;

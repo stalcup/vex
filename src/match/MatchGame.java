@@ -93,7 +93,7 @@ public class MatchGame {
                     .backgroundColor(
                         isResetButton
                             ? Styles.resetButtonColor
-                            : (isSelected ? Color.WHITE : Color.GRAY_60))
+                            : isSelected ? Color.WHITE : Color.GRAY_60)
                     .hoverBackgroundColor(UiState.confirmingReset ? null : Color.MEDIUM_MIST)
                     .borderWidth(isSelected ? 4 : 2)
                     .text(buttonLabel))
@@ -138,7 +138,7 @@ public class MatchGame {
             Styles.infoLabelStyle.text(
                 +DataState.matchedButtonIndexes.size() / 2
                     + " / "
-                    + ((DataState.gridSize * DataState.gridSize) / 2)));
+                    + DataState.gridSize * DataState.gridSize / 2));
 
     if (UiState.confirmingReset) {
       Widgets.setFont("Arial", FontStyle.BOLD, 20);

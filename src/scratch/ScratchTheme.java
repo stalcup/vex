@@ -1,9 +1,9 @@
 package scratch;
 
+import vex.Align;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
-import vex.Align;
 import vex.styles.ButtonStyle;
 import vex.styles.Style;
 import vex.styles.TextBoxStyle;
@@ -38,7 +38,7 @@ class ScratchTheme {
           .border(1, Color.MEDIUM_HAZE)
           .cornerRadius(10)
           .textColor(Color.BLACK)
-          .textHorizontalAlignment(Align.MIN)
+          .textAlignX(Align.MIN)
           .paddingLeft(7)
           .font("Arial", FontStyle.BOLD, 14, false)
           .hoverBackgroundColor(Color.BLUE_95);
@@ -47,5 +47,5 @@ class ScratchTheme {
       BaseStyles.button()
           .textColor(Color.BLACK)
           .font("Arial", FontStyle.BOLD, 14, false)
-          .textHorizontalAlignment(Align.MIN);
+          .textAlignX(Align.MIN);
 }

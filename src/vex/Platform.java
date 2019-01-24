@@ -82,6 +82,6 @@ public interface Platform {
   void endLayer();
 
   void setCursor(Cursor cursor);
-  
+
   int getFrameid();
 }

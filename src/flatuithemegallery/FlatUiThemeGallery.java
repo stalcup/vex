@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import vex.Align;
 import vex.Color;
 import vex.FontStyle;
-import vex.Align;
 import vex.Rect;
 import vex.Widgets;
 import vex.styles.ButtonStyle;
@@ -20,7 +20,7 @@ import vex.widgets.WidgetStatus;
 public class FlatUiThemeGallery {
 
   private static ButtonStyle<?> sectionLabelStyle =
-      FlatUiTheme.h6LabelStyle.dupe().textHorizontalAlignment(Align.MIN);
+      FlatUiTheme.h6LabelStyle.dupe().textAlignX(Align.MIN);
 
   private static List<String> dropDownOptions =
       Arrays.asList("Action", "Another Action", "Something else here");
@@ -52,7 +52,7 @@ public class FlatUiThemeGallery {
                 .dupe()
                 .fontPointSize(32)
                 .fontStyle(FontStyle.BOLD)
-                .textHorizontalAlignment(Align.MIN)
+                .textAlignX(Align.MIN)
                 .text("Basic Elements"));
 
     Rect buttonsLabelBounds = basicElementsLabelBounds.dupe().panDown(60);

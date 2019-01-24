@@ -52,4 +52,5 @@ public class WidgetStatus {
   public boolean updated;
   public boolean lostFocus;
   public String selectedKey;
+  public String selected;
 }

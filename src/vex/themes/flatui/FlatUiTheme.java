@@ -1,9 +1,9 @@
 package vex.themes.flatui;
 
+import vex.Align;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
-import vex.Align;
 import vex.Rect;
 import vex.styles.ButtonStyle;
 import vex.styles.DatePickerAreaStyle;
@@ -131,7 +131,7 @@ public class FlatUiTheme {
           .hoverBackgroundColor(new Color(0x48, 0xc9, 0xb0))
           .cornerRadius(6)
           .textColor(Color.WHITE)
-          .textHorizontalAlignment(Align.MIN)
+          .textAlignX(Align.MIN)
           .paddingLeft(16)
           .font("SanSerif", FontStyle.BOLD, 16, false)
           .image(ImageResources.whiteCarret)
@@ -144,7 +144,7 @@ public class FlatUiTheme {
           .backgroundColor(new Color(243, 244, 245))
           .hoverBackgroundColor(new Color(225, 228, 231))
           .textColor(new Color(52, 73, 94))
-          .textHorizontalAlignment(Align.MIN)
+          .textAlignX(Align.MIN)
           .selectedBackgroundColor(new Color(0x1a, 0xbc, 0x9c))
           .selectedTextColor(Color.WHITE)
           .paddingLeft(7)

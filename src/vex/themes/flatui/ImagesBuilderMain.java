@@ -9,6 +9,6 @@ public class ImagesBuilderMain {
   public static void main(String[] args) throws URISyntaxException, IOException {
     String eclipseVariableContainerLoc = args[0];
     new Base64DirectoryImageResourcesBuilder(eclipseVariableContainerLoc, ImagesBuilderMain.class)
-        .build();
+        .build("ImageResources");
   }
 }

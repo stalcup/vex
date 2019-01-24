@@ -6,9 +6,9 @@ import java.util.GregorianCalendar;
 
 import com.google.common.base.Preconditions;
 
+import vex.Align;
 import vex.FontStyle;
 import vex.Graphics;
-import vex.Align;
 import vex.Platform;
 import vex.Rect;
 import vex.Widgets;
@@ -168,7 +168,7 @@ public class DatePickerWidget extends Widget {
         headerBounds.width - style.paddingLeft,
         headerBounds.height,
         style.text,
-        style.textHorizontalAlignment);
+        style.textAlignX);
 
     ButtonStyle<?> dayNameStyle = datePickerDayStyle.dupe();
     dayNameStyle.fontStyle(FontStyle.BOLD);
@@ -200,7 +200,7 @@ public class DatePickerWidget extends Widget {
                   datePickerAreaStyle.dayHeight)
               .shrink(1);
 
-      datePickerDayStyle.text((dayOfMonth + 1) + "");
+      datePickerDayStyle.text(dayOfMonth + 1 + "");
       if (Widgets.button(dayBounds)
           .selected(dayOfMonth == currentDayOfMonth)
           .render(datePickerDayStyle)

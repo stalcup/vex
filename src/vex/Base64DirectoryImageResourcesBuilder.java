@@ -19,8 +19,8 @@ public class Base64DirectoryImageResourcesBuilder {
   private String javaPackage;
 
   public Base64DirectoryImageResourcesBuilder(String srcDir, Class<?> classLiteral) {
-    this.directory = new File(srcDir);
-    this.javaPackage = classLiteral.getPackage().toString();
+    directory = new File(srcDir);
+    javaPackage = classLiteral.getPackage().toString();
   }
 
   private static String getExtension(String fileName) {
@@ -31,14 +31,14 @@ public class Base64DirectoryImageResourcesBuilder {
     return "";
   }
 
-  public void build() throws IOException {
+  public void build(String newFileName) throws IOException {
     StringBuilder sb = new StringBuilder();
 
     sb.append(javaPackage + ";\n");
     sb.append("\n");
     sb.append("import vex.Base64Image;\n");
     sb.append("\n");
-    sb.append("public class ImageResources {\n");
+    sb.append("public class " + newFileName + " {\n");
     sb.append("\n");
 
     for (File file : directory.listFiles()) {
@@ -66,7 +66,9 @@ public class Base64DirectoryImageResourcesBuilder {
     String classContent = sb.toString();
     byte[] bytes = classContent.getBytes(StandardCharsets.UTF_8);
 
-    Path imageResourcesClassPath = new File(directory, "ImageResources.java").toPath();
+    Path imageResourcesClassPath = new File(directory, newFileName + ".java").toPath();
     Files.write(imageResourcesClassPath, bytes);
+    System.out.println(
+        "Recreated " + imageResourcesClassPath + " with size " + bytes.length + " bytes.");
   }
 }

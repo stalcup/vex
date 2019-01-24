@@ -2,6 +2,11 @@ package vex;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+
+import com.google.common.base.Preconditions;
 
 public class Strings {
 
@@ -14,6 +19,7 @@ public class Strings {
   }
 
   public static String escapeSerial(String input) {
+    Preconditions.checkNotNull(input);
     return escapeChar(input, ",");
   }
 
@@ -43,6 +49,14 @@ public class Strings {
   }
 
   public static boolean equals(String a, String b) {
-    return (a == null ? b == null : a.equals(b));
+    return a == null ? b == null : a.equals(b);
+  }
+
+  public static Deque<String> splitPath(String path) {
+    Deque<String> parts = new LinkedList<>(Arrays.asList(path.split("/", -1)));
+    while (!parts.isEmpty() && parts.getFirst().isEmpty()) {
+      parts.removeFirst();
+    }
+    return parts;
   }
 }

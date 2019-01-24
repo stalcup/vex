@@ -1,8 +1,8 @@
 package vex.styles;
 
+import vex.Align;
 import vex.Base64Image;
 import vex.Color;
-import vex.Align;
 
 public class ButtonStyle<T extends ButtonStyle<?>> extends Style<T> {
 
@@ -61,12 +61,16 @@ public class ButtonStyle<T extends ButtonStyle<?>> extends Style<T> {
         .hoverBorderColor(hoverBorderColor)
         .focusBorderColor(focusBorderColor)
         .text(text, textColor)
-        .textHorizontalAlignment(textHorizontalAlignment)
+        .textAlignX(textAlignX)
         .selectedBackgroundColor(selectedBackgroundColor)
+        .selectedTextColor(selectedTextColor)
         .image(image)
         .imageHorizontalAlignment(imageHorizontalAlignment)
         .imageShiftX(imageShiftX)
         .imageShiftY(imageShiftY)
-        .cursor(cursor);
+        .paddingLeft(paddingLeft)
+        .cursor(cursor)
+        .disabledBackgroundColor(disabledBackgroundColor)
+        .disabledBorderColor(disabledBorderColor);
   }
 }

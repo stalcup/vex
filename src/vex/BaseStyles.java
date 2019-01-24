@@ -22,9 +22,7 @@ public class BaseStyles {
   }
 
   public static RadioButtonStyle<?> radioButton() {
-    return new RadioButtonStyle<>()
-        .textHorizontalAlignment(Align.MIN)
-        .triggerShape(StyleShape.OVAL);
+    return new RadioButtonStyle<>().textAlignX(Align.MIN).triggerShape(StyleShape.OVAL);
   }
 
   public static DatePickerAreaStyle<?> datePickerAreaStyle() {

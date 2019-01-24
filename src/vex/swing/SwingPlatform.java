@@ -2,20 +2,23 @@ package vex.swing;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.google.common.base.Preconditions;
 
@@ -34,7 +37,6 @@ import vex.swing.util.SimpleComponentListener;
 import vex.swing.util.SimpleKeyListener;
 import vex.swing.util.SimpleMouseListener;
 
-@SuppressWarnings("serial")
 public class SwingPlatform implements Platform {
 
   private BufferedImage baseBuffer;
@@ -42,6 +44,7 @@ public class SwingPlatform implements Platform {
   private LinkedList<BufferedImage> bufferLayers = new LinkedList<>();
 
   private JPanel canvas;
+  private JTextField locationTextbox;
   private Graphics g;
   private KeyEvent keyEvent;
   private LinkedList<KeyEvent> keyEvents = new LinkedList<>();
@@ -51,14 +54,17 @@ public class SwingPlatform implements Platform {
   private Runnable ui;
   private JFrame window;
 
-  private String location = "";
+  // private String location = "";
   private HttpBrowser httpBrowser = new HttpBrowser();
 
   public SwingPlatform(boolean fullScreen) {
     window = new JFrame();
 
-    // window = new JFrame();
-    window.setState(Frame.MAXIMIZED_BOTH);
+    try {
+      window.setIconImage(ImageIO.read(this.getClass().getResource("icon.png")));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
     if (fullScreen) {
       window.setUndecorated(true);
@@ -71,6 +77,7 @@ public class SwingPlatform implements Platform {
     }
     window.setVisible(true);
 
+    locationTextbox = new JTextField();
     canvas =
         new JPanel() {
           @Override
@@ -78,9 +85,16 @@ public class SwingPlatform implements Platform {
             g.drawImage(getFrontBuffer(), 0, 0, null);
           }
         };
+    canvas.setFocusable(true);
 
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    window.setLayout(null);
+    window.add(locationTextbox);
+    locationTextbox.setBounds(10, 10, 400, 30);
+
     window.add(canvas);
+
+    positionCanvas();
 
     window.addComponentListener(
         new SimpleComponentListener() {
@@ -118,6 +132,9 @@ public class SwingPlatform implements Platform {
 
           @Override
           public void mousePressed(java.awt.event.MouseEvent e) {
+            if (!canvas.hasFocus()) {
+              canvas.grabFocus();
+            }
             addMouseEvent(e, Type.DOWN);
           }
 
@@ -130,7 +147,7 @@ public class SwingPlatform implements Platform {
     // Make sure key listeners see Tab and Shift key presses.
     window.setFocusTraversalKeysEnabled(false);
 
-    window.addKeyListener(
+    canvas.addKeyListener(
         new SimpleKeyListener() {
           @Override
           public void keyPressed(java.awt.event.KeyEvent e) {
@@ -158,6 +175,12 @@ public class SwingPlatform implements Platform {
           }
         };
     httpProcessingQueue.start();
+  }
+
+  private void positionCanvas() {
+    Rectangle parentBounds = canvas.getParent().getBounds();
+
+    canvas.setBounds(0, 50, (int) parentBounds.getWidth(), (int) (parentBounds.getHeight() - 50));
   }
 
   @Override
@@ -406,13 +429,17 @@ public class SwingPlatform implements Platform {
 
   @Override
   public String getLocation() {
-    return location;
+    return locationTextbox.getText();
   }
 
   @Override
   public void setLocation(String location) {
     Preconditions.checkArgument(location != null);
-    this.location = location;
+    //    Preconditions.checkArgument(!location.equals(this.locationTextbox.getText()));
+
+    System.out.println("client going to " + location);
+
+    locationTextbox.setText(location);
   }
 
   @Override

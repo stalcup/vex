@@ -8,7 +8,6 @@ import vex.Color;
 import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
-import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
@@ -28,16 +27,6 @@ public class TextBoxWidget extends Widget {
   public TextBoxWidget(String focusId, Rect bounds) {
     super(bounds);
     this.focusId = focusId;
-  }
-
-  @Override
-  public Color computeBackgroundColor(Style<?> style) {
-    TextBoxStyle<?> textboxStyle = (TextBoxStyle<?>) style;
-    if (disabled && textboxStyle.disabledBackgroundColor != null) {
-      return textboxStyle.disabledBackgroundColor;
-    }
-
-    return super.computeBackgroundColor(style);
   }
 
   @Override
@@ -85,7 +74,7 @@ public class TextBoxWidget extends Widget {
     }
 
     int pointSizeMargin = style.fontPointSize * 9 / 10;
-    int effectiveMargin = style.margin == TextBoxStyle.NOT_SET ? pointSizeMargin : style.margin;
+    int effectiveMargin = style.margin == Style.NOT_SET ? pointSizeMargin : style.margin;
 
     if ((text == null || text.isEmpty())
         && style.placeholderText != null
@@ -183,7 +172,9 @@ public class TextBoxWidget extends Widget {
           if (keyEvent != null) {
             boolean enter = "Enter".equals(keyText);
             boolean tab = keyText.equals("Tab");
-            Widgets.focusNext = tab;
+            if (tab) {
+              Widgets.focusNext = tab;
+            }
 
             boolean delete = keyText.equals("Delete");
             boolean backspace = keyText.equals("Backspace");
@@ -289,7 +280,7 @@ public class TextBoxWidget extends Widget {
 
   private List<String> splitOnLinebreaks(String text) {
     if (multiline) {
-      return new ArrayList<String>(Arrays.asList(text.split("\n", -1)));
+      return new ArrayList<>(Arrays.asList(text.split("\n", -1)));
     } else {
       List<String> list = new ArrayList<>();
       list.add(text);
@@ -303,20 +294,6 @@ public class TextBoxWidget extends Widget {
 
   public TextBoxWidget text(String text) {
     this.text = text;
-    return this;
-  }
-
-  protected boolean disabled;
-
-  public TextBoxWidget disabled(boolean disabled) {
-    this.disabled = disabled;
-    return this;
-  }
-
-  protected boolean receivesTabFocus = true;
-
-  public TextBoxWidget receivesTabFocus(boolean receivesTabFocus) {
-    this.receivesTabFocus = receivesTabFocus;
     return this;
   }
 
@@ -339,5 +316,15 @@ public class TextBoxWidget extends Widget {
           style.imageShiftX,
           style.imageShiftY);
     }
+  }
+
+  @Override
+  public TextBoxWidget disabled(boolean disabled) {
+    return (TextBoxWidget) super.disabled(disabled);
+  }
+
+  @Override
+  public TextBoxWidget receivesTabFocus(boolean receivesTabFocus) {
+    return (TextBoxWidget) super.receivesTabFocus(receivesTabFocus);
   }
 }

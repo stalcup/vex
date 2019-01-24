@@ -227,6 +227,8 @@ public class Widgets {
 
   public static WidgetStatus startRawDropDown(
       boolean open,
+      String focusId,
+      boolean disabled,
       String selectionsPreview,
       Rect closedRect,
       ButtonStyle<?> buttonStyle,
@@ -234,13 +236,14 @@ public class Widgets {
     if (selectionsPreview != null) {
       buttonStyle.text(selectionsPreview);
     }
-    if (button(closedRect).render(buttonStyle).clicked) {
+    if (button(closedRect).disabled(disabled).focusId(focusId).render(buttonStyle).clicked) {
       open = true;
       Vex.platform.consumeMouseEvent();
     }
 
     int displayRowCount = Math.min(optionsCount, 5);
-    Rect openRect = closedRect.dupe().scaleHeight(displayRowCount).panDown(closedRect.height + 10);
+    Rect openRect =
+        closedRect.dupe().scaleHeight(displayRowCount * 0.8).panDown(closedRect.height + 10);
 
     List<Rect> rowRects = null;
 
@@ -305,5 +308,19 @@ public class Widgets {
     return focusId != null
         && focusId.equals(lastFocusId)
         && focusSetOnFrameId == Vex.platform.getFrameid() - 1;
+  }
+
+  public static void clickOutClearFocus(Rect bounds) {
+    if (Platform.mouseEventIsIn(bounds, Type.DOWN)) {
+      clearFocusIfNotSetThisFrame();
+    }
+  }
+
+  public static void unfocusedTabFocusNext() {
+    if (getCurrentFocusId() == null
+        && Vex.platform.getKeyEvent() != null
+        && "Tab".equals(Vex.platform.getKeyEvent().keyText)) {
+      focusNext = true;
+    }
   }
 }

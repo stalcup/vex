@@ -22,7 +22,7 @@ public class Rect {
     for (int i = 0; i < rowCount; i++) {
       int top = i * height / rowCount;
       int bottom = (i + 1) * height / rowCount;
-      rows.add(new Rect(x, y + top, width, (bottom - top)));
+      rows.add(new Rect(x, y + top, width, bottom - top));
     }
     return rows;
   }
@@ -45,7 +45,7 @@ public class Rect {
     for (int i = 0; i < columnCount; i++) {
       int left = i * width / columnCount;
       int right = (i + 1) * width / columnCount;
-      columns.add(new Rect(x + left, y, (right - left), height));
+      columns.add(new Rect(x + left, y, right - left, height));
     }
     return columns;
   }
@@ -101,7 +101,7 @@ public class Rect {
     return this;
   }
 
-  public Rect scaleHeight(int scale) {
+  public Rect scaleHeight(double scale) {
     height *= scale;
     return this;
   }
@@ -119,7 +119,7 @@ public class Rect {
   }
 
   public Rect onHorizontalCenter(int width) {
-    this.x = x + (this.width - width) / 2;
+    x = x + (this.width - width) / 2;
     this.width = width;
     return this;
   }
@@ -138,49 +138,70 @@ public class Rect {
     int x = Math.min(this.x, that.x);
     int y = Math.min(this.y, that.y);
 
-    int x2 = Math.max(this.x + this.width, that.x + that.width);
-    int y2 = Math.max(this.y + this.height, that.y + that.height);
+    int x2 = Math.max(this.x + width, that.x + that.width);
+    int y2 = Math.max(this.y + height, that.y + that.height);
 
     this.x = x;
     this.y = y;
-    this.width = x2 - x;
-    this.height = y2 - y;
+    width = x2 - x;
+    height = y2 - y;
 
     return this;
   }
 
   public Rect toCenterHeight(int height) {
     int diff = (this.height - height) / 2;
-    this.y += diff;
+    y += diff;
     this.height -= diff * 2;
     return this;
   }
 
   public Rect toCenterWidth(int width) {
     int diff = (this.width - width) / 2;
-    this.x += diff;
+    x += diff;
     this.width -= diff * 2;
     return this;
   }
 
+  public Rect panUp(int deltaY) {
+    y -= deltaY;
+    return this;
+  }
+
   public Rect panDown(int deltaY) {
-    this.y += deltaY;
+    y += deltaY;
     return this;
   }
 
   public Rect panRight(int deltaX) {
-    this.x += deltaX;
+    x += deltaX;
+    return this;
+  }
+
+  public Rect panLeft(int deltaX) {
+    x -= deltaX;
     return this;
   }
 
   public Rect growLeft(int deltaX) {
-    this.x -= deltaX;
-    this.width += deltaX;
+    x -= deltaX;
+    width += deltaX;
     return this;
   }
 
   public Rect growRight(int deltaX) {
-    this.width += deltaX;
+    width += deltaX;
+    return this;
+  }
+
+  public Rect growTop(int deltaY) {
+    y -= deltaY;
+    height += deltaY;
+    return this;
+  }
+
+  public Rect growBottom(int deltaY) {
+    height += deltaY;
     return this;
   }
 }

@@ -2,12 +2,11 @@ package vex.widgets;
 
 import com.google.common.base.Preconditions;
 
+import vex.Align;
 import vex.Color;
 import vex.Graphics;
-import vex.Align;
 import vex.Platform;
 import vex.Rect;
-import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
@@ -26,6 +25,7 @@ public class RadioButtonWidget extends Widget {
 
   protected boolean disabled;
 
+  @Override
   public RadioButtonWidget disabled(boolean disabled) {
     this.disabled = disabled;
     return this;
@@ -156,7 +156,7 @@ public class RadioButtonWidget extends Widget {
           bounds.width - usedUpLeft,
           bounds.height,
           style.text,
-          style.textHorizontalAlignment);
+          style.textAlignX);
     }
   }
 

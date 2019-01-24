@@ -35,6 +35,7 @@ public class RadioButtonStyle<T extends RadioButtonStyle<?>> extends Style<T> {
 
   public Color disabledBorderColor;
 
+  @Override
   public T disabledBorderColor(Color disabledBorderColor) {
     this.disabledBorderColor = disabledBorderColor;
     return self();
@@ -42,6 +43,7 @@ public class RadioButtonStyle<T extends RadioButtonStyle<?>> extends Style<T> {
 
   public Color disabledBackgroundColor;
 
+  @Override
   public T disabledBackgroundColor(Color disabledBackgroundColor) {
     this.disabledBackgroundColor = disabledBackgroundColor;
     return self();
@@ -74,7 +76,7 @@ public class RadioButtonStyle<T extends RadioButtonStyle<?>> extends Style<T> {
         .hoverBorderColor(hoverBorderColor)
         .focusBorderColor(focusBorderColor)
         .text(text, textColor)
-        .textHorizontalAlignment(textHorizontalAlignment)
+        .textAlignX(textAlignX)
         .triggerDiameter(triggerDiameter)
         .dimpleDiameter(dimpleDiameter)
         .selectedBorderColor(selectedBorderColor)

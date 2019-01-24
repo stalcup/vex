@@ -38,8 +38,8 @@ public class SwingGraphics implements Graphics {
   public void drawRoundRect(int x, int y, int width, int height, int cornerRadius) {
     graphics.draw(
         new RoundRectangle2D.Float(
-            x + (strokeWidth / 2f),
-            y + (strokeWidth / 2f),
+            x + strokeWidth / 2f,
+            y + strokeWidth / 2f,
             width - strokeWidth,
             height - strokeWidth,
             cornerRadius * 2,
@@ -50,10 +50,7 @@ public class SwingGraphics implements Graphics {
   public void drawRect(int x, int y, int width, int height) {
     graphics.draw(
         new Rectangle2D.Float(
-            x + (strokeWidth / 2f),
-            y + (strokeWidth / 2f),
-            width - strokeWidth,
-            height - strokeWidth));
+            x + strokeWidth / 2f, y + strokeWidth / 2f, width - strokeWidth, height - strokeWidth));
   }
 
   @Override
@@ -150,10 +147,7 @@ public class SwingGraphics implements Graphics {
   public void drawOval(int x, int y, int width, int height) {
     graphics.draw(
         new Ellipse2D.Float(
-            x + (strokeWidth / 2f),
-            y + (strokeWidth / 2f),
-            width - strokeWidth,
-            height - strokeWidth));
+            x + strokeWidth / 2f, y + strokeWidth / 2f, width - strokeWidth, height - strokeWidth));
   }
 
   @Override

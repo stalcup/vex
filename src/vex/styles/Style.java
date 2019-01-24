@@ -1,9 +1,9 @@
 package vex.styles;
 
+import vex.Align;
 import vex.Color;
 import vex.Cursor;
 import vex.FontStyle;
-import vex.Align;
 
 public class Style<T extends Style<?>> {
   public static int NOT_SET = -1;
@@ -20,10 +20,10 @@ public class Style<T extends Style<?>> {
     return self();
   }
 
-  public Align textHorizontalAlignment = Align.MID;
+  public Align textAlignX = Align.MID;
 
-  public T textHorizontalAlignment(Align textHorizontalAlignment) {
-    this.textHorizontalAlignment = textHorizontalAlignment;
+  public T textAlignX(Align textAlignX) {
+    this.textAlignX = textAlignX;
     return self();
   }
 
@@ -153,6 +153,20 @@ public class Style<T extends Style<?>> {
 
   public T cursor(Cursor cursor) {
     this.cursor = cursor;
+    return self();
+  }
+
+  public Color disabledBorderColor;
+
+  public T disabledBorderColor(Color disabledBorderColor) {
+    this.disabledBorderColor = disabledBorderColor;
+    return self();
+  }
+
+  public Color disabledBackgroundColor;
+
+  public T disabledBackgroundColor(Color disabledBackgroundColor) {
+    this.disabledBackgroundColor = disabledBackgroundColor;
     return self();
   }
 }
