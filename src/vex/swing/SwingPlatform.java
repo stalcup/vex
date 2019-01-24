@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
@@ -18,7 +17,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import com.google.common.base.Preconditions;
 
@@ -44,7 +42,7 @@ public class SwingPlatform implements Platform {
   private LinkedList<BufferedImage> bufferLayers = new LinkedList<>();
 
   private JPanel canvas;
-  private JTextField locationTextbox;
+  private String location = "";
   private Graphics g;
   private KeyEvent keyEvent;
   private LinkedList<KeyEvent> keyEvents = new LinkedList<>();
@@ -77,7 +75,6 @@ public class SwingPlatform implements Platform {
     }
     window.setVisible(true);
 
-    locationTextbox = new JTextField();
     canvas =
         new JPanel() {
           @Override
@@ -85,16 +82,9 @@ public class SwingPlatform implements Platform {
             g.drawImage(getFrontBuffer(), 0, 0, null);
           }
         };
-    canvas.setFocusable(true);
 
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    window.setLayout(null);
-    window.add(locationTextbox);
-    locationTextbox.setBounds(10, 10, 400, 30);
-
     window.add(canvas);
-
-    positionCanvas();
 
     window.addComponentListener(
         new SimpleComponentListener() {
@@ -132,9 +122,6 @@ public class SwingPlatform implements Platform {
 
           @Override
           public void mousePressed(java.awt.event.MouseEvent e) {
-            if (!canvas.hasFocus()) {
-              canvas.grabFocus();
-            }
             addMouseEvent(e, Type.DOWN);
           }
 
@@ -147,7 +134,7 @@ public class SwingPlatform implements Platform {
     // Make sure key listeners see Tab and Shift key presses.
     window.setFocusTraversalKeysEnabled(false);
 
-    canvas.addKeyListener(
+    window.addKeyListener(
         new SimpleKeyListener() {
           @Override
           public void keyPressed(java.awt.event.KeyEvent e) {
@@ -175,12 +162,6 @@ public class SwingPlatform implements Platform {
           }
         };
     httpProcessingQueue.start();
-  }
-
-  private void positionCanvas() {
-    Rectangle parentBounds = canvas.getParent().getBounds();
-
-    canvas.setBounds(0, 50, (int) parentBounds.getWidth(), (int) (parentBounds.getHeight() - 50));
   }
 
   @Override
@@ -429,7 +410,7 @@ public class SwingPlatform implements Platform {
 
   @Override
   public String getLocation() {
-    return locationTextbox.getText();
+    return location;
   }
 
   @Override
@@ -439,7 +420,7 @@ public class SwingPlatform implements Platform {
 
     System.out.println("client going to " + location);
 
-    locationTextbox.setText(location);
+    this.location = location;
   }
 
   @Override
