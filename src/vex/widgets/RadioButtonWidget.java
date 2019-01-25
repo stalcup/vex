@@ -106,7 +106,7 @@ public class RadioButtonWidget extends Widget {
               .onLeft(radioButtonStyle.triggerDiameter)
               .toCenterHeight(radioButtonStyle.triggerDiameter);
       if (radioButtonStyle.selectedImage != null) {
-        Widgets.drawAlignedImage(
+        Widgets.renderAlignedImage(
             imageBounds.x,
             imageBounds.y,
             imageBounds.width,

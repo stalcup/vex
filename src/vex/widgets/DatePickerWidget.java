@@ -117,7 +117,7 @@ public class DatePickerWidget extends Widget {
   protected void renderText(Graphics g, Style<?> style) {
     DatePickerAreaStyle<?> datePickerAreaStyle = (DatePickerAreaStyle<?>) style;
 
-    Widgets.drawAlignedImage(
+    Widgets.renderAlignedImage(
         leftArrowBounds.x,
         leftArrowBounds.y,
         leftArrowBounds.width,
@@ -137,7 +137,7 @@ public class DatePickerWidget extends Widget {
       timeMs = calendar.getTimeInMillis();
     }
 
-    Widgets.drawAlignedImage(
+    Widgets.renderAlignedImage(
         rightArrowBounds.x,
         rightArrowBounds.y,
         rightArrowBounds.width,

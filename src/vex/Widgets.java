@@ -149,7 +149,7 @@ public class Widgets {
     }
   }
 
-  public static void drawAlignedImage(
+  public static void renderAlignedImage(
       int x,
       int y,
       int width,

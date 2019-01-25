@@ -82,7 +82,7 @@ public class ButtonWidget extends Widget {
 
   private void renderImage(Graphics g, ButtonStyle<?> style) {
     if (style.image != null) {
-      Widgets.drawAlignedImage(
+      Widgets.renderAlignedImage(
           bounds.x,
           bounds.y,
           bounds.width,

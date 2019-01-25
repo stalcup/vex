@@ -95,6 +95,11 @@ public class Rect {
     return this;
   }
 
+  public Rect offBottom(int pixels) {
+    height -= pixels;
+    return this;
+  }
+
   public Rect offLeft(int pixels) {
     x += pixels;
     width -= pixels;
@@ -203,5 +208,10 @@ public class Rect {
   public Rect growBottom(int deltaY) {
     height += deltaY;
     return this;
+  }
+
+  @Override
+  public String toString() {
+    return "Rect [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
   }
 }
