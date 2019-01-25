@@ -62,7 +62,7 @@ public class MatchGame {
         (UiState.smallerDimension - Styles.gridCellGap * (DataState.gridSize + 1))
             / DataState.gridSize;
 
-    Widgets.renderRect(x, y, width, height, Color.GRAY_95);
+    Vex.fillRect(x, y, width, height, Color.GRAY_95);
     Vex.setFont("Arial", FontStyle.BOLD, 20, false);
 
     for (int cellX = 0; cellX < DataState.gridSize; cellX++) {
@@ -108,7 +108,7 @@ public class MatchGame {
     }
 
     if (UiState.confirmingReset) {
-      Widgets.renderRect(0, 0, UiState.smallerDimension, UiState.smallerDimension, Color.HIGH_MIST);
+      Vex.fillRect(0, 0, UiState.smallerDimension, UiState.smallerDimension, Color.HIGH_MIST);
     }
 
     Vex.setFont("Impact", FontStyle.PLAIN, UiState.squareSize / 2, false);

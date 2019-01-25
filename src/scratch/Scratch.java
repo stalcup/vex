@@ -2,6 +2,7 @@ package scratch;
 
 import vex.Color;
 import vex.Rect;
+import vex.Vex;
 import vex.Widgets;
 import vex.themes.flatui.FlatUiTheme;
 
@@ -16,7 +17,7 @@ public class Scratch {
   public static void doUi(int x, int y, int width, int height) {
     Rect appRect = new Rect(x, y, width, height);
 
-    Widgets.renderRect(appRect, Color.WHITE);
+    Vex.fillRect(appRect, Color.WHITE);
 
     Rect queryBounds = appRect.dupe().offLeft(20).offTop(20).onLeft(300).onTop(30);
     UiState.newCountryText =

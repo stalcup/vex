@@ -11,6 +11,7 @@ import vex.Align;
 import vex.Color;
 import vex.FontStyle;
 import vex.Rect;
+import vex.Vex;
 import vex.Widgets;
 import vex.styles.ButtonStyle;
 import vex.themes.flatui.FlatUiTheme;
@@ -43,7 +44,7 @@ public class FlatUiThemeGallery {
   }
 
   public static void doUi(Rect bounds) {
-    Widgets.renderRect(bounds, Color.WHITE);
+    Vex.fillRect(bounds, Color.WHITE);
 
     Rect basicElementsLabelBounds = bounds.dupe().offLeft(20).offTop(20).onLeft(300).onTop(40);
     Widgets.label(basicElementsLabelBounds)

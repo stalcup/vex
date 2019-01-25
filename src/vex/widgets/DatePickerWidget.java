@@ -117,7 +117,7 @@ public class DatePickerWidget extends Widget {
   protected void renderText(Style<?> style) {
     DatePickerAreaStyle<?> datePickerAreaStyle = (DatePickerAreaStyle<?>) style;
 
-    Widgets.renderAlignedImage(
+    Vex.drawAlignedImage(
         leftArrowBounds.x,
         leftArrowBounds.y,
         leftArrowBounds.width,
@@ -137,7 +137,7 @@ public class DatePickerWidget extends Widget {
       timeMs = calendar.getTimeInMillis();
     }
 
-    Widgets.renderAlignedImage(
+    Vex.drawAlignedImage(
         rightArrowBounds.x,
         rightArrowBounds.y,
         rightArrowBounds.width,
@@ -162,7 +162,7 @@ public class DatePickerWidget extends Widget {
 
     style.text = dateFormatSymbols.getMonths()[monthOfYear] + " " + calendar.get(Calendar.YEAR);
 
-    Widgets.renderAlignedString(
+    Vex.drawAlignedString(
         headerBounds.x + style.paddingLeft,
         headerBounds.y,
         headerBounds.width - style.paddingLeft,

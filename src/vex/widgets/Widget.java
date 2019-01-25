@@ -61,7 +61,7 @@ public class Widget {
       Vex.fillRoundRect(
           tooltipBounds.x, tooltipBounds.y, tooltipBounds.width, tooltipBounds.height, 4);
       Vex.setColor(Color.WHITE);
-      Widgets.renderAlignedString(tooltipBounds, tooltip, Align.MID);
+      Vex.drawAlignedString(tooltipBounds, tooltip, Align.MID);
     }
   }
 
@@ -113,11 +113,10 @@ public class Widget {
       Vex.setStroke(borderWidth);
 
       if (style.cornerRadius > 0) {
-        Vex.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, style.cornerRadius);
+        Vex.drawRoundRect(bounds, style.cornerRadius);
       } else {
         int pad = borderWidth;
-        Vex.drawRect(
-            bounds.x - pad, bounds.y - pad, bounds.width + pad * 2, bounds.height + pad * 2);
+        Vex.drawRect(bounds.dupe().shrink(-pad));
       }
     }
   }
@@ -163,7 +162,7 @@ public class Widget {
     if (style.text != null) {
       Preconditions.checkState(style.textColor != null);
       Vex.setColor(computeTextColor(style));
-      Widgets.renderAlignedString(
+      Vex.drawAlignedString(
           bounds.x + style.paddingLeft,
           bounds.y,
           bounds.width - style.paddingLeft,

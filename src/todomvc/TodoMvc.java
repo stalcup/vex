@@ -3,6 +3,7 @@ package todomvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import vex.Align;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
@@ -11,6 +12,7 @@ import vex.Rect;
 import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
+import vex.geom.Point;
 import vex.widgets.WidgetStatus;
 
 public class TodoMvc {
@@ -76,11 +78,12 @@ public class TodoMvc {
       Widgets.setCurrentFocusId("new-todo-textbox");
     }
 
-    Widgets.renderRect(x, y, width, height, Style.pageBackgroundColor);
+    Vex.fillRect(x, y, width, height, Style.pageBackgroundColor);
 
     Vex.setColor(Style.appTitleColor);
     Vex.setFont(Style.appFontName, FontStyle.PLAIN, Style.appTitleFontSize, false);
-    Widgets.renderStringCenteredHorizontal(x, y + 103, width, "todos");
+    Point stringSize = Vex.getSize("todos");
+    Vex.drawString("todos", x + width / 2 - stringSize.x / 2, y + 103);
 
     int left = (width - Style.todoWidth) / 2;
 
@@ -143,7 +146,7 @@ public class TodoMvc {
       if (todoStatus.updated) {
         todo.description = todoStatus.text;
       }
-      Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
+      Vex.fillRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
       Vex.setFont(Style.appFontName, FontStyle.PLAIN, 30, false);
       if (Widgets.button(new Rect(left + 6, top + 8, 45, 45))
@@ -170,18 +173,18 @@ public class TodoMvc {
 
     if (!DataState.todos.isEmpty()) {
 
-      Widgets.renderRect(
-          left, top, Style.todoWidth, Style.filterAreaHeight, Style.appBackgroundColor);
-      Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
+      Vex.fillRect(left, top, Style.todoWidth, Style.filterAreaHeight, Style.appBackgroundColor);
+      Vex.fillRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
       Vex.setColor(Style.filterButtonTextColor);
       Vex.setFont(Style.appFontName, FontStyle.PLAIN, 14, false);
-      Widgets.renderStringLeft(
+      Vex.drawAlignedString(
           left + 13,
           top,
           Style.todoWidth,
           Style.filterAreaHeight,
-          notDoneCount + " item" + (notDoneCount > 1 ? "s" : "") + " left");
+          notDoneCount + " item" + (notDoneCount > 1 ? "s" : "") + " left",
+          Align.MIN);
 
       if (Widgets.button(new Rect(left + 200, top + 3, 30, Style.filterAreaHeight - 6))
           .render(
@@ -256,7 +259,7 @@ public class TodoMvc {
           0,
           Style.smallDropShadowOffsetY,
           Style.smallDropShadowRadius);
-      Widgets.renderRect(
+      Vex.fillRect(
           left + 6,
           130 + dropShadowHeight + 10,
           Style.todoWidth - 12,
@@ -272,7 +275,7 @@ public class TodoMvc {
           0,
           Style.smallDropShadowOffsetY,
           Style.smallDropShadowRadius);
-      Widgets.renderRect(
+      Vex.fillRect(
           left + 3,
           130 + dropShadowHeight + 5,
           Style.todoWidth - 6,

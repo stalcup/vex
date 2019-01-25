@@ -14,40 +14,6 @@ public interface Platform {
     void handleResponseMessage(String responseMessage);
   }
 
-  int getHeight();
-
-  int getWidth();
-
-  KeyEvent getKeyEvent();
-
-  MouseEvent getMouseEvent();
-
-  Point getMouseLocation();
-
-  void consumeMouseEvent();
-
-  void consumeKeyEvent();
-
-  void println(String line);
-
-  void setUi(Runnable ui);
-
-  void doAfterFrame(Runnable callback);
-
-  void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler);
-
-  void httpGet(String path, ResponseMessageHandler responseMessageHandler);
-
-  String getLocation();
-
-  void setLocation(String location);
-
-  void setTitle(String title);
-
-  //  void setLocalStorage(String key, String value);
-  //
-  //  String getLocalStorage(String key);
-
   public static boolean mouseEventIs(Type type) {
     return Vex.platform.getMouseEvent() != null && Vex.platform.getMouseEvent().type == type;
   }
@@ -56,6 +22,10 @@ public interface Platform {
     return Vex.platform.getMouseEvent() != null
         && Vex.platform.getMouseEvent().type == type
         && mouseLocationIsIn(x, y, width, height);
+  }
+
+  public static boolean mouseEventIsIn(Rect rect, Type type) {
+    return mouseEventIsIn(rect.x, rect.y, rect.width, rect.height, type);
   }
 
   public static boolean mouseLocationIsIn(int x, int y, int width, int height) {
@@ -71,15 +41,41 @@ public interface Platform {
     return mouseLocationIsIn(rect.x, rect.y, rect.width, rect.height);
   }
 
-  public static boolean mouseEventIsIn(Rect rect, Type type) {
-    return mouseEventIsIn(rect.x, rect.y, rect.width, rect.height, type);
-  }
-
   void beginLayer();
+
+  void consumeKeyEvent();
+
+  void consumeMouseEvent();
+
+  void doAfterFrame(Runnable callback);
 
   void endLayer();
 
+  int getFrameid();
+
+  int getHeight();
+
+  KeyEvent getKeyEvent();
+
+  String getLocation();
+
+  MouseEvent getMouseEvent();
+
+  Point getMouseLocation();
+
+  int getWidth();
+
+  void httpGet(String path, ResponseMessageHandler responseMessageHandler);
+
+  void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler);
+
+  void println(String line);
+
   void setCursor(Cursor cursor);
 
-  int getFrameid();
+  void setLocation(String location);
+
+  void setTitle(String title);
+
+  void setUi(Runnable ui);
 }

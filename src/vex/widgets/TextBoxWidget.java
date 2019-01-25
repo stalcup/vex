@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import vex.Align;
 import vex.Color;
 import vex.Platform;
 import vex.Rect;
@@ -77,12 +78,13 @@ public class TextBoxWidget extends Widget {
         && style.placeholderText != null
         && style.placeholderTextColor != null) {
       Vex.setColor(style.placeholderTextColor);
-      Widgets.renderStringLeft(
+      Vex.drawAlignedString(
           bounds.x + effectiveMargin,
           bounds.y,
           bounds.width - effectiveMargin,
           bounds.height,
-          style.placeholderText);
+          style.placeholderText,
+          Align.MIN);
     }
 
     if (text == null) {
@@ -119,7 +121,7 @@ public class TextBoxWidget extends Widget {
       if (i > 0) {
         offsetTop += stringSize.y * 1.1;
       }
-      stringSize = Widgets.getStringSize(line);
+      stringSize = Vex.getSize(line);
 
       if (focused) {
         if (!alreadyProcessedChar && TextBoxWidget.textCursorLine == i) {
@@ -164,7 +166,7 @@ public class TextBoxWidget extends Widget {
           TextBoxWidget.textCursorPosition = Math.max(TextBoxWidget.textCursorPosition, 0);
 
           String textLeftOfCursor = lineNextTime.substring(0, TextBoxWidget.textCursorPosition);
-          stringSize = Widgets.getStringSize(textLeftOfCursor);
+          stringSize = Vex.getSize(textLeftOfCursor);
 
           if (keyEvent != null) {
             boolean enter = "Enter".equals(keyText);
@@ -251,12 +253,13 @@ public class TextBoxWidget extends Widget {
             bounds.width,
             bounds.height);
       } else {
-        Widgets.renderStringLeft(
+        Vex.drawAlignedString(
             bounds.x + effectiveMargin,
             bounds.y,
             bounds.width - effectiveMargin,
             bounds.height,
-            displayText);
+            displayText,
+            Align.MIN);
       }
     }
 
@@ -302,7 +305,7 @@ public class TextBoxWidget extends Widget {
 
   private void renderImage(TextBoxStyle<?> style) {
     if (style.image != null) {
-      Widgets.renderAlignedImage(
+      Vex.drawAlignedImage(
           bounds.x,
           bounds.y,
           bounds.width,

@@ -104,7 +104,7 @@ public class RadioButtonWidget extends Widget {
               .onLeft(radioButtonStyle.triggerDiameter)
               .toCenterHeight(radioButtonStyle.triggerDiameter);
       if (radioButtonStyle.selectedImage != null) {
-        Widgets.renderAlignedImage(
+        Vex.drawAlignedImage(
             imageBounds.x,
             imageBounds.y,
             imageBounds.width,
@@ -148,7 +148,7 @@ public class RadioButtonWidget extends Widget {
 
       Vex.setColor(computeTextColor(style));
       int usedUpLeft = radioButtonStyle.triggerDiameter + style.paddingLeft;
-      Widgets.renderAlignedString(
+      Vex.drawAlignedString(
           bounds.x + usedUpLeft,
           bounds.y,
           bounds.width - usedUpLeft,

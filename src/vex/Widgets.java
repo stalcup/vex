@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import vex.events.MouseEvent.Type;
-import vex.geom.Point;
 import vex.styles.ButtonStyle;
 import vex.widgets.ButtonWidget;
 import vex.widgets.DatePickerWidget;
@@ -74,116 +73,6 @@ public class Widgets {
     }
 
     return scrollPercent;
-  }
-
-  public static Point getStringSize(String text) {
-    return Vex.getSize(text);
-  }
-
-  public static void renderInnerBorder(int x, int y, int width, int height, int border) {
-    Vex.setStroke(border);
-    Vex.drawRect(x, y, width - border, height - border);
-  }
-
-  public static void renderRect(int x, int y, int width, int height, Color color) {
-    Vex.setColor(color);
-    Vex.fillRect(x, y, width, height);
-  }
-
-  public static void renderRect(Rect rect, Color color) {
-    renderRect(rect.x, rect.y, rect.width, rect.height, color);
-  }
-
-  public static void renderStringCenteredBoth(int x, int y, int width, int height, String text) {
-    Point stringSize = getStringSize(text);
-    Vex.drawString(
-        text,
-        x + width / 2 - stringSize.x / 2,
-        y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-        x,
-        y,
-        width,
-        height);
-  }
-
-  public static void renderStringCenteredHorizontal(int x, int y, int width, String text) {
-    Point stringSize = getStringSize(text);
-    Vex.drawString(text, x + width / 2 - stringSize.x / 2, y);
-  }
-
-  public static void renderAlignedString(Rect rect, String text, Align horizontalAlignment) {
-    renderAlignedString(rect.x, rect.y, rect.width, rect.height, text, horizontalAlignment);
-  }
-
-  public static void renderAlignedString(
-      int x, int y, int width, int height, String text, Align horizontalAlignment) {
-    Point stringSize = getStringSize(text);
-
-    if (horizontalAlignment == Align.MIN) {
-      Vex.drawString(
-          text,
-          x,
-          y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-          x,
-          y,
-          width,
-          height);
-    } else if (horizontalAlignment == Align.MID) {
-      Vex.drawString(
-          text,
-          x + width / 2 - stringSize.x / 2,
-          y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f));
-    } else if (horizontalAlignment == Align.MAX) {
-      Vex.drawString(
-          text,
-          x + width - stringSize.x,
-          y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-          x,
-          y,
-          width,
-          height);
-    }
-  }
-
-  public static void renderAlignedImage(
-      int x,
-      int y,
-      int width,
-      int height,
-      Base64Image image,
-      Align horizontalAlignment,
-      int imageShiftX,
-      int imageShiftY) {
-    if (horizontalAlignment == Align.MIN) {
-      Vex.drawImage(x + imageShiftX, y + imageShiftY + (height - image.height) / 2, image);
-    } else if (horizontalAlignment == Align.MID) {
-      Vex.drawImage(
-          x + imageShiftX + (width - image.width) / 2,
-          y + imageShiftY + (height - image.height) / 2,
-          image);
-    } else if (horizontalAlignment == Align.MAX) {
-      Vex.drawImage(
-          x + imageShiftX + width - image.width,
-          y + imageShiftY + (height - image.height) / 2,
-          image);
-    }
-  }
-
-  public static void renderStringLeft(int x, int y, int width, int height, String text) {
-    renderAlignedString(x, y, width, height, text, Align.MIN);
-  }
-
-  public static void renderStringRight(int x, int y, int width, int height, String text) {
-    renderAlignedString(x, y, width, height, text, Align.MAX);
-  }
-
-  public static void renderTitleBar(
-      int x, int y, int width, int height, String title, Color backgroundColor, Color textColor) {
-    Vex.setColor(backgroundColor);
-    Vex.fillRect(x, y, width, height);
-
-    Vex.setColor(textColor);
-    renderStringCenteredBoth(x, y, width, height, title);
   }
 
   public static ButtonWidget label(Rect rect) {

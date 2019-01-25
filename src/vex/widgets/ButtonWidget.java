@@ -79,7 +79,7 @@ public class ButtonWidget extends Widget {
 
   private void renderImage(ButtonStyle<?> style) {
     if (style.image != null) {
-      Widgets.renderAlignedImage(
+      Vex.drawAlignedImage(
           bounds.x,
           bounds.y,
           bounds.width,
