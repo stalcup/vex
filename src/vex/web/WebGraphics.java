@@ -137,20 +137,16 @@ public class WebGraphics implements Graphics {
   }
 
   @Override
-  public void drawImage(int x, int y, Base64Image image) {
-    // TODO Auto-generated method stub
-
-  }
+  public void drawImage(int x, int y, Base64Image image) {}
 
   @Override
-  public void drawOval(int x, int y, int width, int height) {
-    // TODO Auto-generated method stub
-
-  }
+  public void drawOval(int x, int y, int width, int height) {}
 
   @Override
-  public void fillOval(int x, int y, int width, int height) {
-    // TODO Auto-generated method stub
+  public void fillOval(int x, int y, int width, int height) {}
 
+  @Override
+  public boolean canDisplay(char c) {
+    return false;
   }
 }

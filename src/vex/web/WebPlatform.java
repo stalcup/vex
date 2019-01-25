@@ -7,6 +7,7 @@ import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
 import elemental2.dom.HTMLCanvasElement;
 import elemental2.dom.KeyboardEvent;
+import vex.Cursor;
 import vex.Graphics;
 import vex.Platform;
 import vex.events.KeyEvent;
@@ -146,38 +147,33 @@ public class WebPlatform implements Platform {
   public void httpGet(String path, ResponseMessageHandler responseMessageHandler) {}
 
   @Override
-  public void consumeKeyEvent() {
-    // TODO Auto-generated method stub
-
-  }
+  public void consumeKeyEvent() {}
 
   @Override
   public String getLocation() {
-    // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public void setLocation(String location) {
-    // TODO Auto-generated method stub
+  public void setLocation(String location) {}
 
+  @Override
+  public void setTitle(String title) {}
+
+  @Override
+  public void beginLayer() {}
+
+  @Override
+  public void endLayer() {}
+
+  @Override
+  public void doAfterFrame(Runnable callback) {}
+
+  @Override
+  public int getFrameid() {
+    return 0;
   }
 
   @Override
-  public void setTitle(String title) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void beginLayer() {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void endLayer() {
-    // TODO Auto-generated method stub
-
-  }
+  public void setCursor(Cursor cursor) {}
 }

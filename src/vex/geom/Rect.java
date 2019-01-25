@@ -5,16 +5,26 @@ import java.util.List;
 
 public class Rect {
 
+  public int height;
+  public int width;
   public int x;
   public int y;
-  public int width;
-  public int height;
 
   public Rect(int x, int y, int width, int height) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+  }
+
+  public List<Rect> asColumns(int columnCount) {
+    List<Rect> columns = new ArrayList<>();
+    for (int i = 0; i < columnCount; i++) {
+      int left = i * width / columnCount;
+      int right = (i + 1) * width / columnCount;
+      columns.add(new Rect(x + left, y, right - left, height));
+    }
+    return columns;
   }
 
   public List<Rect> asRows(int rowCount) {
@@ -40,102 +50,9 @@ public class Rect {
     return rows;
   }
 
-  public List<Rect> asColumns(int columnCount) {
-    List<Rect> columns = new ArrayList<>();
-    for (int i = 0; i < columnCount; i++) {
-      int left = i * width / columnCount;
-      int right = (i + 1) * width / columnCount;
-      columns.add(new Rect(x + left, y, right - left, height));
-    }
-    return columns;
-  }
-
-  public Rect dupe() {
-    return new Rect(x, y, width, height);
-  }
-
-  public Rect shrink(int pixels) {
-    x += pixels;
-    y += pixels;
-    width -= pixels * 2;
-    height -= pixels * 2;
-    return this;
-  }
-
-  public Rect onTop(int pixels) {
-    height = pixels;
-    return this;
-  }
-
-  public Rect offTop(int pixels) {
-    y += pixels;
-    height -= pixels;
-    return this;
-  }
-
-  public Rect onLeft(int pixels) {
-    width = pixels;
-    return this;
-  }
-
-  public Rect onRight(int pixels) {
-    x = x + width - pixels;
-    width = pixels;
-    return this;
-  }
-
-  public Rect onBottom(int pixels) {
-    y = y + height - pixels;
-    height = pixels;
-    return this;
-  }
-
-  public Rect offRight(int pixels) {
-    width -= pixels;
-    return this;
-  }
-
-  public Rect offBottom(int pixels) {
-    height -= pixels;
-    return this;
-  }
-
-  public Rect offLeft(int pixels) {
-    x += pixels;
-    width -= pixels;
-    return this;
-  }
-
-  public Rect scaleHeight(double scale) {
-    height *= scale;
-    return this;
-  }
-
   public Rect at(int x, int y) {
     this.x = x;
     this.y = y;
-    return this;
-  }
-
-  public Rect to(int width, int height) {
-    this.width = width;
-    this.height = height;
-    return this;
-  }
-
-  public Rect onHorizontalCenter(int width) {
-    x = x + (this.width - width) / 2;
-    this.width = width;
-    return this;
-  }
-
-  public Rect toHeight(int height) {
-    this.height = height;
-    return this;
-  }
-
-  public Rect toWidth(int width) {
-    this.width = width;
     return this;
   }
 
@@ -154,37 +71,12 @@ public class Rect {
     return this;
   }
 
-  public Rect toCenterHeight(int height) {
-    int diff = (this.height - height) / 2;
-    y += diff;
-    this.height -= diff * 2;
-    return this;
+  public Rect dupe() {
+    return new Rect(x, y, width, height);
   }
 
-  public Rect toCenterWidth(int width) {
-    int diff = (this.width - width) / 2;
-    x += diff;
-    this.width -= diff * 2;
-    return this;
-  }
-
-  public Rect panUp(int deltaY) {
-    y -= deltaY;
-    return this;
-  }
-
-  public Rect panDown(int deltaY) {
-    y += deltaY;
-    return this;
-  }
-
-  public Rect panRight(int deltaX) {
-    x += deltaX;
-    return this;
-  }
-
-  public Rect panLeft(int deltaX) {
-    x -= deltaX;
+  public Rect growBottom(int deltaY) {
+    height += deltaY;
     return this;
   }
 
@@ -205,13 +97,115 @@ public class Rect {
     return this;
   }
 
-  public Rect growBottom(int deltaY) {
-    height += deltaY;
+  public Rect offBottom(int pixels) {
+    height -= pixels;
+    return this;
+  }
+
+  public Rect offLeft(int pixels) {
+    x += pixels;
+    width -= pixels;
+    return this;
+  }
+
+  public Rect offRight(int pixels) {
+    width -= pixels;
+    return this;
+  }
+
+  public Rect offTop(int pixels) {
+    y += pixels;
+    height -= pixels;
+    return this;
+  }
+
+  public Rect onBottom(int pixels) {
+    y = y + height - pixels;
+    height = pixels;
+    return this;
+  }
+
+  public Rect onLeft(int pixels) {
+    width = pixels;
+    return this;
+  }
+
+  public Rect onRight(int pixels) {
+    x = x + width - pixels;
+    width = pixels;
+    return this;
+  }
+
+  public Rect onTop(int pixels) {
+    height = pixels;
+    return this;
+  }
+
+  public Rect panDown(int deltaY) {
+    y += deltaY;
+    return this;
+  }
+
+  public Rect panLeft(int deltaX) {
+    x -= deltaX;
+    return this;
+  }
+
+  public Rect panRight(int deltaX) {
+    x += deltaX;
+    return this;
+  }
+
+  public Rect panUp(int deltaY) {
+    y -= deltaY;
+    return this;
+  }
+
+  public Rect scaleHeight(double scale) {
+    height *= scale;
+    return this;
+  }
+
+  public Rect shrink(int pixels) {
+    x += pixels;
+    y += pixels;
+    width -= pixels * 2;
+    height -= pixels * 2;
+    return this;
+  }
+
+  public Rect to(int width, int height) {
+    this.width = width;
+    this.height = height;
+    return this;
+  }
+
+  public Rect toCenterHeight(int height) {
+    int diff = (this.height - height) / 2;
+    y += diff;
+    this.height -= diff * 2;
+    return this;
+  }
+
+  public Rect toCenterWidth(int width) {
+    int diff = (this.width - width) / 2;
+    x += diff;
+    this.width -= diff * 2;
+    return this;
+  }
+
+  public Rect toHeight(int height) {
+    this.height = height;
     return this;
   }
 
   @Override
   public String toString() {
     return "Rect [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + "]";
+  }
+
+  public Rect toWidth(int width) {
+    this.width = width;
+    return this;
   }
 }

@@ -119,23 +119,6 @@ public class SwingGraphics implements Graphics {
   public void drawDropShadow(
       int x, int y, int width, int height, int offsetX, int offsetY, int blur) {
     throw new RuntimeException("don't use this, it's too expensive");
-
-    //    java.awt.Color startingColor = graphics.getColor();
-    //
-    //    int blurOffset = startingColor.getAlpha() / (blur + 1) - 1;
-    //
-    //    for (int i = 0; i < blur; i++) {
-    //      graphics.setColor(
-    //          new java.awt.Color(
-    //              startingColor.getRed(),
-    //              startingColor.getGreen(),
-    //              startingColor.getBlue(),
-    //              startingColor.getAlpha() / (i + 1) - blurOffset));
-    //
-    //      graphics.fillRoundRect(
-    //          x - i + offsetX, y - i + offsetY, width + i * 2, height + i * 2, i * 2, i * 2);
-    //    }
-    //    graphics.setColor(startingColor);
   }
 
   @Override

@@ -55,7 +55,6 @@ public class SwingPlatform implements Platform {
   private Runnable ui;
   private JFrame window;
 
-  // private String location = "";
   private HttpBrowser httpBrowser = new HttpBrowser();
 
   public SwingPlatform(boolean fullScreen) {
@@ -174,10 +173,6 @@ public class SwingPlatform implements Platform {
 
   @Override
   public KeyEvent getKeyEvent() {
-    //    if (currentLayerIndex != interactiveLayerIndex) {
-    //      return null;
-    //    }
-
     return keyEvent;
   }
 
@@ -427,7 +422,6 @@ public class SwingPlatform implements Platform {
   @Override
   public void setLocation(String location) {
     Preconditions.checkArgument(location != null);
-    //    Preconditions.checkArgument(!location.equals(this.locationTextbox.getText()));
 
     System.out.println("client going to " + location);
 

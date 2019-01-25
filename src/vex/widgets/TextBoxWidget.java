@@ -107,12 +107,8 @@ public class TextBoxWidget extends Widget {
     boolean alreadyProcessedChar = false;
 
     if (focused) {
-      //      if (multiline) {
       TextBoxWidget.textCursorLine = Math.min(TextBoxWidget.textCursorLine, lines.size() - 1);
       TextBoxWidget.textCursorLine = Math.max(TextBoxWidget.textCursorLine, 0);
-      //      } else {
-      //        TextBoxWidget.textCursorLine = 0;
-      //      }
     }
 
     for (int i = 0; i < lines.size(); i++) {
