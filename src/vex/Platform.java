@@ -34,7 +34,7 @@ public interface Platform {
 
   void setUi(Runnable ui);
 
-  void doAtEnd();
+  void doAfterFrame(Runnable callback);
 
   void httpPost(String path, String body, ResponseMessageHandler responseMessageHandler);
 

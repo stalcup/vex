@@ -10,7 +10,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -222,23 +224,20 @@ public class SwingPlatform implements Platform {
 
   private int frameId = 0;
 
-  private synchronized void doFrame() {
-    if (ui == null) {
-      return;
-    }
-    if (getWidth() == 0 || getHeight() == 0) {
-      return;
-    }
+  private void doFrame() {
+    synchronized (theWebIsSingleThreaded) {
+      if (ui == null) {
+        return;
+      }
+      if (getWidth() == 0 || getHeight() == 0) {
+        return;
+      }
 
-    bufferLayers.clear();
-    currentLayerIndex = 0;
-    interactiveLayerIndex = highestLayerIndex;
-    highestLayerIndex = 0;
-
-    startFrame();
-    frameId++;
-    ui.run();
-    endFrame();
+      startFrame();
+      frameId++;
+      ui.run();
+      endFrame();
+    }
   }
 
   private boolean bufferAIsFront = true;
@@ -262,6 +261,11 @@ public class SwingPlatform implements Platform {
     consumeMouseEvent();
     consumeKeyEvent();
     applyCursor();
+
+    for (Runnable afterFrameCallback : afterFrameCallbacks) {
+      afterFrameCallback.run();
+    }
+    afterFrameCallbacks.clear();
   }
 
   private void flipBuffers() {
@@ -339,6 +343,11 @@ public class SwingPlatform implements Platform {
   }
 
   private void startFrame() {
+    bufferLayers.clear();
+    currentLayerIndex = 0;
+    interactiveLayerIndex = highestLayerIndex;
+    highestLayerIndex = 0;
+
     beginLayer();
 
     if (!mouseEvents.isEmpty()) {
@@ -357,6 +366,10 @@ public class SwingPlatform implements Platform {
 
   private Cursor previousCursor;
   private Cursor currentCursor;
+
+  private List<Runnable> afterFrameCallbacks = new ArrayList<>();
+
+  private Object theWebIsSingleThreaded = new Object();
 
   @Override
   public void httpGet(String path, ResponseMessageHandler responseMessageHandler) {
@@ -378,7 +391,9 @@ public class SwingPlatform implements Platform {
             return;
           }
 
-          responseMessageHandler.handleResponseMessage(httpResponse.bodyText());
+          synchronized (theWebIsSingleThreaded) {
+            responseMessageHandler.handleResponseMessage(httpResponse.bodyText());
+          }
           doFrame();
         });
   }
@@ -506,7 +521,9 @@ public class SwingPlatform implements Platform {
   }
 
   @Override
-  public void doAtEnd() {}
+  public void doAfterFrame(Runnable callback) {
+    afterFrameCallbacks.add(callback);
+  }
 
   @Override
   public void setCursor(Cursor currentCursor) {
