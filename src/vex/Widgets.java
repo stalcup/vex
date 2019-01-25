@@ -43,16 +43,16 @@ public class Widgets {
     int offsetPixels = (int) (hiddenPixels * scrollPercent / 100f);
 
     if (backgroundColor != null) {
-      g().setColor(backgroundColor);
-      g().fillRect(x, y, width, height);
+      Vex.setColor(backgroundColor);
+      Vex.fillRect(x, y, width, height);
     }
 
-    g().setColor(barColor);
-    g().fillRect(x, y + offsetPixels, width, visiblePixels);
+    Vex.setColor(barColor);
+    Vex.fillRect(x, y + offsetPixels, width, visiblePixels);
 
     if (Platform.mouseLocationIsIn(x, y, width, height)
         || Strings.equals(getCurrentFocusId(), focusId)) {
-      g().fillRect(x, y + offsetPixels, width, visiblePixels);
+      Vex.fillRect(x, y + offsetPixels, width, visiblePixels);
     }
 
     if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
@@ -76,22 +76,18 @@ public class Widgets {
     return scrollPercent;
   }
 
-  public static Graphics g() {
-    return Vex.platform.getGraphics();
-  }
-
   public static Point getStringSize(String text) {
-    return g().getSize(text);
+    return Vex.getSize(text);
   }
 
   public static void renderInnerBorder(int x, int y, int width, int height, int border) {
-    g().setStroke(border);
-    g().drawRect(x, y, width - border, height - border);
+    Vex.setStroke(border);
+    Vex.drawRect(x, y, width - border, height - border);
   }
 
   public static void renderRect(int x, int y, int width, int height, Color color) {
-    g().setColor(color);
-    g().fillRect(x, y, width, height);
+    Vex.setColor(color);
+    Vex.fillRect(x, y, width, height);
   }
 
   public static void renderRect(Rect rect, Color color) {
@@ -100,19 +96,19 @@ public class Widgets {
 
   public static void renderStringCenteredBoth(int x, int y, int width, int height, String text) {
     Point stringSize = getStringSize(text);
-    g().drawString(
-            text,
-            x + width / 2 - stringSize.x / 2,
-            y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-            x,
-            y,
-            width,
-            height);
+    Vex.drawString(
+        text,
+        x + width / 2 - stringSize.x / 2,
+        y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
+        x,
+        y,
+        width,
+        height);
   }
 
   public static void renderStringCenteredHorizontal(int x, int y, int width, String text) {
     Point stringSize = getStringSize(text);
-    g().drawString(text, x + width / 2 - stringSize.x / 2, y);
+    Vex.drawString(text, x + width / 2 - stringSize.x / 2, y);
   }
 
   public static void renderAlignedString(Rect rect, String text, Align horizontalAlignment) {
@@ -124,28 +120,28 @@ public class Widgets {
     Point stringSize = getStringSize(text);
 
     if (horizontalAlignment == Align.MIN) {
-      g().drawString(
-              text,
-              x,
-              y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-              x,
-              y,
-              width,
-              height);
+      Vex.drawString(
+          text,
+          x,
+          y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
+          x,
+          y,
+          width,
+          height);
     } else if (horizontalAlignment == Align.MID) {
-      g().drawString(
-              text,
-              x + width / 2 - stringSize.x / 2,
-              y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f));
+      Vex.drawString(
+          text,
+          x + width / 2 - stringSize.x / 2,
+          y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f));
     } else if (horizontalAlignment == Align.MAX) {
-      g().drawString(
-              text,
-              x + width - stringSize.x,
-              y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
-              x,
-              y,
-              width,
-              height);
+      Vex.drawString(
+          text,
+          x + width - stringSize.x,
+          y + height / 2 + stringSize.y / 2 - Math.round(stringSize.y / 6f),
+          x,
+          y,
+          width,
+          height);
     }
   }
 
@@ -159,17 +155,17 @@ public class Widgets {
       int imageShiftX,
       int imageShiftY) {
     if (horizontalAlignment == Align.MIN) {
-      g().drawImage(x + imageShiftX, y + imageShiftY + (height - image.height) / 2, image);
+      Vex.drawImage(x + imageShiftX, y + imageShiftY + (height - image.height) / 2, image);
     } else if (horizontalAlignment == Align.MID) {
-      g().drawImage(
-              x + imageShiftX + (width - image.width) / 2,
-              y + imageShiftY + (height - image.height) / 2,
-              image);
+      Vex.drawImage(
+          x + imageShiftX + (width - image.width) / 2,
+          y + imageShiftY + (height - image.height) / 2,
+          image);
     } else if (horizontalAlignment == Align.MAX) {
-      g().drawImage(
-              x + imageShiftX + width - image.width,
-              y + imageShiftY + (height - image.height) / 2,
-              image);
+      Vex.drawImage(
+          x + imageShiftX + width - image.width,
+          y + imageShiftY + (height - image.height) / 2,
+          image);
     }
   }
 
@@ -183,19 +179,11 @@ public class Widgets {
 
   public static void renderTitleBar(
       int x, int y, int width, int height, String title, Color backgroundColor, Color textColor) {
-    g().setColor(backgroundColor);
-    g().fillRect(x, y, width, height);
+    Vex.setColor(backgroundColor);
+    Vex.fillRect(x, y, width, height);
 
-    g().setColor(textColor);
+    Vex.setColor(textColor);
     renderStringCenteredBoth(x, y, width, height, title);
-  }
-
-  public static void setColor(Color color) {
-    g().setColor(color);
-  }
-
-  public static void setFont(String fontName, FontStyle fontStyle, int fontSize) {
-    g().setFont(fontName, fontStyle, fontSize, false);
   }
 
   public static ButtonWidget label(Rect rect) {

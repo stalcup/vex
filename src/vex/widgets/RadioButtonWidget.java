@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 
 import vex.Align;
 import vex.Color;
-import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
 import vex.Vex;
@@ -47,8 +46,7 @@ public class RadioButtonWidget extends Widget {
   }
 
   @Override
-  protected void drawFocusHaloShape(
-      Graphics g, Style<?> style, Rect focusHaloBounds, int focusHaloWidth) {
+  protected void drawFocusHaloShape(Style<?> style, Rect focusHaloBounds, int focusHaloWidth) {
     RadioButtonStyle<?> radioButtonStyle = (RadioButtonStyle<?>) style;
     radioButtonStyle.triggerShape.fill(focusHaloBounds);
   }
@@ -67,13 +65,13 @@ public class RadioButtonWidget extends Widget {
   }
 
   @Override
-  protected void renderBackground(Graphics g, Style<?> style) {
+  protected void renderBackground(Style<?> style) {
     Color backgroundColor = computeBackgroundColor(style);
 
     RadioButtonStyle<?> radioButtonStyle = (RadioButtonStyle<?>) style;
 
     if (backgroundColor != null) {
-      g.setColor(backgroundColor);
+      Vex.setColor(backgroundColor);
       radioButtonStyle.triggerShape.fill(
           bounds
               .dupe()
@@ -83,15 +81,15 @@ public class RadioButtonWidget extends Widget {
   }
 
   @Override
-  protected void renderBorder(Graphics g, Style<?> style) {
+  protected void renderBorder(Style<?> style) {
     Color borderColor = computeBorderColor(style);
     int borderWidth = computeBorderWidth(style);
 
     RadioButtonStyle<?> radioButtonStyle = (RadioButtonStyle<?>) style;
 
     if (borderWidth > 0 && borderColor != null) {
-      g.setColor(borderColor);
-      g.setStroke(borderWidth);
+      Vex.setColor(borderColor);
+      Vex.setStroke(borderWidth);
       radioButtonStyle.triggerShape.draw(
           bounds
               .dupe()
@@ -116,8 +114,8 @@ public class RadioButtonWidget extends Widget {
             0,
             0);
       } else if (borderColor != null) {
-        g.setColor(borderColor);
-        g.fillOval(
+        Vex.setColor(borderColor);
+        Vex.fillOval(
             bounds.x + (radioButtonStyle.triggerDiameter - radioButtonStyle.dimpleDiameter) / 2,
             bounds.y + (bounds.height - radioButtonStyle.dimpleDiameter) / 2,
             radioButtonStyle.dimpleDiameter,
@@ -142,13 +140,13 @@ public class RadioButtonWidget extends Widget {
   }
 
   @Override
-  protected void renderText(Graphics g, Style<?> style) {
+  protected void renderText(Style<?> style) {
     if (style.text != null) {
       Preconditions.checkState(style.textColor != null);
 
       RadioButtonStyle<?> radioButtonStyle = (RadioButtonStyle<?>) style;
 
-      g.setColor(computeTextColor(style));
+      Vex.setColor(computeTextColor(style));
       int usedUpLeft = radioButtonStyle.triggerDiameter + style.paddingLeft;
       Widgets.renderAlignedString(
           bounds.x + usedUpLeft,

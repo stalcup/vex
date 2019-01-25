@@ -8,9 +8,9 @@ import com.google.common.base.Preconditions;
 
 import vex.Align;
 import vex.FontStyle;
-import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
+import vex.Vex;
 import vex.Widgets;
 import vex.events.MouseEvent.Type;
 import vex.styles.ButtonStyle;
@@ -99,12 +99,12 @@ public class DatePickerWidget extends Widget {
   }
 
   @Override
-  protected void renderBackground(Graphics g, Style<?> style) {
-    super.renderBackground(g, style);
+  protected void renderBackground(Style<?> style) {
+    super.renderBackground(style);
 
     DatePickerAreaStyle<?> datePickerAreaStyle = (DatePickerAreaStyle<?>) style;
-    g.setColor(datePickerAreaStyle.innerBackgroundColor);
-    g.fillRect(
+    Vex.setColor(datePickerAreaStyle.innerBackgroundColor);
+    Vex.fillRect(
         innerBackgroundBounds.x,
         innerBackgroundBounds.y,
         innerBackgroundBounds.width,
@@ -114,7 +114,7 @@ public class DatePickerWidget extends Widget {
   private static DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
 
   @Override
-  protected void renderText(Graphics g, Style<?> style) {
+  protected void renderText(Style<?> style) {
     DatePickerAreaStyle<?> datePickerAreaStyle = (DatePickerAreaStyle<?>) style;
 
     Widgets.renderAlignedImage(
@@ -158,7 +158,7 @@ public class DatePickerWidget extends Widget {
     }
 
     Preconditions.checkState(style.textColor != null);
-    g.setColor(computeTextColor(style));
+    Vex.setColor(computeTextColor(style));
 
     style.text = dateFormatSymbols.getMonths()[monthOfYear] + " " + calendar.get(Calendar.YEAR);
 

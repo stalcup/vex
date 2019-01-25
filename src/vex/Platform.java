@@ -18,8 +18,6 @@ public interface Platform {
 
   int getWidth();
 
-  Graphics getGraphics();
-
   KeyEvent getKeyEvent();
 
   MouseEvent getMouseEvent();

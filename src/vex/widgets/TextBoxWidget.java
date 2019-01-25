@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import vex.Color;
-import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
 import vex.Vex;
@@ -64,13 +63,11 @@ public class TextBoxWidget extends Widget {
 
     super.render(style);
 
-    Graphics g = Vex.platform.getGraphics();
-
-    renderImage(g, style);
+    renderImage(style);
 
     if (style.underlineColor != null) {
-      g.setColor(style.underlineColor);
-      g.fillRect(bounds.x, bounds.y + bounds.height - 1, bounds.width, 1);
+      Vex.setColor(style.underlineColor);
+      Vex.fillRect(bounds.x, bounds.y + bounds.height - 1, bounds.width, 1);
     }
 
     int pointSizeMargin = style.fontPointSize * 9 / 10;
@@ -79,7 +76,7 @@ public class TextBoxWidget extends Widget {
     if ((text == null || text.isEmpty())
         && style.placeholderText != null
         && style.placeholderTextColor != null) {
-      g.setColor(style.placeholderTextColor);
+      Vex.setColor(style.placeholderTextColor);
       Widgets.renderStringLeft(
           bounds.x + effectiveMargin,
           bounds.y,
@@ -96,7 +93,7 @@ public class TextBoxWidget extends Widget {
     String keyText = null;
     String displayText = null;
 
-    g.setColor(style.textColor);
+    Vex.setColor(style.textColor);
 
     List<String> lines = splitOnLinebreaks(text);
 
@@ -230,12 +227,12 @@ public class TextBoxWidget extends Widget {
           if (multiline) {
             int textCursorPixelX = bounds.x + effectiveMargin + textCursorX;
             if (textCursorPixelX < bounds.x + bounds.width) {
-              g.fillRect(textCursorPixelX, bounds.y + offsetTop, 2, stringSize.y);
+              Vex.fillRect(textCursorPixelX, bounds.y + offsetTop, 2, stringSize.y);
             }
           } else {
             int textCursorPixelX = bounds.x + effectiveMargin + textCursorX;
             if (textCursorPixelX < bounds.x + bounds.width) {
-              g.fillRect(
+              Vex.fillRect(
                   textCursorPixelX, bounds.y + (bounds.height - stringSize.y) / 2, 2, stringSize.y);
             }
           }
@@ -245,15 +242,14 @@ public class TextBoxWidget extends Widget {
       displayText = style.password ? makePasswordString(line.length()) : line;
 
       if (multiline) {
-        Widgets.g()
-            .drawString(
-                displayText,
-                bounds.x + effectiveMargin,
-                bounds.y + offsetTop + stringSize.y,
-                bounds.x,
-                bounds.y,
-                bounds.width,
-                bounds.height);
+        Vex.drawString(
+            displayText,
+            bounds.x + effectiveMargin,
+            bounds.y + offsetTop + stringSize.y,
+            bounds.x,
+            bounds.y,
+            bounds.width,
+            bounds.height);
       } else {
         Widgets.renderStringLeft(
             bounds.x + effectiveMargin,
@@ -304,7 +300,7 @@ public class TextBoxWidget extends Widget {
     return this;
   }
 
-  private void renderImage(Graphics g, TextBoxStyle<?> style) {
+  private void renderImage(TextBoxStyle<?> style) {
     if (style.image != null) {
       Widgets.renderAlignedImage(
           bounds.x,

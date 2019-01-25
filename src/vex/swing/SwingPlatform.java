@@ -29,6 +29,7 @@ import jodd.http.HttpResponse;
 import vex.Cursor;
 import vex.Graphics;
 import vex.Platform;
+import vex.Vex;
 import vex.events.KeyEvent;
 import vex.events.MouseEvent;
 import vex.events.MouseEvent.Type;
@@ -164,11 +165,6 @@ public class SwingPlatform implements Platform {
           }
         };
     httpProcessingQueue.start();
-  }
-
-  @Override
-  public Graphics getGraphics() {
-    return g;
   }
 
   @Override
@@ -474,6 +470,7 @@ public class SwingPlatform implements Platform {
       swingGraphics.setRenderingHint(
           RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
       g = new SwingGraphics(swingGraphics);
+      Vex.graphics = g;
 
       bufferLayers.addLast(currentBuffer);
     }
@@ -503,6 +500,7 @@ public class SwingPlatform implements Platform {
     swingGraphics.setRenderingHint(
         RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
     g = new SwingGraphics(swingGraphics);
+    Vex.graphics = g;
   }
 
   private void compositeBuffers() {

@@ -6,7 +6,6 @@ import java.util.List;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
-import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
 import vex.Strings;
@@ -79,8 +78,8 @@ public class TodoMvc {
 
     Widgets.renderRect(x, y, width, height, Style.pageBackgroundColor);
 
-    Widgets.setColor(Style.appTitleColor);
-    Widgets.setFont(Style.appFontName, FontStyle.PLAIN, Style.appTitleFontSize);
+    Vex.setColor(Style.appTitleColor);
+    Vex.setFont(Style.appFontName, FontStyle.PLAIN, Style.appTitleFontSize, false);
     Widgets.renderStringCenteredHorizontal(x, y + 103, width, "todos");
 
     int left = (width - Style.todoWidth) / 2;
@@ -106,7 +105,7 @@ public class TodoMvc {
     }
 
     if (!DataState.todos.isEmpty()) {
-      Widgets.setFont(Style.appFontName, FontStyle.PLAIN, Style.doneButtonFontSize);
+      Vex.setFont(Style.appFontName, FontStyle.PLAIN, Style.doneButtonFontSize, false);
       if (Widgets.button(new Rect(left + 6, 130 + 8, 45, 45))
           .render(BaseStyles.button().text("✔", Color.GRAY_80))
           .clicked) {
@@ -146,7 +145,7 @@ public class TodoMvc {
       }
       Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
-      Widgets.setFont(Style.appFontName, FontStyle.PLAIN, 30);
+      Vex.setFont(Style.appFontName, FontStyle.PLAIN, 30, false);
       if (Widgets.button(new Rect(left + 6, top + 8, 45, 45))
           .render(BaseStyles.button().text(todo.done ? "✔" : "◯", Style.doneTodoTextColor))
           .clicked) {
@@ -175,8 +174,8 @@ public class TodoMvc {
           left, top, Style.todoWidth, Style.filterAreaHeight, Style.appBackgroundColor);
       Widgets.renderRect(left, top, Style.todoWidth, 1, Style.todoDividerColor);
 
-      Widgets.setColor(Style.filterButtonTextColor);
-      Widgets.setFont(Style.appFontName, FontStyle.PLAIN, 14);
+      Vex.setColor(Style.filterButtonTextColor);
+      Vex.setFont(Style.appFontName, FontStyle.PLAIN, 14, false);
       Widgets.renderStringLeft(
           left + 13,
           top,
@@ -237,9 +236,8 @@ public class TodoMvc {
       dropShadowHeight += Style.todoHeight;
     }
 
-    Widgets.setColor(Style.bigDropShadowColor);
-    Graphics g = Vex.platform.getGraphics();
-    g.drawDropShadow(
+    Vex.setColor(Style.bigDropShadowColor);
+    Vex.drawDropShadow(
         left,
         130,
         Style.todoWidth,
@@ -249,8 +247,8 @@ public class TodoMvc {
         Style.bigDropShadowRadius);
 
     if (!DataState.todos.isEmpty()) {
-      Widgets.setColor(Style.smallDropShadowColor);
-      g.drawDropShadow(
+      Vex.setColor(Style.smallDropShadowColor);
+      Vex.drawDropShadow(
           left + 6,
           130 + dropShadowHeight + 10,
           Style.todoWidth - 12,
@@ -265,8 +263,8 @@ public class TodoMvc {
           Style.filterAreaHeight,
           Style.appBackgroundColor);
 
-      Widgets.setColor(Style.smallDropShadowColor);
-      g.drawDropShadow(
+      Vex.setColor(Style.smallDropShadowColor);
+      Vex.drawDropShadow(
           left + 3,
           130 + dropShadowHeight + 5,
           Style.todoWidth - 6,
@@ -282,8 +280,8 @@ public class TodoMvc {
           Style.appBackgroundColor);
     }
 
-    Widgets.setColor(Style.smallDropShadowColor);
-    g.drawDropShadow(
+    Vex.setColor(Style.smallDropShadowColor);
+    Vex.drawDropShadow(
         left,
         130,
         Style.todoWidth,

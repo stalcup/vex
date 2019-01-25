@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import vex.Align;
 import vex.Color;
 import vex.FontStyle;
-import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
 import vex.Strings;
@@ -22,16 +21,14 @@ public class Widget {
   }
 
   public WidgetStatus render(Style<?> style) {
-    Graphics g = Vex.platform.getGraphics();
-
     if (isFocused()) {
-      renderFocusHalo(g, style);
+      renderFocusHalo(style);
     }
-    renderBackground(g, style);
-    renderFont(g, style);
-    renderText(g, style);
-    renderBorder(g, style);
-    renderTooltip(g, style);
+    renderBackground(style);
+    renderFont(style);
+    renderText(style);
+    renderBorder(style);
+    renderTooltip(style);
     setCursor(style);
 
     return null;
@@ -43,14 +40,14 @@ public class Widget {
     }
   }
 
-  protected void renderTooltip(Graphics g, Style<?> style) {
+  protected void renderTooltip(Style<?> style) {
     if (tooltip == null) {
       return;
     }
 
     if (isHovered()) {
-      g.setFont("SanSerif", FontStyle.PLAIN, 12, false);
-      Point tooltipSize = g.getSize(tooltip);
+      Vex.setFont("SanSerif", FontStyle.PLAIN, 12, false);
+      Point tooltipSize = Vex.getSize(tooltip);
 
       Rect tooltipBounds =
           bounds
@@ -60,10 +57,10 @@ public class Widget {
               .toWidth(tooltipSize.x + 20)
               .toCenterHeight(tooltipSize.y + 6);
 
-      g.setColor(Color.BLACK);
-      g.fillRoundRect(
+      Vex.setColor(Color.BLACK);
+      Vex.fillRoundRect(
           tooltipBounds.x, tooltipBounds.y, tooltipBounds.width, tooltipBounds.height, 4);
-      g.setColor(Color.WHITE);
+      Vex.setColor(Color.WHITE);
       Widgets.renderAlignedString(tooltipBounds, tooltip, Align.MID);
     }
   }
@@ -72,23 +69,22 @@ public class Widget {
     return Platform.mouseLocationIsIn(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
-  protected void renderFocusHalo(Graphics g, Style<?> style) {
+  protected void renderFocusHalo(Style<?> style) {
     Color focusHaloColor = computeFocusHaloColor(style);
     int focusHaloWidth = computeFocusHaloWidth(style);
 
     if (focusHaloWidth > 0 && focusHaloColor != null) {
-      g.setColor(focusHaloColor);
-      g.setStroke(focusHaloWidth + 2);
+      Vex.setColor(focusHaloColor);
+      Vex.setStroke(focusHaloWidth + 2);
 
       Rect focusHaloBounds = computeHaloBounds(focusHaloWidth, style);
-      drawFocusHaloShape(g, style, focusHaloBounds, focusHaloWidth);
+      drawFocusHaloShape(style, focusHaloBounds, focusHaloWidth);
     }
   }
 
-  protected void drawFocusHaloShape(
-      Graphics g, Style<?> style, Rect focusHaloBounds, int focusHaloWidth) {
+  protected void drawFocusHaloShape(Style<?> style, Rect focusHaloBounds, int focusHaloWidth) {
     if (style.cornerRadius > 0) {
-      g.drawRoundRect(
+      Vex.drawRoundRect(
           focusHaloBounds.x,
           focusHaloBounds.y,
           focusHaloBounds.width,
@@ -96,7 +92,7 @@ public class Widget {
           style.cornerRadius);
     } else {
       int pad = focusHaloWidth;
-      g.drawRect(
+      Vex.drawRect(
           focusHaloBounds.x - pad,
           focusHaloBounds.y - pad,
           focusHaloBounds.width + pad * 2,
@@ -108,19 +104,20 @@ public class Widget {
     return bounds.dupe().shrink(-focusHaloWidth);
   }
 
-  protected void renderBorder(Graphics g, Style<?> style) {
+  protected void renderBorder(Style<?> style) {
     Color borderColor = computeBorderColor(style);
     int borderWidth = computeBorderWidth(style);
 
     if (borderWidth > 0 && borderColor != null) {
-      g.setColor(borderColor);
-      g.setStroke(borderWidth);
+      Vex.setColor(borderColor);
+      Vex.setStroke(borderWidth);
 
       if (style.cornerRadius > 0) {
-        g.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, style.cornerRadius);
+        Vex.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, style.cornerRadius);
       } else {
         int pad = borderWidth;
-        g.drawRect(bounds.x - pad, bounds.y - pad, bounds.width + pad * 2, bounds.height + pad * 2);
+        Vex.drawRect(
+            bounds.x - pad, bounds.y - pad, bounds.width + pad * 2, bounds.height + pad * 2);
       }
     }
   }
@@ -162,10 +159,10 @@ public class Widget {
     return focusId != null && Strings.equals(Widgets.getCurrentFocusId(), focusId);
   }
 
-  protected void renderText(Graphics g, Style<?> style) {
+  protected void renderText(Style<?> style) {
     if (style.text != null) {
       Preconditions.checkState(style.textColor != null);
-      g.setColor(computeTextColor(style));
+      Vex.setColor(computeTextColor(style));
       Widgets.renderAlignedString(
           bounds.x + style.paddingLeft,
           bounds.y,
@@ -180,18 +177,18 @@ public class Widget {
     return style.textColor;
   }
 
-  protected void renderFont(Graphics g, Style<?> style) {
+  protected void renderFont(Style<?> style) {
     if (style.fontName != null) {
-      g.setFont(style.fontName, style.fontStyle, style.fontPointSize, style.fontStrikeThrough);
+      Vex.setFont(style.fontName, style.fontStyle, style.fontPointSize, style.fontStrikeThrough);
     }
   }
 
-  protected void renderBackground(Graphics g, Style<?> style) {
+  protected void renderBackground(Style<?> style) {
     Color color = computeBackgroundColor(style);
 
     if (color != null) {
-      g.setColor(color);
-      fillRectOrRoundRect(g, style);
+      Vex.setColor(color);
+      fillRectOrRoundRect(style);
     }
   }
 
@@ -208,11 +205,11 @@ public class Widget {
     return color;
   }
 
-  protected void fillRectOrRoundRect(Graphics g, Style<?> style) {
+  protected void fillRectOrRoundRect(Style<?> style) {
     if (style.cornerRadius > 0) {
-      g.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, style.cornerRadius);
+      Vex.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, style.cornerRadius);
     } else {
-      g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      Vex.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
   }
 

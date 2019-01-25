@@ -11,6 +11,7 @@ import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
 import vex.Rect;
+import vex.Vex;
 import vex.Widgets;
 import vex.geom.Point;
 import vex.styles.ButtonStyle;
@@ -62,7 +63,7 @@ public class MatchGame {
             / DataState.gridSize;
 
     Widgets.renderRect(x, y, width, height, Color.GRAY_95);
-    Widgets.setFont("Arial", FontStyle.BOLD, 20);
+    Vex.setFont("Arial", FontStyle.BOLD, 20, false);
 
     for (int cellX = 0; cellX < DataState.gridSize; cellX++) {
       for (int cellY = 0; cellY < DataState.gridSize; cellY++) {
@@ -110,7 +111,7 @@ public class MatchGame {
       Widgets.renderRect(0, 0, UiState.smallerDimension, UiState.smallerDimension, Color.HIGH_MIST);
     }
 
-    Widgets.setFont("Impact", FontStyle.PLAIN, UiState.squareSize / 2);
+    Vex.setFont("Impact", FontStyle.PLAIN, UiState.squareSize / 2, false);
 
     Widgets.area(
             new Rect(
@@ -141,7 +142,7 @@ public class MatchGame {
                     + DataState.gridSize * DataState.gridSize / 2));
 
     if (UiState.confirmingReset) {
-      Widgets.setFont("Arial", FontStyle.BOLD, 20);
+      Vex.setFont("Arial", FontStyle.BOLD, 20, false);
       if (Widgets.button(
               new Rect(
                   UiState.smallerDimension / 2,

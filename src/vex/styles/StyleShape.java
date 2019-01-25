@@ -13,12 +13,12 @@ public abstract class StyleShape {
       new StyleShape() {
         @Override
         public void draw(Rect bounds) {
-          Vex.platform.getGraphics().drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
+          Vex.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
         }
 
         @Override
         public void fill(Rect bounds) {
-          Vex.platform.getGraphics().fillOval(bounds.x, bounds.y, bounds.width, bounds.height);
+          Vex.fillOval(bounds.x, bounds.y, bounds.width, bounds.height);
         }
       };
 
@@ -26,12 +26,12 @@ public abstract class StyleShape {
       new StyleShape() {
         @Override
         public void draw(Rect bounds) {
-          Vex.platform.getGraphics().drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+          Vex.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
 
         @Override
         public void fill(Rect bounds) {
-          Vex.platform.getGraphics().fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+          Vex.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
       };
 
@@ -40,17 +40,13 @@ public abstract class StyleShape {
       @Override
       public void draw(Rect bounds) {
         int cornerRadius = (int) (Math.min(bounds.width, bounds.height) * cornerRadiusRatio);
-        Vex.platform
-            .getGraphics()
-            .drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, cornerRadius);
+        Vex.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, cornerRadius);
       }
 
       @Override
       public void fill(Rect bounds) {
         int cornerRadius = (int) (Math.min(bounds.width, bounds.height) * cornerRadiusRatio);
-        Vex.platform
-            .getGraphics()
-            .fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, cornerRadius);
+        Vex.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, cornerRadius);
       }
     };
   }

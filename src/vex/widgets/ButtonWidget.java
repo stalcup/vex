@@ -1,7 +1,6 @@
 package vex.widgets;
 
 import vex.Color;
-import vex.Graphics;
 import vex.Platform;
 import vex.Rect;
 import vex.Vex;
@@ -37,14 +36,12 @@ public class ButtonWidget extends Widget {
       }
     }
 
-    Graphics g = Vex.platform.getGraphics();
-
-    renderBackground(g, style);
-    renderFont(g, style);
-    renderText(g, style);
-    renderImage(g, style);
-    renderBorder(g, style);
-    renderTooltip(g, style);
+    renderBackground(style);
+    renderFont(style);
+    renderText(style);
+    renderImage(style);
+    renderBorder(style);
+    renderTooltip(style);
     setCursor(style);
 
     if (!disabled && isFocused()) {
@@ -80,7 +77,7 @@ public class ButtonWidget extends Widget {
     return super.computeTextColor(style);
   }
 
-  private void renderImage(Graphics g, ButtonStyle<?> style) {
+  private void renderImage(ButtonStyle<?> style) {
     if (style.image != null) {
       Widgets.renderAlignedImage(
           bounds.x,

@@ -64,11 +64,6 @@ public class WebPlatform implements Platform {
   }
 
   @Override
-  public Graphics getGraphics() {
-    return graphics;
-  }
-
-  @Override
   public int getHeight() {
     return canvasElement.clientHeight;
   }
