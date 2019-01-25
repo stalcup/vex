@@ -9,10 +9,10 @@ import com.google.common.base.Preconditions;
 import vex.Align;
 import vex.FontStyle;
 import vex.Platform;
-import vex.Rect;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.MouseEvent.Type;
+import vex.geom.Rect;
 import vex.styles.ButtonStyle;
 import vex.styles.DatePickerAreaStyle;
 import vex.styles.Style;
@@ -51,13 +51,11 @@ public class DatePickerWidget extends Widget {
   private Rect innerBackgroundBounds;
   private Rect squareBounds;
   private ButtonStyle<?> datePickerDayStyle;
-  private DatePickerAreaStyle<?> datePickerAreaStyle;
 
   public WidgetStatus render(
       DatePickerAreaStyle<?> datePickerAreaStyle, ButtonStyle<?> datePickerDayStyle) {
 
     this.datePickerDayStyle = datePickerDayStyle;
-    this.datePickerAreaStyle = datePickerAreaStyle;
 
     bounds.width =
         datePickerAreaStyle.outerMargin * 2

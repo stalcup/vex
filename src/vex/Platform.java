@@ -5,6 +5,7 @@ import vex.events.KeyEvent;
 import vex.events.MouseEvent;
 import vex.events.MouseEvent.Type;
 import vex.geom.Point;
+import vex.geom.Rect;
 
 @JsType
 public interface Platform {

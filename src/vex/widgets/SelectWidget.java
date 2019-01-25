@@ -3,10 +3,10 @@ package vex.widgets;
 import java.util.List;
 import java.util.Set;
 
-import vex.Rect;
 import vex.Sets;
 import vex.Vex;
 import vex.Widgets;
+import vex.geom.Rect;
 import vex.styles.ButtonStyle;
 
 public class SelectWidget {

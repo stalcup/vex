@@ -10,10 +10,10 @@ import java.util.Set;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
-import vex.Rect;
 import vex.Vex;
 import vex.Widgets;
 import vex.geom.Point;
+import vex.geom.Rect;
 import vex.styles.ButtonStyle;
 import vex.styles.Style;
 

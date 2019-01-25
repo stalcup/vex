@@ -6,11 +6,11 @@ import vex.Align;
 import vex.Color;
 import vex.FontStyle;
 import vex.Platform;
-import vex.Rect;
 import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
 import vex.geom.Point;
+import vex.geom.Rect;
 import vex.styles.Style;
 
 public class Widget {
@@ -58,8 +58,7 @@ public class Widget {
               .toCenterHeight(tooltipSize.y + 6);
 
       Vex.setColor(Color.BLACK);
-      Vex.fillRoundRect(
-          tooltipBounds.x, tooltipBounds.y, tooltipBounds.width, tooltipBounds.height, 4);
+      Vex.fillRoundRect(tooltipBounds, 4);
       Vex.setColor(Color.WHITE);
       Vex.drawAlignedString(tooltipBounds, tooltip, Align.MID);
     }
@@ -84,19 +83,10 @@ public class Widget {
 
   protected void drawFocusHaloShape(Style<?> style, Rect focusHaloBounds, int focusHaloWidth) {
     if (style.cornerRadius > 0) {
-      Vex.drawRoundRect(
-          focusHaloBounds.x,
-          focusHaloBounds.y,
-          focusHaloBounds.width,
-          focusHaloBounds.height,
-          style.cornerRadius);
+      Vex.drawRoundRect(focusHaloBounds, style.cornerRadius);
     } else {
       int pad = focusHaloWidth;
-      Vex.drawRect(
-          focusHaloBounds.x - pad,
-          focusHaloBounds.y - pad,
-          focusHaloBounds.width + pad * 2,
-          focusHaloBounds.height + pad * 2);
+      Vex.drawRect(focusHaloBounds.dupe().shrink(-pad));
     }
   }
 
@@ -206,9 +196,9 @@ public class Widget {
 
   protected void fillRectOrRoundRect(Style<?> style) {
     if (style.cornerRadius > 0) {
-      Vex.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, style.cornerRadius);
+      Vex.fillRoundRect(bounds, style.cornerRadius);
     } else {
-      Vex.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      Vex.fillRect(bounds);
     }
   }
 

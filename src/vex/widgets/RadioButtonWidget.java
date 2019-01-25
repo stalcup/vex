@@ -5,11 +5,11 @@ import com.google.common.base.Preconditions;
 import vex.Align;
 import vex.Color;
 import vex.Platform;
-import vex.Rect;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
 import vex.events.MouseEvent.Type;
+import vex.geom.Rect;
 import vex.styles.RadioButtonStyle;
 import vex.styles.Style;
 
@@ -104,15 +104,7 @@ public class RadioButtonWidget extends Widget {
               .onLeft(radioButtonStyle.triggerDiameter)
               .toCenterHeight(radioButtonStyle.triggerDiameter);
       if (radioButtonStyle.selectedImage != null) {
-        Vex.drawAlignedImage(
-            imageBounds.x,
-            imageBounds.y,
-            imageBounds.width,
-            imageBounds.height,
-            radioButtonStyle.selectedImage,
-            Align.MID,
-            0,
-            0);
+        Vex.drawAlignedImage(imageBounds, radioButtonStyle.selectedImage, Align.MID, 0, 0);
       } else if (borderColor != null) {
         Vex.setColor(borderColor);
         Vex.fillOval(

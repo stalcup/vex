@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import vex.events.MouseEvent.Type;
+import vex.geom.Rect;
 import vex.styles.ButtonStyle;
 import vex.widgets.ButtonWidget;
 import vex.widgets.DatePickerWidget;

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import vex.Rect;
 import vex.Widgets;
+import vex.geom.Rect;
 import vex.styles.RadioButtonStyle;
 
 public class RadioButtonsWidget extends Widget {

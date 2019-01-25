@@ -1,7 +1,7 @@
 package flatuithemegallery;
 
-import vex.Rect;
 import vex.Vex;
+import vex.geom.Rect;
 import vex.swing.SwingPlatform;
 
 public class FlatUiThemeGalleryLauncher {

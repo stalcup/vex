@@ -1,7 +1,7 @@
 package vex.styles;
 
-import vex.Rect;
 import vex.Vex;
+import vex.geom.Rect;
 
 public abstract class StyleShape {
 

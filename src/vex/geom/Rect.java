@@ -1,4 +1,4 @@
-package vex;
+package vex.geom;
 
 import java.util.ArrayList;
 import java.util.List;

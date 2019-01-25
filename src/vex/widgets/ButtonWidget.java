@@ -2,11 +2,11 @@ package vex.widgets;
 
 import vex.Color;
 import vex.Platform;
-import vex.Rect;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
 import vex.events.MouseEvent.Type;
+import vex.geom.Rect;
 import vex.styles.ButtonStyle;
 import vex.styles.Style;
 
@@ -80,10 +80,7 @@ public class ButtonWidget extends Widget {
   private void renderImage(ButtonStyle<?> style) {
     if (style.image != null) {
       Vex.drawAlignedImage(
-          bounds.x,
-          bounds.y,
-          bounds.width,
-          bounds.height,
+          bounds,
           style.image,
           style.imageHorizontalAlignment,
           style.imageShiftX,

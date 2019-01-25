@@ -1,6 +1,7 @@
 package vex;
 
 import vex.geom.Point;
+import vex.geom.Rect;
 
 public class Vex {
   public static Graphics graphics;
@@ -8,6 +9,19 @@ public class Vex {
 
   public static boolean canDisplay(char c) {
     return graphics.canDisplay(c);
+  }
+
+  public static void drawAlignedImage(
+      Rect rect, Base64Image image, Align horizontalAlignment, int imageShiftX, int imageShiftY) {
+    drawAlignedImage(
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height,
+        image,
+        horizontalAlignment,
+        imageShiftX,
+        imageShiftY);
   }
 
   public static void drawAlignedImage(

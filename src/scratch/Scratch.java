@@ -1,9 +1,9 @@
 package scratch;
 
 import vex.Color;
-import vex.Rect;
 import vex.Vex;
 import vex.Widgets;
+import vex.geom.Rect;
 import vex.themes.flatui.FlatUiTheme;
 
 public class Scratch {

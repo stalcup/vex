@@ -4,7 +4,7 @@ import vex.Align;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
-import vex.Rect;
+import vex.geom.Rect;
 import vex.styles.ButtonStyle;
 import vex.styles.DatePickerAreaStyle;
 import vex.styles.RadioButtonStyle;

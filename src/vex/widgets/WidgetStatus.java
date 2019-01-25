@@ -2,7 +2,7 @@ package vex.widgets;
 
 import java.util.List;
 
-import vex.Rect;
+import vex.geom.Rect;
 
 public class WidgetStatus {
 
