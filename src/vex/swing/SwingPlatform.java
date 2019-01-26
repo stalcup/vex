@@ -40,6 +40,11 @@ import vex.swing.util.SimpleMouseListener;
 
 public class SwingPlatform implements Platform {
 
+  static {
+    // actually faster with opengl off... wow
+    // System.setProperty("sun.java2d.opengl", "true");
+  }
+
   private BufferedImage baseBuffer;
   private BufferedImage currentBuffer;
   private LinkedList<BufferedImage> bufferLayers = new LinkedList<>();
@@ -216,6 +221,7 @@ public class SwingPlatform implements Platform {
   private int frameId = 0;
 
   private void doFrame() {
+    //    long beforeMs = System.nanoTime() / 1000000;
     synchronized (theWebIsSingleThreaded) {
       if (ui == null) {
         return;
@@ -229,6 +235,8 @@ public class SwingPlatform implements Platform {
       ui.run();
       endFrame();
     }
+    //    long afterMs = System.nanoTime() / 1000000;
+    //    System.out.println("frame time: " + (afterMs - beforeMs) + "ms");
   }
 
   private boolean bufferAIsFront = true;
@@ -435,19 +443,31 @@ public class SwingPlatform implements Platform {
 
   @Override
   public void beginLayer() {
+    // TYPE_BYTE_GRAY 3-4 ms
+    // TYPE_INT_ARGB 6 ms
+    // TYPE_INT_ARGB_PRE 6 ms
+    // TYPE_INT_BGR 4 ms
+    // TYPE_INT_RGB 4 ms
+    // TYPE_USHORT_555_RGB 3-4 ms
+    // TYPE_USHORT_565_RGB 3-4 ms
+    // TYPE_USHORT_GRAY 3-4 ms
+
+    int opaqueImageType = BufferedImage.TYPE_INT_RGB;
+    int transparentImageType = BufferedImage.TYPE_INT_ARGB;
+
     if (bufferLayers.size() <= currentLayerIndex) {
       if (baseBuffer == null
           || baseBuffer.getWidth() != getWidth()
           || baseBuffer.getHeight() != getHeight()) {
-        baseBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-        compositeBufferA = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        compositeBufferB = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        baseBuffer = new BufferedImage(getWidth(), getHeight(), opaqueImageType);
+        compositeBufferA = new BufferedImage(getWidth(), getHeight(), opaqueImageType);
+        compositeBufferB = new BufferedImage(getWidth(), getHeight(), opaqueImageType);
       }
 
       if (bufferLayers.isEmpty()) {
         currentBuffer = baseBuffer;
       } else {
-        currentBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        currentBuffer = new BufferedImage(getWidth(), getHeight(), transparentImageType);
       }
 
       Graphics2D swingGraphics = (Graphics2D) currentBuffer.getGraphics();

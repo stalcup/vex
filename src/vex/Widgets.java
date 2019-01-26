@@ -110,7 +110,8 @@ public class Widgets {
       String selectionsPreview,
       Rect closedRect,
       ButtonStyle<?> buttonStyle,
-      int optionsCount) {
+      int optionsCount,
+      int maxDisplayRowCount) {
     if (selectionsPreview != null) {
       buttonStyle.text(selectionsPreview);
     }
@@ -119,7 +120,7 @@ public class Widgets {
       Vex.platform.consumeMouseEvent();
     }
 
-    int displayRowCount = Math.min(optionsCount, 5);
+    int displayRowCount = Math.min(optionsCount, maxDisplayRowCount);
     Rect openRect =
         closedRect.dupe().scaleHeight(displayRowCount * 0.8).panDown(closedRect.height + 10);
 

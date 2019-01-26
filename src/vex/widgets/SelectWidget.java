@@ -28,7 +28,14 @@ public class SelectWidget {
 
     WidgetStatus status =
         Widgets.startRawDropDown(
-            open, focusId, disabled, selectionsPreview, closedBounds, triggerStyle, options.size());
+            open,
+            focusId,
+            disabled,
+            selectionsPreview,
+            closedBounds,
+            triggerStyle,
+            options.size(),
+            maxDisplayRowCount);
 
     if (status.open) {
       int displayCount = Math.min(options.size(), status.rowRects.size());
@@ -39,7 +46,7 @@ public class SelectWidget {
             .selected(selections != null && selections.contains(option))
             .render(optionStyle.text(option))
             .clicked) {
-          status.selected = option;
+          status.changedSelection = option;
           Sets.toggle(selections, option);
         }
       }
@@ -59,6 +66,13 @@ public class SelectWidget {
 
   public SelectWidget focusId(String focusId) {
     this.focusId = focusId;
+    return this;
+  }
+
+  private int maxDisplayRowCount = 5;
+
+  public SelectWidget maxDisplayRowCount(int maxDisplayRowCount) {
+    this.maxDisplayRowCount = maxDisplayRowCount;
     return this;
   }
 }
