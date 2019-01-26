@@ -146,13 +146,18 @@ public class SwingPlatform implements Platform {
           @Override
           public void keyPressed(java.awt.event.KeyEvent e) {
             String keyText = java.awt.event.KeyEvent.getKeyText(e.getKeyCode());
+            boolean tab = e.getKeyCode() == java.awt.event.KeyEvent.VK_TAB;
             boolean isDelete = e.getKeyCode() == java.awt.event.KeyEvent.VK_DELETE;
             boolean isBackspace = e.getKeyCode() == java.awt.event.KeyEvent.VK_BACK_SPACE;
             boolean printable = g.canDisplay(e.getKeyChar()) && !isDelete && !isBackspace;
             keyEvents.addLast(
                 new KeyEvent(e.getKeyChar() + "", keyText, KeyEvent.Type.TYPE, printable));
             doFrame();
-            doFrame();
+
+            // Draw again to show possibly updated focus.
+            if (tab) {
+              doFrame();
+            }
           }
         });
 
@@ -214,7 +219,6 @@ public class SwingPlatform implements Platform {
   private void addMouseEvent(java.awt.event.MouseEvent e, Type type) {
     Point point = new Point(e.getPoint().x, e.getPoint().y);
     mouseEvents.addLast(new MouseEvent(point, type, Point.createDelta(getMouseLocation(), point)));
-    doFrame();
     doFrame();
   }
 
