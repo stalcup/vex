@@ -49,16 +49,8 @@ public class TextBoxWidget extends Widget {
   }
 
   public WidgetStatus render(TextBoxStyle<?> style) {
-    if (receivesTabFocus) {
-      Widgets.maybeFocusMeNext(focusId);
-    }
-    if (focusId != null
-        && Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN)) {
-      Widgets.setCurrentFocusId(focusId);
-      if (text != null) {
-        TextBoxWidget.textCursorPosition = text.length();
-      }
-    }
+    maybeFocusMeNext();
+    focusMeOnClick();
     boolean focused = isFocused();
 
     super.render(style);
@@ -72,19 +64,12 @@ public class TextBoxWidget extends Widget {
 
     int pointSizeMargin = style.fontPointSize * 9 / 10;
     int effectiveMargin = style.margin == Style.NOT_SET ? pointSizeMargin : style.margin;
+    int offsetTop = pointSizeMargin / 2;
+    Point stringSize = null;
+    boolean addedALine = false;
+    boolean alreadyProcessedChar = false;
 
-    if ((text == null || text.isEmpty())
-        && style.placeholderText != null
-        && style.placeholderTextColor != null) {
-      Vex.setColor(style.placeholderTextColor);
-      Vex.drawAlignedString(
-          bounds.x + effectiveMargin,
-          bounds.y,
-          bounds.width - effectiveMargin,
-          bounds.height,
-          style.placeholderText,
-          Align.MIN);
-    }
+    renderPlaceholderText(style, effectiveMargin);
 
     if (text == null) {
       return WidgetStatus.text(false, null, null, false);
@@ -97,13 +82,6 @@ public class TextBoxWidget extends Widget {
     Vex.setColor(style.textColor);
 
     List<String> lines = splitOnLinebreaks(text);
-
-    int offsetTop = pointSizeMargin / 2;
-
-    Point stringSize = null;
-
-    boolean addedALine = false;
-    boolean alreadyProcessedChar = false;
 
     if (focused) {
       TextBoxWidget.textCursorLine = Math.min(TextBoxWidget.textCursorLine, lines.size() - 1);
@@ -270,6 +248,37 @@ public class TextBoxWidget extends Widget {
     }
 
     return WidgetStatus.text(updatedText, text, keyText, Widgets.lostFocus(focusId));
+  }
+
+  private void renderPlaceholderText(TextBoxStyle<?> style, int effectiveMargin) {
+    if ((text == null || text.isEmpty())
+        && style.placeholderText != null
+        && style.placeholderTextColor != null) {
+      Vex.setColor(style.placeholderTextColor);
+      Vex.drawAlignedString(
+          bounds.x + effectiveMargin,
+          bounds.y,
+          bounds.width - effectiveMargin,
+          bounds.height,
+          style.placeholderText,
+          Align.MIN);
+    }
+  }
+
+  private void focusMeOnClick() {
+    if (focusId != null
+        && Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN)) {
+      Widgets.setCurrentFocusId(focusId);
+      if (text != null) {
+        TextBoxWidget.textCursorPosition = text.length();
+      }
+    }
+  }
+
+  private void maybeFocusMeNext() {
+    if (receivesTabFocus) {
+      Widgets.maybeFocusMeNext(focusId);
+    }
   }
 
   private List<String> splitOnLinebreaks(String text) {
