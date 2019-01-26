@@ -26,7 +26,7 @@ public class DateTextBoxWidget {
   private boolean updated;
 
   public DateTextBoxWidget(String focusId, Rect bounds) {
-    textBoxWidget = new TextBoxWidget(focusId, bounds);
+    textBoxWidget = new TextBoxWidget(bounds).focusId(focusId);
   }
 
   public WidgetStatus render(

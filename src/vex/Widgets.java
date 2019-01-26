@@ -85,7 +85,7 @@ public class Widgets {
   }
 
   public static TextBoxWidget textBox(String focusId, Rect rect) {
-    return new TextBoxWidget(focusId, rect);
+    return new TextBoxWidget(rect).focusId(focusId);
   }
 
   public static RadioButtonWidget radioButton(String focusId, Rect radioButtonBounds) {

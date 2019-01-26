@@ -24,9 +24,8 @@ public class TextBoxWidget extends Widget {
 
   private String text;
 
-  public TextBoxWidget(String focusId, Rect bounds) {
+  public TextBoxWidget(Rect bounds) {
     super(bounds);
-    this.focusId = focusId;
   }
 
   @Override
@@ -318,5 +317,10 @@ public class TextBoxWidget extends Widget {
   @Override
   public TextBoxWidget receivesTabFocus(boolean receivesTabFocus) {
     return (TextBoxWidget) super.receivesTabFocus(receivesTabFocus);
+  }
+
+  @Override
+  public TextBoxWidget focusId(String focusId) {
+    return (TextBoxWidget) super.focusId(focusId);
   }
 }
