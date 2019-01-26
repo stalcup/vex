@@ -67,7 +67,6 @@ public class TextBoxWidget extends Widget {
     int offsetTop = pointSizeMargin / 2;
     Point stringSize = null;
     boolean addedALine = false;
-    boolean alreadyProcessedChar = false;
 
     renderPlaceholderText(style, effectiveMargin);
 
@@ -86,130 +85,161 @@ public class TextBoxWidget extends Widget {
     if (focused) {
       TextBoxWidget.textCursorLine = Math.min(TextBoxWidget.textCursorLine, lines.size() - 1);
       TextBoxWidget.textCursorLine = Math.max(TextBoxWidget.textCursorLine, 0);
+
+      TextBoxWidget.textCursorPosition =
+          Math.min(
+              TextBoxWidget.textCursorPosition, lines.get(TextBoxWidget.textCursorLine).length());
+      TextBoxWidget.textCursorPosition = Math.max(TextBoxWidget.textCursorPosition, 0);
     }
+
+    KeyEvent keyEvent = disabled ? null : Vex.platform.getKeyEvent();
+
+    if (focused && keyEvent != null) {
+      keyText = keyEvent.keyText;
+
+      for (int i = 0; i < lines.size(); i++) {
+        String line = lines.get(i);
+
+        if (TextBoxWidget.textCursorLine == i) {
+
+          if (keyText.equals("Left")) {
+            if (TextBoxWidget.textCursorPosition > 0) {
+              TextBoxWidget.textCursorPosition--;
+            } else if (TextBoxWidget.textCursorLine > 0) {
+              TextBoxWidget.textCursorLine--;
+              TextBoxWidget.textCursorPosition = lines.get(TextBoxWidget.textCursorLine).length();
+            }
+            break;
+          } else if (keyText.equals("Right")) {
+            if (TextBoxWidget.textCursorPosition < line.length()) {
+              TextBoxWidget.textCursorPosition = TextBoxWidget.textCursorPosition + 1;
+            } else if (TextBoxWidget.textCursorLine < lines.size() - 1) {
+              TextBoxWidget.textCursorPosition = 0;
+              TextBoxWidget.textCursorLine++;
+            }
+            break;
+          } else if (keyText.equals("Up")) {
+            if (TextBoxWidget.textCursorLine > 0) {
+              TextBoxWidget.textCursorLine = TextBoxWidget.textCursorLine - 1;
+            } else {
+              TextBoxWidget.textCursorPosition = 0;
+            }
+            break;
+          } else if (keyText.equals("Down")) {
+            if (TextBoxWidget.textCursorLine < lines.size() - 1) {
+              TextBoxWidget.textCursorLine++;
+            } else {
+              TextBoxWidget.textCursorPosition = line.length();
+            }
+            break;
+          }
+
+          TextBoxWidget.textCursorPosition =
+              Math.min(TextBoxWidget.textCursorPosition, line.length());
+          TextBoxWidget.textCursorPosition = Math.max(TextBoxWidget.textCursorPosition, 0);
+
+          String textLeftOfCursor = line.substring(0, TextBoxWidget.textCursorPosition);
+
+          boolean delete = keyText.equals("Delete");
+          boolean backspace = keyText.equals("Backspace");
+          boolean enter = "Enter".equals(keyText);
+          boolean tab = keyText.equals("Tab");
+          boolean acceptCharacter =
+              keyEvent.printable && (multiline || !enter) && !tab || delete || backspace;
+
+          if (tab) {
+            Widgets.focusNext = tab;
+          }
+
+          if (acceptCharacter) {
+            addedALine = enter;
+
+            String left = TextBoxWidget.textCursorPosition > 0 ? textLeftOfCursor : "";
+            String right =
+                TextBoxWidget.textCursorPosition < line.length()
+                    ? line.substring(TextBoxWidget.textCursorPosition)
+                    : "";
+
+            // Process these as mutually exclusive states, even though on some OS's the KeyEvent
+            // does
+            // not make that clear.
+            if (delete && TextBoxWidget.textCursorPosition < line.length()) {
+              line = left + right.substring(1);
+              updatedText = true;
+            } else if (backspace && TextBoxWidget.textCursorPosition > 0) {
+              line = left.substring(0, left.length() - 1) + right;
+              TextBoxWidget.textCursorPosition = TextBoxWidget.textCursorPosition - 1;
+              updatedText = true;
+            } else if (keyEvent.printable) {
+              line = left + keyEvent.key + right;
+              if (!enter) {
+                TextBoxWidget.textCursorPosition = TextBoxWidget.textCursorPosition + 1;
+              }
+              updatedText = true;
+            } else if (delete
+                && TextBoxWidget.textCursorPosition == line.length()
+                && i < lines.size() - 1) {
+              line = left + lines.remove(i + 1);
+              updatedText = true;
+            } else if (backspace && TextBoxWidget.textCursorPosition == 0 && i > 0) {
+              String previousLine = lines.remove(i - 1);
+              line = previousLine + right;
+              TextBoxWidget.textCursorLine--;
+              TextBoxWidget.textCursorPosition = previousLine.length();
+              updatedText = true;
+              i--;
+            }
+
+            lines.set(i, line);
+          }
+        }
+      }
+    }
+
+    text = String.join("\n", lines);
+
+    if (addedALine) {
+      TextBoxWidget.textCursorLine++;
+      TextBoxWidget.textCursorPosition = 0;
+
+      lines = splitOnLinebreaks(text);
+    }
+
+    if (focused) {
+      TextBoxWidget.textCursorLine = Math.min(TextBoxWidget.textCursorLine, lines.size() - 1);
+      TextBoxWidget.textCursorLine = Math.max(TextBoxWidget.textCursorLine, 0);
+
+      TextBoxWidget.textCursorPosition =
+          Math.min(
+              TextBoxWidget.textCursorPosition, lines.get(TextBoxWidget.textCursorLine).length());
+      TextBoxWidget.textCursorPosition = Math.max(TextBoxWidget.textCursorPosition, 0);
+    }
+
+    // -------------------------------- draw
 
     for (int i = 0; i < lines.size(); i++) {
       String line = lines.get(i);
 
+      stringSize = Vex.getSize(line);
       if (i > 0) {
         offsetTop += stringSize.y * 1.1;
       }
-      stringSize = Vex.getSize(line);
 
-      if (focused) {
-        if (!alreadyProcessedChar && TextBoxWidget.textCursorLine == i) {
+      if (focused && TextBoxWidget.textCursorLine == i) {
+        String textLeftOfCursor = line.substring(0, TextBoxWidget.textCursorPosition);
+        stringSize = Vex.getSize(textLeftOfCursor);
 
-          KeyEvent keyEvent = disabled ? null : Vex.platform.getKeyEvent();
-          if (keyEvent != null) {
-            keyText = keyEvent.keyText;
-            if (keyText.equals("Left")) {
-              if (TextBoxWidget.textCursorPosition > 0) {
-                TextBoxWidget.textCursorPosition--;
-              } else if (TextBoxWidget.textCursorLine > 0) {
-                TextBoxWidget.textCursorLine--;
-                TextBoxWidget.textCursorPosition = lines.get(TextBoxWidget.textCursorLine).length();
-              }
-            } else if (keyText.equals("Right")) {
-              if (TextBoxWidget.textCursorPosition < line.length()) {
-                TextBoxWidget.textCursorPosition = TextBoxWidget.textCursorPosition + 1;
-              } else if (TextBoxWidget.textCursorLine < lines.size() - 1) {
-                TextBoxWidget.textCursorPosition = 0;
-                TextBoxWidget.textCursorLine++;
-                alreadyProcessedChar = true;
-              }
-            } else if (keyText.equals("Up")) {
-              if (TextBoxWidget.textCursorLine > 0) {
-                TextBoxWidget.textCursorLine = TextBoxWidget.textCursorLine - 1;
-              } else {
-                TextBoxWidget.textCursorPosition = 0;
-              }
-            } else if (keyText.equals("Down")) {
-              if (TextBoxWidget.textCursorLine < lines.size() - 1) {
-                TextBoxWidget.textCursorLine++;
-                alreadyProcessedChar = true;
-              } else {
-                TextBoxWidget.textCursorPosition = line.length();
-              }
-            }
+        int textCursorX = stringSize.x;
+        if (multiline) {
+          int textCursorPixelX = bounds.x + effectiveMargin + textCursorX;
+          if (textCursorPixelX < bounds.x + bounds.width) {
+            Vex.fillRect(textCursorPixelX, bounds.y + offsetTop, 2, stringSize.y);
           }
-
-          String lineNextTime = lines.get(TextBoxWidget.textCursorLine);
-          TextBoxWidget.textCursorPosition =
-              Math.min(TextBoxWidget.textCursorPosition, lineNextTime.length());
-          TextBoxWidget.textCursorPosition = Math.max(TextBoxWidget.textCursorPosition, 0);
-
-          String textLeftOfCursor = lineNextTime.substring(0, TextBoxWidget.textCursorPosition);
-          stringSize = Vex.getSize(textLeftOfCursor);
-
-          if (keyEvent != null) {
-            boolean enter = "Enter".equals(keyText);
-            boolean tab = keyText.equals("Tab");
-            if (tab) {
-              Widgets.focusNext = tab;
-            }
-
-            boolean delete = keyText.equals("Delete");
-            boolean backspace = keyText.equals("Backspace");
-            boolean acceptCharacter =
-                keyEvent.printable && (multiline || !enter) && !tab || delete || backspace;
-
-            if (acceptCharacter) {
-              addedALine = enter;
-
-              String left = TextBoxWidget.textCursorPosition > 0 ? textLeftOfCursor : "";
-              String right =
-                  TextBoxWidget.textCursorPosition < line.length()
-                      ? line.substring(TextBoxWidget.textCursorPosition)
-                      : "";
-
-              // Process these as mutually exclusive states, even though on some OS's the KeyEvent
-              // does
-              // not make that clear.
-              if (delete && TextBoxWidget.textCursorPosition < line.length()) {
-                line = left + right.substring(1);
-                updatedText = true;
-              } else if (backspace && TextBoxWidget.textCursorPosition > 0) {
-                line = left.substring(0, left.length() - 1) + right;
-                TextBoxWidget.textCursorPosition = TextBoxWidget.textCursorPosition - 1;
-                updatedText = true;
-              } else if (keyEvent.printable) {
-                line = left + keyEvent.key + right;
-                if (!enter) {
-                  TextBoxWidget.textCursorPosition = TextBoxWidget.textCursorPosition + 1;
-                }
-                updatedText = true;
-              } else if (delete
-                  && TextBoxWidget.textCursorPosition == line.length()
-                  && i < lines.size() - 1) {
-                line = left + lines.remove(i + 1);
-                updatedText = true;
-              } else if (backspace && TextBoxWidget.textCursorPosition == 0 && i > 0) {
-                String previousLine = lines.remove(i - 1);
-                line = previousLine + right;
-                TextBoxWidget.textCursorLine--;
-                TextBoxWidget.textCursorPosition = previousLine.length();
-                updatedText = true;
-                i--;
-              }
-
-              lines.set(i, line);
-            }
-          }
-        }
-
-        if (TextBoxWidget.textCursorLine == i) {
-          int textCursorX = stringSize.x;
-          if (multiline) {
-            int textCursorPixelX = bounds.x + effectiveMargin + textCursorX;
-            if (textCursorPixelX < bounds.x + bounds.width) {
-              Vex.fillRect(textCursorPixelX, bounds.y + offsetTop, 2, stringSize.y);
-            }
-          } else {
-            int textCursorPixelX = bounds.x + effectiveMargin + textCursorX;
-            if (textCursorPixelX < bounds.x + bounds.width) {
-              Vex.fillRect(
-                  textCursorPixelX, bounds.y + (bounds.height - stringSize.y) / 2, 2, stringSize.y);
-            }
+        } else {
+          int textCursorPixelX = bounds.x + effectiveMargin + textCursorX;
+          if (textCursorPixelX < bounds.x + bounds.width) {
+            Vex.fillRect(
+                textCursorPixelX, bounds.y + (bounds.height - stringSize.y) / 2, 2, stringSize.y);
           }
         }
       }
@@ -236,15 +266,8 @@ public class TextBoxWidget extends Widget {
       }
     }
 
-    text = String.join("\n", lines);
-
     if (updatedText) {
       TextBoxWidget.updatedText = text;
-    }
-
-    if (addedALine) {
-      TextBoxWidget.textCursorLine++;
-      TextBoxWidget.textCursorPosition = 0;
     }
 
     return WidgetStatus.text(updatedText, text, keyText, Widgets.lostFocus(focusId));
