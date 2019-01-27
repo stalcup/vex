@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 
 import vex.Align;
 import vex.Color;
-import vex.Platform;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
@@ -154,7 +153,7 @@ public class RadioButtonWidget extends Widget {
   public WidgetStatus render(Style<?> style) {
     Widgets.maybeFocusMeNext(focusId);
     boolean triedToClick =
-        Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
+        Vex.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
     if (focusId != null && triedToClick) {
       Widgets.setCurrentFocusId(focusId);
     }
@@ -162,12 +161,12 @@ public class RadioButtonWidget extends Widget {
     super.render(style);
 
     if (isFocused()) {
-      KeyEvent keyEvent = disabled ? null : Vex.platform.getKeyEvent();
+      KeyEvent keyEvent = disabled ? null : Vex.getKeyEvent();
       if (keyEvent != null) {
         String keyText = keyEvent.keyText;
 
         if ("Tab".equals(keyText)) {
-          Widgets.focusNext = true;
+          Widgets.setFocusNext(true);
         }
 
         triedToClick |= "Space".equals(keyText);

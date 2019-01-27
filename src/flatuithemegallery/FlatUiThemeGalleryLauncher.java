@@ -8,9 +8,9 @@ public class FlatUiThemeGalleryLauncher {
 
   public static void main(String[] args) {
     Vex.platform = new SwingPlatform(false);
-    Vex.platform.setUi(
+    Vex.setUi(
         () ->
             FlatUiThemeGallery.doUi(
-                new Rect(0, 0, Vex.platform.getWidth(), Vex.platform.getHeight())));
+                new Rect(0, 0, Vex.getWidth(), Vex.getHeight())));
   }
 }

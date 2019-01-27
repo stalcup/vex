@@ -1,5 +1,9 @@
 package vex;
 
+import vex.Platform.ResponseMessageHandler;
+import vex.events.KeyEvent;
+import vex.events.MouseEvent;
+import vex.events.MouseEvent.Type;
 import vex.geom.Point;
 import vex.geom.Rect;
 
@@ -7,21 +11,24 @@ public class Vex {
   public static Graphics graphics;
   public static Platform platform;
 
+  public static void beginLayer() {
+    platform.beginLayer();
+  }
+
   public static boolean canDisplay(char c) {
     return graphics.canDisplay(c);
   }
 
-  public static void drawAlignedImage(
-      Rect rect, Base64Image image, Align horizontalAlignment, int imageShiftX, int imageShiftY) {
-    drawAlignedImage(
-        rect.x,
-        rect.y,
-        rect.width,
-        rect.height,
-        image,
-        horizontalAlignment,
-        imageShiftX,
-        imageShiftY);
+  public static void consumeKeyEvent() {
+    platform.consumeKeyEvent();
+  }
+
+  public static void consumeMouseEvent() {
+    platform.consumeMouseEvent();
+  }
+
+  public static void doAfterFrame(Runnable callback) {
+    platform.doAfterFrame(callback);
   }
 
   public static void drawAlignedImage(
@@ -46,6 +53,19 @@ public class Vex {
           y + imageShiftY + (height - image.height) / 2,
           image);
     }
+  }
+
+  public static void drawAlignedImage(
+      Rect rect, Base64Image image, Align horizontalAlignment, int imageShiftX, int imageShiftY) {
+    drawAlignedImage(
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height,
+        image,
+        horizontalAlignment,
+        imageShiftX,
+        imageShiftY);
   }
 
   public static void drawAlignedString(
@@ -132,6 +152,10 @@ public class Vex {
     graphics.drawString(string, x, y, clipX, clipY, clipWidth, clipHeight);
   }
 
+  public static void endLayer() {
+    platform.endLayer();
+  }
+
   public static void fillOval(int x, int y, int width, int height) {
     graphics.fillOval(x, y, width, height);
   }
@@ -165,12 +189,84 @@ public class Vex {
     graphics.fillRoundRect(rect.x, rect.y, rect.width, rect.height, cornerRadius);
   }
 
+  public static int getFrameid() {
+    return platform.getFrameid();
+  }
+
+  public static int getHeight() {
+    return platform.getHeight();
+  }
+
+  public static KeyEvent getKeyEvent() {
+    return platform.getKeyEvent();
+  }
+
+  public static String getLocation() {
+    return platform.getLocation();
+  }
+
+  public static MouseEvent getMouseEvent() {
+    return platform.getMouseEvent();
+  }
+
+  public static Point getMouseLocation() {
+    return platform.getMouseLocation();
+  }
+
   public static Point getSize(String string) {
     return graphics.getSize(string);
   }
 
+  public static int getWidth() {
+    return platform.getWidth();
+  }
+
+  public static void httpGet(String path, ResponseMessageHandler responseMessageHandler) {
+    platform.httpGet(path, responseMessageHandler);
+  }
+
+  public static void httpPost(
+      String path, String body, ResponseMessageHandler responseMessageHandler) {
+    platform.httpPost(path, body, responseMessageHandler);
+  }
+
+  public static boolean mouseEventIs(Type type) {
+    return getMouseEvent() != null && getMouseEvent().type == type;
+  }
+
+  public static boolean mouseEventIsIn(int x, int y, int width, int height, Type type) {
+    return getMouseEvent() != null
+        && getMouseEvent().type == type
+        && mouseLocationIsIn(x, y, width, height);
+  }
+
+  public static boolean mouseEventIsIn(Rect rect, Type type) {
+    return Vex.mouseEventIsIn(rect.x, rect.y, rect.width, rect.height, type);
+  }
+
+  public static boolean mouseLocationIsIn(int x, int y, int width, int height) {
+    Point point = getMouseLocation();
+    return point != null
+        && point.x >= x
+        && point.y >= y
+        && point.x < x + width
+        && point.y < y + height;
+  }
+
+  public static boolean mouseLocationIsIn(Rect rect) {
+    return Vex.mouseLocationIsIn(rect.x, rect.y, rect.width, rect.height);
+  }
+
+  public static void println(String line) {
+    platform.println(line);
+  }
+
   public static void setColor(Color color) {
     graphics.setColor(color);
+  }
+
+  public static void setCursor(Cursor cursor) {
+    platform.setCursor(cursor);
   }
 
   public static void setFont(
@@ -178,7 +274,23 @@ public class Vex {
     graphics.setFont(fontName, style, pointSize, strikeThrough);
   }
 
+  public static void setLocation(String location) {
+    platform.setLocation(location);
+  }
+
   public static void setStroke(int width) {
     graphics.setStroke(width);
+  }
+
+  public static void setTitle(String title) {
+    platform.setTitle(title);
+  }
+
+  public static void setUi(Runnable ui) {
+    platform.setUi(ui);
+  }
+
+  public static void repaint() {
+    platform.repaint();
   }
 }

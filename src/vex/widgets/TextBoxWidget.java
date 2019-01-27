@@ -6,7 +6,6 @@ import java.util.List;
 
 import vex.Align;
 import vex.Color;
-import vex.Platform;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
@@ -92,7 +91,7 @@ public class TextBoxWidget extends Widget {
       TextBoxWidget.textCursorPosition = Math.max(TextBoxWidget.textCursorPosition, 0);
     }
 
-    KeyEvent keyEvent = disabled ? null : Vex.platform.getKeyEvent();
+    KeyEvent keyEvent = disabled ? null : Vex.getKeyEvent();
 
     if (focused && keyEvent != null) {
       keyText = keyEvent.keyText;
@@ -148,7 +147,7 @@ public class TextBoxWidget extends Widget {
               keyEvent.printable && (multiline || !enter) && !tab || delete || backspace;
 
           if (tab) {
-            Widgets.focusNext = tab;
+            Widgets.setFocusNext(tab);
           }
 
           if (acceptCharacter) {
@@ -290,7 +289,7 @@ public class TextBoxWidget extends Widget {
 
   private void focusMeOnClick() {
     if (focusId != null
-        && Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN)) {
+        && Vex.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN)) {
       Widgets.setCurrentFocusId(focusId);
       if (text != null) {
         TextBoxWidget.textCursorPosition = text.length();

@@ -3,7 +3,6 @@ package vex.widgets;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import vex.Platform;
 import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
@@ -56,7 +55,7 @@ public class DateTextBoxWidget {
     }
 
     if (datePickerOpen) {
-      Vex.platform.beginLayer();
+      Vex.beginLayer();
 
       Rect datePickerWidgetBounds =
           textBoxWidget.bounds.dupe().panDown(textBoxWidget.bounds.height + 10).to(0, 0);
@@ -64,15 +63,15 @@ public class DateTextBoxWidget {
       WidgetStatus datePickerWidgetStatus =
           datePickerWidget.render(datePickerAreaStyle, datePickerDayStyle);
 
-      if (Platform.mouseEventIs(Type.DOWN)) {
-        if (!Platform.mouseEventIsIn(datePickerWidgetBounds, Type.DOWN)) {
+      if (Vex.mouseEventIs(Type.DOWN)) {
+        if (!Vex.mouseEventIsIn(datePickerWidgetBounds, Type.DOWN)) {
           datePickerOpen = false;
           Widgets.setCurrentFocusId(null);
           datePickerWidgetStatus.lostFocus = true;
         }
       }
 
-      Vex.platform.endLayer();
+      Vex.endLayer();
 
       if (updated) {
         datePickerWidgetStatus.updated = updated;

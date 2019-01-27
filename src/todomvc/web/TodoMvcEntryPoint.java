@@ -14,6 +14,6 @@ public class TodoMvcEntryPoint implements EntryPoint {
   public void onModuleLoad() {
     Vex.platform =
         new WebPlatform((HTMLCanvasElement) DomGlobal.document.getElementById("todomvc-canvas"));
-    Vex.platform.setUi(() -> TodoMvc.doUi(0, 0, Vex.platform.getWidth(), Vex.platform.getHeight()));
+    Vex.setUi(() -> TodoMvc.doUi(0, 0, Vex.getWidth(), Vex.getHeight()));
   }
 }

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -146,18 +148,12 @@ public class SwingPlatform implements Platform {
           @Override
           public void keyPressed(java.awt.event.KeyEvent e) {
             String keyText = java.awt.event.KeyEvent.getKeyText(e.getKeyCode());
-            boolean tab = e.getKeyCode() == java.awt.event.KeyEvent.VK_TAB;
             boolean isDelete = e.getKeyCode() == java.awt.event.KeyEvent.VK_DELETE;
             boolean isBackspace = e.getKeyCode() == java.awt.event.KeyEvent.VK_BACK_SPACE;
             boolean printable = g.canDisplay(e.getKeyChar()) && !isDelete && !isBackspace;
             keyEvents.addLast(
                 new KeyEvent(e.getKeyChar() + "", keyText, KeyEvent.Type.TYPE, printable));
             doFrame();
-
-            // Draw again to show possibly updated focus.
-            if (tab) {
-              doFrame();
-            }
           }
         });
 
@@ -224,6 +220,8 @@ public class SwingPlatform implements Platform {
 
   private int frameId = 0;
 
+  private Timer timer = new Timer();
+
   private void doFrame() {
     //    long beforeMs = System.nanoTime() / 1000000;
     synchronized (theWebIsSingleThreaded) {
@@ -234,10 +232,22 @@ public class SwingPlatform implements Platform {
         return;
       }
 
+      repaint = false;
       startFrame();
       frameId++;
       ui.run();
       endFrame();
+
+      if (repaint) {
+        timer.schedule(
+            new TimerTask() {
+              @Override
+              public void run() {
+                doFrame();
+              }
+            },
+            0);
+      }
     }
     //    long afterMs = System.nanoTime() / 1000000;
     //    System.out.println("frame time: " + (afterMs - beforeMs) + "ms");
@@ -373,6 +383,7 @@ public class SwingPlatform implements Platform {
   private List<Runnable> afterFrameCallbacks = new ArrayList<>();
 
   private Object theWebIsSingleThreaded = new Object();
+  private boolean repaint;
 
   @Override
   public void httpGet(String path, ResponseMessageHandler responseMessageHandler) {
@@ -549,5 +560,10 @@ public class SwingPlatform implements Platform {
   @Override
   public int getFrameid() {
     return frameId;
+  }
+
+  @Override
+  public void repaint() {
+    repaint = true;
   }
 }

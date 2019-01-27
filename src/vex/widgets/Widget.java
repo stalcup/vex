@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import vex.Align;
 import vex.Color;
 import vex.FontStyle;
-import vex.Platform;
 import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
@@ -36,7 +35,7 @@ public class Widget {
 
   protected void setCursor(Style<?> style) {
     if (style.cursor != null && isHovered()) {
-      Vex.platform.setCursor(style.cursor);
+      Vex.setCursor(style.cursor);
     }
   }
 
@@ -65,7 +64,7 @@ public class Widget {
   }
 
   protected boolean isHovered() {
-    return Platform.mouseLocationIsIn(bounds.x, bounds.y, bounds.width, bounds.height);
+    return Vex.mouseLocationIsIn(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
   protected void renderFocusHalo(Style<?> style) {

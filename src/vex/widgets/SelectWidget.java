@@ -50,7 +50,7 @@ public class SelectWidget {
           Sets.toggle(selections, option);
         }
       }
-      Vex.platform.endLayer();
+      Vex.endLayer();
     }
     return status;
   }

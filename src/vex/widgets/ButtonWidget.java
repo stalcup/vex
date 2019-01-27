@@ -1,7 +1,6 @@
 package vex.widgets;
 
 import vex.Color;
-import vex.Platform;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.KeyEvent;
@@ -29,7 +28,7 @@ public class ButtonWidget extends Widget {
     }
     boolean clicked =
         !disabled
-            && Platform.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
+            && Vex.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
     if (clicked) {
       if (focusId != null) {
         Widgets.setCurrentFocusId(focusId);
@@ -45,11 +44,11 @@ public class ButtonWidget extends Widget {
     setCursor(style);
 
     if (!disabled && isFocused()) {
-      KeyEvent keyEvent = Vex.platform.getKeyEvent();
+      KeyEvent keyEvent = Vex.getKeyEvent();
       if (keyEvent != null) {
         boolean tab = "Tab".equals(keyEvent.keyText);
         if (tab) {
-          Widgets.focusNext = tab;
+          Widgets.setFocusNext(tab);
         }
       }
     }

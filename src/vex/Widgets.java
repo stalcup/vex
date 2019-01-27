@@ -19,7 +19,7 @@ import vex.widgets.WidgetStatus;
 
 public class Widgets {
 
-  public static boolean focusNext = true;
+  private static boolean focusNext = true;
   private static String lastFocusId;
   private static String currentFocusId;
   private static int focusSetOnFrameId;
@@ -50,26 +50,26 @@ public class Widgets {
     Vex.setColor(barColor);
     Vex.fillRect(x, y + offsetPixels, width, visiblePixels);
 
-    if (Platform.mouseLocationIsIn(x, y, width, height)
+    if (Vex.mouseLocationIsIn(x, y, width, height)
         || Strings.equals(getCurrentFocusId(), focusId)) {
       Vex.fillRect(x, y + offsetPixels, width, visiblePixels);
     }
 
-    if (Platform.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
+    if (Vex.mouseEventIsIn(x, y, width, height, Type.DOWN)) {
       setCurrentFocusId(focusId);
       // Aka, start dragging.
     }
 
     if (Strings.equals(getCurrentFocusId(), focusId)
-        && Vex.platform.getMouseEvent() != null
-        && Vex.platform.getMouseEvent().type == Type.DRAG) {
-      scrollPercent += Vex.platform.getMouseEvent().delta.y * 100f / hiddenPixels;
+        && Vex.getMouseEvent() != null
+        && Vex.getMouseEvent().type == Type.DRAG) {
+      scrollPercent += Vex.getMouseEvent().delta.y * 100f / hiddenPixels;
 
       scrollPercent = Math.max(0, scrollPercent);
       scrollPercent = Math.min(100, scrollPercent);
     }
 
-    if (Strings.equals(getCurrentFocusId(), focusId) && Platform.mouseEventIs(Type.UP)) {
+    if (Strings.equals(getCurrentFocusId(), focusId) && Vex.mouseEventIs(Type.UP)) {
       setCurrentFocusId(null);
     }
 
@@ -117,7 +117,7 @@ public class Widgets {
     }
     if (button(closedRect).disabled(disabled).focusId(focusId).render(buttonStyle).clicked) {
       open = true;
-      Vex.platform.consumeMouseEvent();
+      Vex.consumeMouseEvent();
     }
 
     int displayRowCount = Math.min(optionsCount, maxDisplayRowCount);
@@ -127,11 +127,11 @@ public class Widgets {
     List<Rect> rowRects = null;
 
     if (open) {
-      Vex.platform.beginLayer();
+      Vex.beginLayer();
       rowRects = openRect.dupe().asRows(displayRowCount);
     }
 
-    if (open && Platform.mouseEventIs(Type.DOWN) && !Platform.mouseEventIsIn(openRect, Type.DOWN)) {
+    if (open && Vex.mouseEventIs(Type.DOWN) && !Vex.mouseEventIsIn(openRect, Type.DOWN)) {
       open = false;
     }
 
@@ -155,7 +155,7 @@ public class Widgets {
     if (focusNext) {
       focusNext = false;
       setCurrentFocusId(focusId);
-      Vex.platform.consumeKeyEvent();
+      Vex.consumeKeyEvent();
     }
   }
 
@@ -166,7 +166,7 @@ public class Widgets {
   public static void setCurrentFocusId(String currentFocusId) {
     lastFocusId = Widgets.currentFocusId;
     Widgets.currentFocusId = currentFocusId;
-    focusSetOnFrameId = Vex.platform.getFrameid();
+    focusSetOnFrameId = Vex.getFrameid();
   }
 
   public static String getLastFocusId() {
@@ -174,7 +174,7 @@ public class Widgets {
   }
 
   public static void clearFocusIfNotSetThisFrame() {
-    if (focusSetOnFrameId != Vex.platform.getFrameid()) {
+    if (focusSetOnFrameId != Vex.getFrameid()) {
       setCurrentFocusId(null);
     }
   }
@@ -186,20 +186,29 @@ public class Widgets {
   public static boolean lostFocus(String focusId) {
     return focusId != null
         && focusId.equals(lastFocusId)
-        && focusSetOnFrameId == Vex.platform.getFrameid() - 1;
+        && focusSetOnFrameId == Vex.getFrameid() - 1;
   }
 
   public static void clickOutClearFocus(Rect bounds) {
-    if (Platform.mouseEventIsIn(bounds, Type.DOWN)) {
+    if (Vex.mouseEventIsIn(bounds, Type.DOWN)) {
       clearFocusIfNotSetThisFrame();
     }
   }
 
   public static void unfocusedTabFocusNext() {
     if (getCurrentFocusId() == null
-        && Vex.platform.getKeyEvent() != null
-        && "Tab".equals(Vex.platform.getKeyEvent().keyText)) {
+        && Vex.getKeyEvent() != null
+        && "Tab".equals(Vex.getKeyEvent().keyText)) {
       focusNext = true;
     }
+  }
+
+  public static boolean shouldFocusNext() {
+    return focusNext;
+  }
+
+  public static void setFocusNext(boolean focusNext) {
+    Widgets.focusNext = focusNext;
+    Vex.repaint();
   }
 }

@@ -8,7 +8,6 @@ import com.google.common.base.Preconditions;
 
 import vex.Align;
 import vex.FontStyle;
-import vex.Platform;
 import vex.Vex;
 import vex.Widgets;
 import vex.events.MouseEvent.Type;
@@ -124,7 +123,7 @@ public class DatePickerWidget extends Widget {
         Align.MID,
         0,
         0);
-    if (Platform.mouseEventIsIn(
+    if (Vex.mouseEventIsIn(
         leftArrowBounds.x,
         leftArrowBounds.y,
         leftArrowBounds.width,
@@ -144,7 +143,7 @@ public class DatePickerWidget extends Widget {
         Align.MID,
         0,
         0);
-    if (Platform.mouseEventIsIn(
+    if (Vex.mouseEventIsIn(
         rightArrowBounds.x,
         rightArrowBounds.y,
         rightArrowBounds.width,

@@ -7,7 +7,6 @@ import vex.Align;
 import vex.BaseStyles;
 import vex.Color;
 import vex.FontStyle;
-import vex.Platform;
 import vex.Strings;
 import vex.Vex;
 import vex.Widgets;
@@ -155,7 +154,7 @@ public class TodoMvc {
         todo.done = !todo.done;
       }
 
-      if (Platform.mouseLocationIsIn(left, top, Style.todoWidth, Style.todoHeight)) {
+      if (Vex.mouseLocationIsIn(left, top, Style.todoWidth, Style.todoHeight)) {
         if (Widgets.button(
                 new Rect(
                     left + Style.todoWidth - Style.todoHeight + Style.todoHeight / 4,
