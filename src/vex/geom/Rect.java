@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
+import vex.VexDebug;
+
 public class Rect {
 
   public String name;
@@ -25,7 +27,9 @@ public class Rect {
     this.width = width;
     this.height = height;
 
-    System.out.println(chainName);
+    if (VexDebug.printLayoutTree) {
+      System.out.println(chainName);
+    }
   }
 
   public Rect(String name, String chainName, int x, int y, int width, int height) {
@@ -38,7 +42,9 @@ public class Rect {
     this.width = width;
     this.height = height;
 
-    System.out.println(chainName);
+    if (VexDebug.printLayoutTree) {
+      System.out.println(chainName);
+    }
   }
 
   public Rect(String name, int x, int y, int width, int height, Rect parent) {
@@ -51,7 +57,9 @@ public class Rect {
     this.width = width;
     this.height = height;
 
-    System.out.println(chainName);
+    if (VexDebug.printLayoutTree) {
+      System.out.println(chainName);
+    }
   }
 
   public List<Rect> asColumns(int columnCount, String name) {

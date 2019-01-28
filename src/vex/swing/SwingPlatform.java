@@ -32,6 +32,7 @@ import vex.Cursor;
 import vex.Graphics;
 import vex.Platform;
 import vex.Vex;
+import vex.VexDebug;
 import vex.events.KeyEvent;
 import vex.events.MouseEvent;
 import vex.events.MouseEvent.Type;
@@ -365,7 +366,9 @@ public class SwingPlatform implements Platform {
   }
 
   private void startFrame() {
-    System.out.println("-------------------------------------------------");
+    if (VexDebug.printLayoutTree) {
+      System.out.println("-------------------------------------------------");
+    }
     bufferLayers.clear();
     currentLayerIndex = 0;
     interactiveLayerIndex = highestLayerIndex;
