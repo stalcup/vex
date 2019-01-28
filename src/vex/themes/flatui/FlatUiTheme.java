@@ -13,9 +13,9 @@ import vex.styles.TextBoxStyle;
 
 public class FlatUiTheme {
 
-  public static Rect textBoxRect = new Rect(0, 0, 227, 41);
+  public static Rect textBoxRect = new Rect("FlatUiDefaultTextBoxRect", 0, 0, 227, 41);
 
-  public static Rect textAreaRect = new Rect(0, 0, 227, 108);
+  public static Rect textAreaRect = new Rect("FlatUiDefaultTextAreaRect", 0, 0, 227, 108);
 
   public static TextBoxStyle<?> baseTextBoxStyle =
       BaseStyles.textBox()

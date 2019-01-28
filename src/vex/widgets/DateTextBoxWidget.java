@@ -58,7 +58,11 @@ public class DateTextBoxWidget {
       Vex.beginLayer();
 
       Rect datePickerWidgetBounds =
-          textBoxWidget.bounds.dupe().panDown(textBoxWidget.bounds.height + 10).to(0, 0);
+          textBoxWidget
+              .bounds
+              .dupe("datePickerWidget")
+              .panDown(textBoxWidget.bounds.height + 10)
+              .to(0, 0);
       datePickerWidget = new DatePickerWidget(datePickerWidgetBounds).timeMs(timeMs);
       WidgetStatus datePickerWidgetStatus =
           datePickerWidget.render(datePickerAreaStyle, datePickerDayStyle);

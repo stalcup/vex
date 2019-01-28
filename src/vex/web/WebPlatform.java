@@ -26,6 +26,7 @@ public class WebPlatform implements Platform {
   private LinkedList<MouseEvent> mouseEvents = new LinkedList<>();
   private Point mouseLocation = new Point(0, 0);
   private Runnable ui;
+  private boolean repaint;
 
   public WebPlatform(HTMLCanvasElement canvasElement) {
     this.canvasElement = canvasElement;
@@ -176,4 +177,9 @@ public class WebPlatform implements Platform {
 
   @Override
   public void setCursor(Cursor cursor) {}
+
+  @Override
+  public void repaint() {
+    repaint = true;
+  }
 }

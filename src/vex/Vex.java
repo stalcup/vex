@@ -230,6 +230,10 @@ public class Vex {
     platform.httpPost(path, body, responseMessageHandler);
   }
 
+  public static void httpPost(String path, ResponseMessageHandler responseMessageHandler) {
+    platform.httpPost(path, "", responseMessageHandler);
+  }
+
   public static boolean mouseEventIs(Type type) {
     return getMouseEvent() != null && getMouseEvent().type == type;
   }

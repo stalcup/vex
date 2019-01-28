@@ -48,7 +48,7 @@ public class DatePickerWidget extends Widget {
   private Rect leftArrowBounds;
   private Rect rightArrowBounds;
   private Rect innerBackgroundBounds;
-  private Rect squareBounds;
+  private Rect datesAreaBounds;
   private ButtonStyle<?> datePickerDayStyle;
 
   public WidgetStatus render(
@@ -67,28 +67,31 @@ public class DatePickerWidget extends Widget {
             + datePickerAreaStyle.headerHeight;
 
     headerBounds =
-        bounds.dupe().onTop(datePickerAreaStyle.headerHeight + datePickerAreaStyle.outerMargin);
+        bounds
+            .dupe("headerArea")
+            .onTop(datePickerAreaStyle.headerHeight + datePickerAreaStyle.outerMargin);
 
     leftArrowBounds =
         headerBounds
-            .dupe()
+            .dupe("leftArrowButton")
             .offLeft(datePickerAreaStyle.outerMargin)
             .offTop(datePickerAreaStyle.outerMargin / 2)
             .onLeft(datePickerAreaStyle.headerHeight + datePickerAreaStyle.outerMargin / 2);
 
     rightArrowBounds =
         headerBounds
-            .dupe()
+            .dupe("rightArrowButton")
             .offRight(datePickerAreaStyle.outerMargin)
             .offTop(datePickerAreaStyle.outerMargin / 2)
             .onRight(datePickerAreaStyle.headerHeight + datePickerAreaStyle.outerMargin / 2);
 
     innerBackgroundBounds =
         bounds
-            .dupe()
+            .dupe("innerBackgroundArea")
             .shrink(datePickerAreaStyle.outerMargin)
             .offTop(datePickerAreaStyle.headerHeight);
-    squareBounds = innerBackgroundBounds.dupe().shrink(datePickerAreaStyle.innerMargin);
+    datesAreaBounds =
+        innerBackgroundBounds.dupe("datesArea").shrink(datePickerAreaStyle.innerMargin);
 
     super.render(datePickerAreaStyle);
 
@@ -176,10 +179,12 @@ public class DatePickerWidget extends Widget {
       String day = dateFormatSymbols.getShortWeekdays()[i + 1];
       Rect dayBounds =
           new Rect(
-              squareBounds.x + i * datePickerAreaStyle.dayWidth,
-              squareBounds.y,
+              "dayOfWeek",
+              datesAreaBounds.x + i * datePickerAreaStyle.dayWidth,
+              datesAreaBounds.y,
               datePickerAreaStyle.dayWidth,
-              datePickerAreaStyle.dayHeight);
+              datePickerAreaStyle.dayHeight,
+              datesAreaBounds);
 
       dayNameStyle.text(day);
       Widgets.button(dayBounds).render(dayNameStyle);
@@ -191,10 +196,12 @@ public class DatePickerWidget extends Widget {
 
       Rect dayBounds =
           new Rect(
-                  squareBounds.x + dayOfWeek * datePickerAreaStyle.dayWidth,
-                  squareBounds.y + (weekOfMonth + 1) * datePickerAreaStyle.dayHeight,
+                  "dateButton",
+                  datesAreaBounds.x + dayOfWeek * datePickerAreaStyle.dayWidth,
+                  datesAreaBounds.y + (weekOfMonth + 1) * datePickerAreaStyle.dayHeight,
                   datePickerAreaStyle.dayWidth,
-                  datePickerAreaStyle.dayHeight)
+                  datePickerAreaStyle.dayHeight,
+                  datesAreaBounds)
               .shrink(1);
 
       datePickerDayStyle.text(dayOfMonth + 1 + "");

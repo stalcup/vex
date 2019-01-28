@@ -36,7 +36,7 @@ public class RadioButtonsWidget extends Widget {
       return WidgetStatus.selected(newSelectedKey);
     }
 
-    List<Rect> optionsBounds = bounds.asRows(selectableKeysByDisplayValue.size());
+    List<Rect> optionsBounds = bounds.asRows(selectableKeysByDisplayValue.size(), "row");
     Iterator<Rect> optionsBoundsIterator = optionsBounds.iterator();
     for (Entry<String, String> entry : selectableKeysByDisplayValue.entrySet()) {
       Rect optionBounds = optionsBoundsIterator.next();

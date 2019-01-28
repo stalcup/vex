@@ -46,7 +46,8 @@ public class FlatUiThemeGallery {
   public static void doUi(Rect bounds) {
     Vex.fillRect(bounds, Color.WHITE);
 
-    Rect basicElementsLabelBounds = bounds.dupe().offLeft(20).offTop(20).onLeft(300).onTop(40);
+    Rect basicElementsLabelBounds =
+        bounds.dupe("basicElementsLabel").offLeft(20).offTop(20).onLeft(300).onTop(40);
     Widgets.label(basicElementsLabelBounds)
         .render(
             FlatUiTheme.baseHeaderLabelStyle
@@ -56,10 +57,10 @@ public class FlatUiThemeGallery {
                 .textAlignX(Align.MIN)
                 .text("Basic Elements"));
 
-    Rect buttonsLabelBounds = basicElementsLabelBounds.dupe().panDown(60);
+    Rect buttonsLabelBounds = basicElementsLabelBounds.dupe("buttonsLabel").panDown(60);
     Widgets.label(buttonsLabelBounds).render(sectionLabelStyle.text("Buttons"));
 
-    Rect buttonBounds = buttonsLabelBounds.dupe().panDown(60).to(212, 45);
+    Rect buttonBounds = buttonsLabelBounds.dupe("button").panDown(60).to(212, 45);
     Widgets.button(buttonBounds).render(FlatUiTheme.primaryButtonStyle.text("Primary Button"));
     Widgets.button(buttonBounds.panRight(212 + 30))
         .render(FlatUiTheme.warningButtonStyle.text("Warning Button"));
@@ -68,7 +69,7 @@ public class FlatUiThemeGallery {
     Widgets.button(buttonBounds.panRight(212 + 30))
         .render(FlatUiTheme.dangerButtonStyle.text("Danger Button"));
 
-    buttonBounds = buttonsLabelBounds.dupe().panDown(125).to(212, 45);
+    buttonBounds = buttonsLabelBounds.dupe("button").panDown(125).to(212, 45);
     Widgets.button(buttonBounds).render(FlatUiTheme.successButtonStyle.text("Success Button"));
     Widgets.button(buttonBounds.panRight(212 + 30))
         .render(FlatUiTheme.inverseButtonStyle.text("Inverse Button"));
@@ -77,10 +78,10 @@ public class FlatUiThemeGallery {
     Widgets.button(buttonBounds.panRight(212 + 30))
         .render(FlatUiTheme.disabledButtonStyle.text("Disabled Button"));
 
-    Rect inputLabelBounds = buttonsLabelBounds.dupe().panDown(205).to(212, 45);
+    Rect inputLabelBounds = buttonsLabelBounds.dupe("inputLabel").panDown(205).to(212, 45);
     Widgets.label(inputLabelBounds).render(sectionLabelStyle.text("Input"));
 
-    Rect textBoxBounds = inputLabelBounds.dupe().panDown(60).to(212, 42);
+    Rect textBoxBounds = inputLabelBounds.dupe("textBox").panDown(60).to(212, 42);
     if (Widgets.textBox("default-textbox", textBoxBounds)
         .text(defaultTextBoxContent)
         .render(FlatUiTheme.defaultTextBoxStyle.placeholderText("Inactive"))
@@ -95,10 +96,10 @@ public class FlatUiThemeGallery {
     Widgets.textBox("disabled-textbox", textBoxBounds.panRight(212 + 30))
         .render(FlatUiTheme.disabledTextBoxStyle.placeholderText("Disabled"));
 
-    Rect dropdownLabelBounds = buttonsLabelBounds.dupe().panDown(345).to(212, 45);
+    Rect dropdownLabelBounds = buttonsLabelBounds.dupe("dropdownLabel").panDown(345).to(212, 45);
     Widgets.label(dropdownLabelBounds).render(sectionLabelStyle.text("Dropdown"));
 
-    Rect dropdownBounds = dropdownLabelBounds.dupe().panDown(60).to(212, 42);
+    Rect dropdownBounds = dropdownLabelBounds.dupe("dropdown").panDown(60).to(212, 42);
     dropDownOpen =
         Widgets.textDropDown(dropdownBounds, dropDownOptions, selectedOptions)
             .render(
@@ -107,16 +108,18 @@ public class FlatUiThemeGallery {
                 dropDownOpen)
             .open;
 
-    Rect radioButtonLabelBounds = buttonsLabelBounds.dupe().panDown(485).to(212, 45);
+    Rect radioButtonLabelBounds =
+        buttonsLabelBounds.dupe("radioButtonLabel").panDown(485).to(212, 45);
     Widgets.label(radioButtonLabelBounds).render(sectionLabelStyle.text("Radio Buttons"));
 
-    Rect radioButtonsBounds = radioButtonLabelBounds.dupe().panDown(60).to(212, 60);
+    Rect radioButtonsBounds = radioButtonLabelBounds.dupe("radioButtons").panDown(60).to(212, 60);
     selectedRadioOption =
         Widgets.radioButtons(radioButtonsBounds, radioButtonsData, selectedRadioOption)
             .render(FlatUiTheme.defaultRadioButtonStyle)
             .selectedKey;
 
-    Rect radioButtonBounds = radioButtonsBounds.dupe().onBottom(0).panDown(3).to(212, 30);
+    Rect radioButtonBounds =
+        radioButtonsBounds.dupe("radioButton").onBottom(0).panDown(3).to(212, 30);
 
     Widgets.radioButton(null, radioButtonBounds)
         .disabled(true)
@@ -126,10 +129,11 @@ public class FlatUiThemeGallery {
         .disabled(true)
         .render(FlatUiTheme.defaultRadioButtonStyle.text("Disabled radio is on"));
 
-    Rect checkboxesLabelBounds = radioButtonLabelBounds.dupe().panRight(212 + 30);
+    Rect checkboxesLabelBounds = radioButtonLabelBounds.dupe("checkboxesLabel").panRight(212 + 30);
     Widgets.label(checkboxesLabelBounds).render(sectionLabelStyle.text("Checkboxes"));
 
-    Rect checkboxesBounds = checkboxesLabelBounds.dupe().onBottom(0).panDown(15).to(212, 30);
+    Rect checkboxesBounds =
+        checkboxesLabelBounds.dupe("checkboxes").onBottom(0).panDown(15).to(212, 30);
 
     if (Widgets.radioButton(null, checkboxesBounds)
         .selected(uncheckedChecked)
@@ -152,10 +156,11 @@ public class FlatUiThemeGallery {
         .disabled(true)
         .render(FlatUiTheme.defaultCheckboxStyle.text("Disabled checked"));
 
-    Rect datePickerLabelBounds = checkboxesLabelBounds.dupe().panRight(212 + 30);
+    Rect datePickerLabelBounds = checkboxesLabelBounds.dupe("datePickerLabel").panRight(212 + 30);
     Widgets.label(datePickerLabelBounds).render(sectionLabelStyle.text("Date Picker"));
 
-    Rect dateTextBoxBounds = datePickerLabelBounds.dupe().onBottom(0).panDown(15).to(212, 42);
+    Rect dateTextBoxBounds =
+        datePickerLabelBounds.dupe("dateTextBox").onBottom(0).panDown(15).to(212, 42);
     WidgetStatus dateWidgetStatus =
         Widgets.dateTextBox("test-date-textbox", dateTextBoxBounds)
             .timeMs(timeMs)

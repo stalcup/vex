@@ -50,7 +50,7 @@ public class Widget {
 
       Rect tooltipBounds =
           bounds
-              .dupe()
+              .dupe("tooltip")
               .onRight(0)
               .panRight(10)
               .toWidth(tooltipSize.x + 20)
@@ -85,12 +85,12 @@ public class Widget {
       Vex.drawRoundRect(focusHaloBounds, style.cornerRadius);
     } else {
       int pad = focusHaloWidth;
-      Vex.drawRect(focusHaloBounds.dupe().shrink(-pad));
+      Vex.drawRect(focusHaloBounds.dupe("halo2?").expand(pad));
     }
   }
 
   protected Rect computeHaloBounds(int focusHaloWidth, Style<?> style) {
-    return bounds.dupe().shrink(-focusHaloWidth);
+    return bounds.dupe("halo1?").expand(focusHaloWidth);
   }
 
   protected void renderBorder(Style<?> style) {
@@ -105,7 +105,7 @@ public class Widget {
         Vex.drawRoundRect(bounds, style.cornerRadius);
       } else {
         int pad = borderWidth;
-        Vex.drawRect(bounds.dupe().shrink(-pad));
+        Vex.drawRect(bounds.dupe("border").expand(pad));
       }
     }
   }

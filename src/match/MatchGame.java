@@ -85,6 +85,7 @@ public class MatchGame {
 
         if (Widgets.button(
                 new Rect(
+                    "matchButton",
                     Styles.gridCellGap + cellX * (Styles.gridCellGap + UiState.squareSize),
                     Styles.gridCellGap + cellY * (Styles.gridCellGap + UiState.squareSize),
                     UiState.squareSize,
@@ -115,6 +116,7 @@ public class MatchGame {
 
     Widgets.area(
             new Rect(
+                "clickCounterLabel",
                 height < width
                     ? UiState.smallerDimension
                     : Styles.gridCellGap * 2 + UiState.squareSize,
@@ -127,6 +129,7 @@ public class MatchGame {
 
     Widgets.area(
             new Rect(
+                "scoreLabel",
                 height < width
                     ? UiState.smallerDimension
                     : Styles.gridCellGap * 3 + UiState.squareSize * 2,
@@ -145,6 +148,7 @@ public class MatchGame {
       Vex.setFont("Arial", FontStyle.BOLD, 20, false);
       if (Widgets.button(
               new Rect(
+                  "confirmationYesButton",
                   UiState.smallerDimension / 2,
                   UiState.smallerDimension / 2,
                   UiState.squareSize,
@@ -159,6 +163,7 @@ public class MatchGame {
       }
       if (Widgets.button(
               new Rect(
+                  "confirmationNoButton",
                   UiState.smallerDimension / 2 + Styles.gridCellGap + UiState.squareSize,
                   UiState.smallerDimension / 2,
                   UiState.squareSize,

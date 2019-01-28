@@ -121,18 +121,22 @@ public class Widgets {
     }
 
     int displayRowCount = Math.min(optionsCount, maxDisplayRowCount);
-    Rect openRect =
-        closedRect.dupe().scaleHeight(displayRowCount * 0.8).panDown(closedRect.height + 10);
 
     List<Rect> rowRects = null;
 
     if (open) {
       Vex.beginLayer();
-      rowRects = openRect.dupe().asRows(displayRowCount);
-    }
 
-    if (open && Vex.mouseEventIs(Type.DOWN) && !Vex.mouseEventIsIn(openRect, Type.DOWN)) {
-      open = false;
+      Rect dropDownRect =
+          closedRect
+              .dupe("dropDown")
+              .scaleHeight(displayRowCount * 0.8)
+              .panDown(closedRect.height + 10);
+      rowRects = dropDownRect.asRows(displayRowCount, "row");
+
+      if (Vex.mouseEventIs(Type.DOWN) && !Vex.mouseEventIsIn(dropDownRect, Type.DOWN)) {
+        open = false;
+      }
     }
 
     return WidgetStatus.open(open, rowRects);

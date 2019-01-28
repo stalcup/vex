@@ -8,7 +8,6 @@ public class MatchGameLauncher {
 
   public static void main(String[] args) {
     Vex.platform = new SwingPlatform(false);
-    Vex.setUi(
-        () -> MatchGame.doUi(0, 0, Vex.getWidth(), Vex.getHeight()));
+    Vex.setUi(() -> MatchGame.doUi(0, 0, Vex.getWidth(), Vex.getHeight()));
   }
 }

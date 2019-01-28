@@ -3,50 +3,74 @@ package vex.geom;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 public class Rect {
+
+  public String name;
+  public String chainName;
 
   public int height;
   public int width;
   public int x;
   public int y;
 
-  public Rect(int x, int y, int width, int height) {
+  public Rect(String name, int x, int y, int width, int height) {
+    Preconditions.checkNotNull(name);
+
+    this.name = name;
+    chainName = name;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+
+    System.out.println(chainName);
   }
 
-  public List<Rect> asColumns(int columnCount) {
+  public Rect(String name, String chainName, int x, int y, int width, int height) {
+    Preconditions.checkNotNull(name);
+
+    this.name = name;
+    this.chainName = chainName;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+
+    System.out.println(chainName);
+  }
+
+  public Rect(String name, int x, int y, int width, int height, Rect parent) {
+    Preconditions.checkNotNull(name);
+
+    this.name = name;
+    chainName = parent.chainName + "-" + name;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+
+    System.out.println(chainName);
+  }
+
+  public List<Rect> asColumns(int columnCount, String name) {
     List<Rect> columns = new ArrayList<>();
     for (int i = 0; i < columnCount; i++) {
       int left = i * width / columnCount;
       int right = (i + 1) * width / columnCount;
-      columns.add(new Rect(x + left, y, right - left, height));
+      columns.add(new Rect(name + i, x + left, y, right - left, height));
     }
     return columns;
   }
 
-  public List<Rect> asRows(int rowCount) {
+  public List<Rect> asRows(int rowCount, String name) {
     List<Rect> rows = new ArrayList<>();
     for (int i = 0; i < rowCount; i++) {
       int top = i * height / rowCount;
       int bottom = (i + 1) * height / rowCount;
-      rows.add(new Rect(x, y + top, width, bottom - top));
+      rows.add(new Rect(name + i, x, y + top, width, bottom - top, this));
     }
-    return rows;
-  }
-
-  public List<Rect> asRows(int rowCount, int gap) {
-    Rect area = dupe();
-    area.height += gap;
-
-    List<Rect> rows = area.asRows(rowCount);
-
-    for (Rect row : rows) {
-      row.height -= gap;
-    }
-
     return rows;
   }
 
@@ -56,23 +80,8 @@ public class Rect {
     return this;
   }
 
-  public Rect combine(Rect that) {
-    int x = Math.min(this.x, that.x);
-    int y = Math.min(this.y, that.y);
-
-    int x2 = Math.max(this.x + width, that.x + that.width);
-    int y2 = Math.max(this.y + height, that.y + that.height);
-
-    this.x = x;
-    this.y = y;
-    width = x2 - x;
-    height = y2 - y;
-
-    return this;
-  }
-
-  public Rect dupe() {
-    return new Rect(x, y, width, height);
+  public Rect dupe(String name) {
+    return new Rect(name, x, y, width, height, this);
   }
 
   public Rect growBottom(int deltaY) {
@@ -174,6 +183,14 @@ public class Rect {
     return this;
   }
 
+  public Rect expand(int pixels) {
+    x -= pixels;
+    y -= pixels;
+    width += pixels * 2;
+    height += pixels * 2;
+    return this;
+  }
+
   public Rect to(int width, int height) {
     this.width = width;
     this.height = height;
@@ -207,5 +224,24 @@ public class Rect {
   public Rect toWidth(int width) {
     this.width = width;
     return this;
+  }
+
+  public static Rect combine(String name, Rect rect1, Rect rect2) {
+    int x = Math.min(rect1.x, rect2.x);
+    int y = Math.min(rect1.y, rect2.y);
+
+    int x2 = Math.max(rect1.x + rect1.width, rect2.x + rect2.width);
+    int y2 = Math.max(rect1.y + rect1.height, rect2.y + rect2.height);
+
+    Rect rect =
+        new Rect(
+            rect1.name + "+" + rect2.name,
+            rect1.chainName + "+" + rect2.name + "-" + name,
+            x,
+            y,
+            x2 - x,
+            y2 - y);
+
+    return rect;
   }
 }

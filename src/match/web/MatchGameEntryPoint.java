@@ -14,7 +14,6 @@ public class MatchGameEntryPoint implements EntryPoint {
   public void onModuleLoad() {
     Vex.platform =
         new WebPlatform((HTMLCanvasElement) DomGlobal.document.getElementById("matchgame-canvas"));
-    Vex.setUi(
-        () -> MatchGame.doUi(0, 0, Vex.getWidth(), Vex.getHeight()));
+    Vex.setUi(() -> MatchGame.doUi(0, 0, Vex.getWidth(), Vex.getHeight()));
   }
 }

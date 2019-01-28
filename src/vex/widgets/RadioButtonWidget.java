@@ -38,10 +38,10 @@ public class RadioButtonWidget extends Widget {
   protected Rect computeHaloBounds(int focusHaloWidth, Style<?> style) {
     RadioButtonStyle<?> radioButtonStyle = (RadioButtonStyle<?>) style;
     return bounds
-        .dupe()
+        .dupe("halo")
         .onLeft(radioButtonStyle.triggerDiameter)
         .toCenterHeight(radioButtonStyle.triggerDiameter)
-        .shrink(-focusHaloWidth);
+        .expand(focusHaloWidth);
   }
 
   @Override
@@ -73,7 +73,7 @@ public class RadioButtonWidget extends Widget {
       Vex.setColor(backgroundColor);
       radioButtonStyle.triggerShape.fill(
           bounds
-              .dupe()
+              .dupe("triggerBackground")
               .onLeft(radioButtonStyle.triggerDiameter)
               .toCenterHeight(radioButtonStyle.triggerDiameter));
     }
@@ -91,18 +91,18 @@ public class RadioButtonWidget extends Widget {
       Vex.setStroke(borderWidth);
       radioButtonStyle.triggerShape.draw(
           bounds
-              .dupe()
+              .dupe("triggerBorder")
               .onLeft(radioButtonStyle.triggerDiameter)
               .toCenterHeight(radioButtonStyle.triggerDiameter));
     }
 
     if (selected) {
-      Rect imageBounds =
-          bounds
-              .dupe()
-              .onLeft(radioButtonStyle.triggerDiameter)
-              .toCenterHeight(radioButtonStyle.triggerDiameter);
       if (radioButtonStyle.selectedImage != null) {
+        Rect imageBounds =
+            bounds
+                .dupe("triggerImage")
+                .onLeft(radioButtonStyle.triggerDiameter)
+                .toCenterHeight(radioButtonStyle.triggerDiameter);
         Vex.drawAlignedImage(imageBounds, radioButtonStyle.selectedImage, Align.MID, 0, 0);
       } else if (borderColor != null) {
         Vex.setColor(borderColor);

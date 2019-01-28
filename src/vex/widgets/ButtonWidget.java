@@ -27,8 +27,7 @@ public class ButtonWidget extends Widget {
       Widgets.maybeFocusMeNext(focusId);
     }
     boolean clicked =
-        !disabled
-            && Vex.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
+        !disabled && Vex.mouseEventIsIn(bounds.x, bounds.y, bounds.width, bounds.height, Type.DOWN);
     if (clicked) {
       if (focusId != null) {
         Widgets.setCurrentFocusId(focusId);

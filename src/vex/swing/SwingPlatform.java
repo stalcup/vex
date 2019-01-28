@@ -235,7 +235,12 @@ public class SwingPlatform implements Platform {
       repaint = false;
       startFrame();
       frameId++;
-      ui.run();
+      try {
+        ui.run();
+      } catch (Exception e) {
+        e.printStackTrace();
+        System.exit(0);
+      }
       endFrame();
 
       if (repaint) {
@@ -275,10 +280,14 @@ public class SwingPlatform implements Platform {
     consumeKeyEvent();
     applyCursor();
 
-    for (Runnable afterFrameCallback : afterFrameCallbacks) {
+    List<Runnable> afterFrameCallbacksToProcess;
+    synchronized (afterFrameCallbacksLock) {
+      afterFrameCallbacksToProcess = new ArrayList<>(afterFrameCallbacks);
+      afterFrameCallbacks.clear();
+    }
+    for (Runnable afterFrameCallback : afterFrameCallbacksToProcess) {
       afterFrameCallback.run();
     }
-    afterFrameCallbacks.clear();
   }
 
   private void flipBuffers() {
@@ -356,6 +365,7 @@ public class SwingPlatform implements Platform {
   }
 
   private void startFrame() {
+    System.out.println("-------------------------------------------------");
     bufferLayers.clear();
     currentLayerIndex = 0;
     interactiveLayerIndex = highestLayerIndex;
@@ -380,6 +390,7 @@ public class SwingPlatform implements Platform {
   private Cursor previousCursor;
   private Cursor currentCursor;
 
+  private Object afterFrameCallbacksLock = new Object();
   private List<Runnable> afterFrameCallbacks = new ArrayList<>();
 
   private Object theWebIsSingleThreaded = new Object();
@@ -549,7 +560,9 @@ public class SwingPlatform implements Platform {
 
   @Override
   public void doAfterFrame(Runnable callback) {
-    afterFrameCallbacks.add(callback);
+    synchronized (afterFrameCallbacksLock) {
+      afterFrameCallbacks.add(callback);
+    }
   }
 
   @Override
